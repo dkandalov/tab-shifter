@@ -12,13 +12,15 @@
           <li>alt+shift+[ - shift tab left
               (moves tab to previous split wrapping around if it's the leftmost split, splits without any tabs disappear)</li>
       </ul>
-      This is similar to built-in Move Left/Right tab actions but done in a more practical way.
-      (Plugin idea by <a href="https://twitter.com/sandromancuso">Sandro Mancuso</a> at
-      <a href="http://socratesuk.org/">SoCraTes UK 2013</a>.
-      This is a java copy of <a href="https://gist.github.com/dkandalov/6643735">this mini-plugin</a>.)
       <br/>
-      See also <a href="https://github.com/dkandalov/tab-shift">GitHub page</a>.
-  ]]> </description>
+      This is similar to built-in Move Left/Right tab actions but done in a more practical way.
+      <br/>
+      Plugin idea by <a href="https://twitter.com/sandromancuso">Sandro Mancuso</a> at
+      <a href="http://socratesuk.org/">SoCraTes UK 2013</a>.
+      This is a java copy of <a href="https://gist.github.com/dkandalov/6643735">this mini-plugin</a>.
+      <br/>
+      For more details please see <a href="https://github.com/dkandalov/tab-shift">GitHub page</a>.
+  ]]></description>
 
 
   <!-- http://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->

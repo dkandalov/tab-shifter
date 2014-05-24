@@ -1,6 +1,6 @@
 What is this?
 ====
-This is a tiny plugin for IntelliJ IDEA to move and split editor tabs.
+This is [**Tab Shifter**](http://plugins.jetbrains.com/plugin/7475) a tiny plugin for IntelliJ IDEA to move and split editor tabs.
  - alt + shift + \] - shift tab right<br/>
  (moves tab to the next split or creates new split if current tab is in the rightmost split)
  - alt + shift + \[ - shift tab left<br/>
