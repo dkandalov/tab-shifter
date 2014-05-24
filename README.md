@@ -17,18 +17,18 @@ The best way to understand how tab shifting work is to try it... seriously.
 Otherwise, see screenshots below.
 
 Editor without any splits.
-<img src="https://github.com/dkandalov/tab-shift/master/screenshot0.png" alt="" title="" align="center"/>
+<img src="https://raw.githubusercontent.com/dkandalov/tab-shift/master/screenshot0.png" alt="" title="" align="center"/>
 
 Shifted current tab right.
-<img src="https://github.com/dkandalov/tab-shift/master/screenshot1.png" alt="" title="" align="center"/>
+<img src="https://raw.githubusercontent.com/dkandalov/tab-shift/master/screenshot1.png" alt="" title="" align="center"/>
 
 Switched focus to tab in the left split and shifted tab right.
 (Note that tab was *moved* to the right split unlike built-in action which would create yet another split.)
-<img src="https://github.com/dkandalov/tab-shift/master/screenshot2.png" alt="" title="" align="center"/>
+<img src="https://raw.githubusercontent.com/dkandalov/tab-shift/master/screenshot2.png" alt="" title="" align="center"/>
 
 Shifted current tab right.
 (Because it's the rightmost split shifting right
-<img src="https://github.com/dkandalov/tab-shift/master/screenshot3.png" alt="" title="" align="center"/>
+<img src="https://raw.githubusercontent.com/dkandalov/tab-shift/master/screenshot3.png" alt="" title="" align="center"/>
 
 
 Credits
