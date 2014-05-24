@@ -5,10 +5,19 @@
   <vendor email="dmitry.kandalov@gmail.com" url="https://github.com/dkandalov/tab-shift">Dmitry Kandalov</vendor>
 
   <description><![CDATA[
-      Actions to move and split tabs.<br>
-      (This is a copy of <a href="https://gist.github.com/dkandalov/6643735">this mini-plugin</a>.
-      Created for <a href="https://twitter.com/sandromancuso">Sandro Mancuso</a> at
-      <a href="http://socratesuk.org/">SoCraTes UK 2013</a>.)
+      Actions to move and split editor tabs.<br>
+      <ul>
+          <li>alt+shift+] - shift tab right
+              (moves tab to the next split or creates new split if current tab is in the rightmost split)</li>
+          <li>alt+shift+[ - shift tab left
+              (moves tab to previous split wrapping around if it's the leftmost split, splits without any tabs disappear)</li>
+      </ul>
+      This is similar to built-in Move Left/Right tab actions but done in a more practical way.
+      (Plugin idea by <a href="https://twitter.com/sandromancuso">Sandro Mancuso</a> at
+      <a href="http://socratesuk.org/">SoCraTes UK 2013</a>.
+      This is a java copy of <a href="https://gist.github.com/dkandalov/6643735">this mini-plugin</a>.)
+      <br/>
+      See also <a href="https://github.com/dkandalov/tab-shift">GitHub page</a>.
   ]]> </description>
 
 
@@ -19,12 +28,12 @@
   <depends>com.intellij.modules.lang</depends>
 
   <actions>
-      <action id="TabShiftActions.ShiftLeft" class="socrates.tabshifter.TabShifterActions$ShiftLeft" text="Shift Tab Left">
-          <add-to-group group-id="WindowMenu" anchor="last"/>
+      <action id="TabShiftActions.ShiftLeft" class="socrates.tabshifter.TabShifterActions$ShiftLeft" text="Shift Left">
+          <add-to-group group-id="EditorTabsGroup" anchor="last"/>
           <keyboard-shortcut first-keystroke="alt shift OPEN_BRACKET" keymap="$default"/>
       </action>
-      <action id="TabShiftActions.ShiftRight" class="socrates.tabshifter.TabShifterActions$ShiftRight" text="Shift Tab Right">
-          <add-to-group group-id="WindowMenu" anchor="last"/>
+      <action id="TabShiftActions.ShiftRight" class="socrates.tabshifter.TabShifterActions$ShiftRight" text="Shift Right">
+          <add-to-group group-id="EditorTabsGroup" anchor="last"/>
           <keyboard-shortcut first-keystroke="alt shift CLOSE_BRACKET" keymap="$default"/>
       </action>
   </actions>
