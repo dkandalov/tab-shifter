@@ -5,6 +5,7 @@ This is [**Tab Shifter**](http://plugins.jetbrains.com/plugin/7475) a tiny plugi
  (moves tab to the next split or creates new split if current tab is in the rightmost split)
  - alt + shift + \[ - shift tab left<br/>
  (moves tab to previous split wrapping around if it's the leftmost split, splits without any tabs disappear)
+
 Also available in Windows -> Editor Tabs menu.
 
 
