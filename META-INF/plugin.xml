@@ -1,6 +1,6 @@
 <idea-plugin version="2">
-  <id>socrates.tabshift</id>
-  <name>TabShift</name>
+  <id>socrates.tabshifter</id>
+  <name>Tab Shifter</name>
   <version>0.1</version>
   <vendor email="dmitry.kandalov@gmail.com" url="https://github.com/dkandalov/tab-shift">Dmitry Kandalov</vendor>
 
@@ -19,13 +19,13 @@
   <depends>com.intellij.modules.lang</depends>
 
   <actions>
-      <action id="TabShiftActions.ShiftLeft" class="socrates.tabshift.TabShiftActions$ShiftLeft" text="Shift Tab Left">
+      <action id="TabShiftActions.ShiftLeft" class="socrates.tabshifter.TabShifterActions$ShiftLeft" text="Shift Tab Left">
           <add-to-group group-id="WindowMenu" anchor="last"/>
-          <keyboard-shortcut first-keystroke="alt shift LEFT" keymap="$default"/>
+          <keyboard-shortcut first-keystroke="alt shift OPEN_BRACKET" keymap="$default"/>
       </action>
-      <action id="TabShiftActions.ShiftRight" class="socrates.tabshift.TabShiftActions$ShiftRight" text="Shift Tab Right">
+      <action id="TabShiftActions.ShiftRight" class="socrates.tabshifter.TabShifterActions$ShiftRight" text="Shift Tab Right">
           <add-to-group group-id="WindowMenu" anchor="last"/>
-          <keyboard-shortcut first-keystroke="alt shift RIGHT" keymap="$default"/>
+          <keyboard-shortcut first-keystroke="alt shift CLOSE_BRACKET" keymap="$default"/>
       </action>
   </actions>
 
