@@ -28,7 +28,7 @@ Switched focus to tab in the left split and shifted tab right.
 <img src="https://raw.githubusercontent.com/dkandalov/tab-shift/master/screenshot2.png" alt="" title="" align="center"/>
 
 Shifted current tab right.
-(Because it's the rightmost split shifting right
+(It was the rightmost split so creating new split.)
 <img src="https://raw.githubusercontent.com/dkandalov/tab-shift/master/screenshot3.png" alt="" title="" align="center"/>
 
 
