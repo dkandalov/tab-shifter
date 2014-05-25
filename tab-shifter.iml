@@ -10,6 +10,18 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="mockito" level="application" />
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library name="LivePlugin">
+        <CLASSES>
+          <root url="jar://$APPLICATION_PLUGINS_DIR$/LivePlugin/lib/LivePlugin.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$APPLICATION_PLUGINS_DIR$/LivePlugin/lib/LivePlugin.jar!/src" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="groovy-all-2.2.1" level="application" />
   </component>
 </module>
 
