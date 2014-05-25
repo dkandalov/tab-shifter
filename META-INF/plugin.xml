@@ -30,11 +30,11 @@
   <depends>com.intellij.modules.lang</depends>
 
   <actions>
-      <action id="TabShiftActions.ShiftLeft" class="socrates.tabshifter.TabShifterActions$ShiftLeft" text="Shift Left">
+      <action id="TabShiftActions.ShiftLeft" class="socrates.tabshifter.Actions$ShiftLeft" text="Shift Left">
           <add-to-group group-id="EditorTabsGroup" anchor="last"/>
           <keyboard-shortcut first-keystroke="alt shift OPEN_BRACKET" keymap="$default"/>
       </action>
-      <action id="TabShiftActions.ShiftRight" class="socrates.tabshifter.TabShifterActions$ShiftRight" text="Shift Right">
+      <action id="TabShiftActions.ShiftRight" class="socrates.tabshifter.Actions$ShiftRight" text="Shift Right">
           <add-to-group group-id="EditorTabsGroup" anchor="last"/>
           <keyboard-shortcut first-keystroke="alt shift CLOSE_BRACKET" keymap="$default"/>
       </action>
