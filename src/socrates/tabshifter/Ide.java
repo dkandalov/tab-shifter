@@ -23,7 +23,7 @@ public class Ide {
         return editorManager.getCurrentWindow().getTabCount();
     }
 
-    public int currentSplit() {
+    public int currentSplitIndex() {
         EditorWindow[] windows = editorManager.getWindows();
         for (int i = 0; i < windows.length; i++) {
             if (editorManager.getCurrentWindow().equals(windows[i])) return i;

@@ -9,10 +9,10 @@ public class TabShifterTest {
     private final Ide ide = mock(Ide.class);
     private final TabShifter tabShifter = new TabShifter(ide);
 
-    @Test public void noActionsWhenMovingRightTheOnlyTab() {
-        stub(ide.splitCount()).toReturn(1);
-        stub(ide.currentSplit()).toReturn(0);
+    @Test public void movingRightTheOnlyTab() {
+        stub(ide.currentSplitIndex()).toReturn(0);
         stub(ide.currentSplitTabCount()).toReturn(1);
+        stub(ide.splitCount()).toReturn(1);
 
         tabShifter.moveTabRight();
 
@@ -21,10 +21,10 @@ public class TabShifterTest {
         verify(ide, never()).setFocusOnSplit(anyInt());
     }
 
-    @Test public void moveTabRightToNewSplitter() {
-        stub(ide.splitCount()).toReturn(1);
-        stub(ide.currentSplit()).toReturn(0);
+    @Test public void movingTabRightToNewSplitter() {
+        stub(ide.currentSplitIndex()).toReturn(0);
         stub(ide.currentSplitTabCount()).toReturn(2);
+        stub(ide.splitCount()).toReturn(1);
 
         tabShifter.moveTabRight();
 
@@ -33,10 +33,10 @@ public class TabShifterTest {
         verify(ide).setFocusOnSplit(1);
     }
 
-    @Test public void moveTabRightToExistingSplitter() {
-        stub(ide.splitCount()).toReturn(2);
-        stub(ide.currentSplit()).toReturn(0);
+    @Test public void movingTabRightToExistingSplitter() {
+        stub(ide.currentSplitIndex()).toReturn(0);
         stub(ide.currentSplitTabCount()).toReturn(2);
+        stub(ide.splitCount()).toReturn(2);
 
         tabShifter.moveTabRight();
 
@@ -45,10 +45,10 @@ public class TabShifterTest {
         verify(ide).reopenMovedTab();
     }
 
-    @Test public void noActionsWhenMovingLeftTheOnlyTab() {
-        stub(ide.splitCount()).toReturn(1);
-        stub(ide.currentSplit()).toReturn(0);
+    @Test public void movingLeftTheOnlyTab() {
+        stub(ide.currentSplitIndex()).toReturn(0);
         stub(ide.currentSplitTabCount()).toReturn(1);
+        stub(ide.splitCount()).toReturn(0);
 
         tabShifter.moveTabLeft();
 
@@ -57,10 +57,9 @@ public class TabShifterTest {
         verify(ide, never()).setFocusOnSplit(anyInt());
     }
 
-    @Test
-    public void moveTabLeftToExistingSplitter() {
+    @Test public void movingLeftToExistingSplitter() {
         stub(ide.splitCount()).toReturn(2);
-        stub(ide.currentSplit()).toReturn(0);
+        stub(ide.currentSplitIndex()).toReturn(0);
         stub(ide.currentSplitTabCount()).toReturn(2);
 
         tabShifter.moveTabLeft();

@@ -14,7 +14,7 @@ public class TabShifter {
             moveTabRight();
             return;
         }
-        int splitIndex = ide.currentSplit();
+        int splitIndex = ide.currentSplitIndex();
 
         boolean isLeftmostSplit = (splitIndex == 0);
         if (isLeftmostSplit && ide.currentSplitTabCount() == 1) return;
@@ -27,7 +27,7 @@ public class TabShifter {
 
     public void moveTabRight() {
         if (ide.splitCount() == 1 && ide.currentSplitTabCount() == 1) return;
-        int splitIndex = ide.currentSplit();
+        int splitIndex = ide.currentSplitIndex();
 
         boolean isRightmostSplit = (splitIndex == ide.splitCount() - 1);
         if (isRightmostSplit && ide.currentSplitTabCount() == 1) return;

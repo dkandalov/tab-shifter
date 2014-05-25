@@ -15,13 +15,12 @@ registerAction("TabShiftActions.ShiftLeft",
         "Shift Left") { AnActionEvent event ->
     shiftLeft.actionPerformed(event)
 }
-def shiftRight = new Actions.ShiftLeft()
+def shiftRight = new Actions.ShiftRight()
 registerAction("TabShiftActions.ShiftRight",
         "alt shift CLOSE_BRACKET",
         "EditorTabsGroup",
         "Shift Right") { AnActionEvent event ->
     shiftRight.actionPerformed(event)
 }
-
 
 show("Reloaded Tab Shifter plugin")
