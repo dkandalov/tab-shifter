@@ -8,11 +8,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class Ide {
     private final FileEditorManagerEx editorManager;
-    private final Project project;
+    private final VirtualFile currentFile;
 
     public Ide(FileEditorManagerEx editorManager, Project project) {
         this.editorManager = editorManager;
-        this.project = project;
+        this.currentFile = currentFileIn(project);
     }
 
     public int splitCount() {
@@ -36,15 +36,15 @@ public class Ide {
     }
 
     public void closeCurrentFileInSplit(int splitIndex) {
-        editorManager.getWindows()[splitIndex].closeFile(currentFileIn(project));
+        editorManager.getWindows()[splitIndex].closeFile(currentFile);
     }
 
     public void setFocusOnSplit(int splitIndex) {
         editorManager.getWindows()[splitIndex].setAsCurrentWindow(true);
     }
 
-    public void reopenCurrentFile() {
-        editorManager.openFile(currentFileIn(project), true);
+    public void reopenMovedTab() {
+        editorManager.openFile(currentFile, true);
     }
 
     private static VirtualFile currentFileIn(@NotNull Project project) {

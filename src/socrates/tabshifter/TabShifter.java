@@ -14,32 +14,34 @@ public class TabShifter {
             moveTabRight();
             return;
         }
+        int splitIndex = ide.currentSplit();
 
-        boolean isLeftmostSplit = (ide.currentSplit() == 0);
+        boolean isLeftmostSplit = (splitIndex == 0);
         if (isLeftmostSplit && ide.currentSplitTabCount() == 1) return;
 
-        int nexIndex = wrap(ide.currentSplit() - 1, ide.splitCount());
-        ide.closeCurrentFileInSplit(ide.currentSplit());
+        int nexIndex = wrap(splitIndex - 1, ide.splitCount());
+        ide.closeCurrentFileInSplit(splitIndex);
         ide.setFocusOnSplit(nexIndex);
-        ide.reopenCurrentFile();
+        ide.reopenMovedTab();
     }
 
     public void moveTabRight() {
         if (ide.splitCount() == 1 && ide.currentSplitTabCount() == 1) return;
+        int splitIndex = ide.currentSplit();
 
-        boolean isRightmostSplit = (ide.currentSplit() == ide.splitCount() - 1);
+        boolean isRightmostSplit = (splitIndex == ide.splitCount() - 1);
         if (isRightmostSplit && ide.currentSplitTabCount() == 1) return;
 
         if (isRightmostSplit) {
             ide.createSplitter(SwingConstants.VERTICAL);
-            ide.closeCurrentFileInSplit(ide.currentSplit());
-            ide.setFocusOnSplit(ide.currentSplit() + 1);
+            ide.closeCurrentFileInSplit(splitIndex);
+            ide.setFocusOnSplit(splitIndex + 1);
         } else {
             boolean wasTheOnlyTab = (ide.currentSplitTabCount() == 1);
             int shift = (wasTheOnlyTab ? 0 : 1);
-            ide.closeCurrentFileInSplit(ide.currentSplit());
-            ide.setFocusOnSplit(ide.currentSplit() + shift);
-            ide.reopenCurrentFile();
+            ide.closeCurrentFileInSplit(splitIndex);
+            ide.setFocusOnSplit(splitIndex + shift);
+            ide.reopenMovedTab();
         }
     }
 

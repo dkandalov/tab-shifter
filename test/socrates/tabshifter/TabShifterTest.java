@@ -42,7 +42,7 @@ public class TabShifterTest {
 
         verify(ide).closeCurrentFileInSplit(0);
         verify(ide).setFocusOnSplit(1);
-        verify(ide).reopenCurrentFile();
+        verify(ide).reopenMovedTab();
     }
 
     @Test public void noActionsWhenMovingLeftTheOnlyTab() {
@@ -67,6 +67,6 @@ public class TabShifterTest {
 
         verify(ide).closeCurrentFileInSplit(0);
         verify(ide).setFocusOnSplit(1);
-        verify(ide).reopenCurrentFile();
+        verify(ide).reopenMovedTab();
     }
 }
