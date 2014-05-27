@@ -7,10 +7,10 @@
   <description><![CDATA[
       Actions to move and split editor tabs.<br>
       <ul>
-          <li>alt+shift+] - shift tab right
-              (moves tab to the next split or creates new split if current tab is in the rightmost split)</li>
-          <li>alt+shift+[ - shift tab left
-              (moves tab to previous split wrapping around if it's the leftmost split, splits without any tabs disappear)</li>
+          <li>alt+shift+] - moves tab to the right split (or creates new split if it's the rightmost split)</li>
+          <li>alt+shift+[ - moves tab to left split</li>
+          <li>alt+shift+; - moves tab to split below (or creates new split if it's the bottom split)</li>
+          <li>alt+shift+p - moves tab to split above</li>
       </ul>
       <br/>
       This is similar to built-in Move Left/Right tab actions but done in a more practical way.
@@ -30,13 +30,21 @@
   <depends>com.intellij.modules.lang</depends>
 
   <actions>
-      <action id="TabShiftActions.ShiftLeft" class="socrates.tabshifter.Actions$ShiftLeft" text="Shift Left">
+      <action id="TabShiftActions.ShiftLeft" class="tabshifter.Actions$ShiftLeft" text="Shift Left">
           <add-to-group group-id="EditorTabsGroup" anchor="last"/>
           <keyboard-shortcut first-keystroke="alt shift OPEN_BRACKET" keymap="$default"/>
       </action>
-      <action id="TabShiftActions.ShiftRight" class="socrates.tabshifter.Actions$ShiftRight" text="Shift Right">
+      <action id="TabShiftActions.ShiftRight" class="tabshifter.Actions$ShiftRight" text="Shift Right">
           <add-to-group group-id="EditorTabsGroup" anchor="last"/>
           <keyboard-shortcut first-keystroke="alt shift CLOSE_BRACKET" keymap="$default"/>
+      </action>
+      <action id="TabShiftActions.ShiftDown" class="tabshifter.Actions$ShiftDown" text="Shift Down">
+          <add-to-group group-id="EditorTabsGroup" anchor="last"/>
+          <keyboard-shortcut first-keystroke="alt shift SEMICOLON" keymap="$default"/>
+      </action>
+      <action id="TabShiftActions.ShiftUp" class="tabshifter.Actions$ShiftUp" text="Shift Up">
+          <add-to-group group-id="EditorTabsGroup" anchor="last"/>
+          <keyboard-shortcut first-keystroke="alt shift P" keymap="$default"/>
       </action>
   </actions>
 

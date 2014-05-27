@@ -1,4 +1,4 @@
-package socrates.tabshifter;
+package tabshifter;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -26,6 +26,28 @@ public class Actions {
 
             Ide ide = new Ide(editorManager, project);
             new TabShifter(ide).moveTabRight();
+        }
+    }
+
+    public static class ShiftDown extends AnAction implements DumbAware {
+        @Override public void actionPerformed(AnActionEvent event) {
+            Project project = event.getProject();
+            FileEditorManagerEx editorManager = editorManagerIn(project);
+            if (project == null || editorManager == null) return;
+
+            Ide ide = new Ide(editorManager, project);
+            new TabShifter(ide).moveTabDown();
+        }
+    }
+
+    public static class ShiftUp extends AnAction implements DumbAware {
+        @Override public void actionPerformed(AnActionEvent event) {
+            Project project = event.getProject();
+            FileEditorManagerEx editorManager = editorManagerIn(project);
+            if (project == null || editorManager == null) return;
+
+            Ide ide = new Ide(editorManager, project);
+            new TabShifter(ide).moveTabUp();
         }
     }
 
