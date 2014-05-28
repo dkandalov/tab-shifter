@@ -25,12 +25,11 @@ public class TabShifter {
 
         boolean isLeftmostWindow = (position.fromX == 0);
         if (isLeftmostWindow) return;
-        boolean isTheOnlyTab = window.getTabCount() == 1;
 
         EditorWindow leftWindow = findWindowLeftOf(position, windowPositions);
         ide.reopenFileIn(leftWindow);
         ide.closeCurrentFileIn(window);
-        if (!isTheOnlyTab) ide.setFocusOn(leftWindow);
+        ide.setFocusOn(leftWindow); // TODO
     }
 
     public void moveTabUp() {
@@ -40,12 +39,11 @@ public class TabShifter {
 
         boolean isTopWindow = (position.fromY == 0);
         if (isTopWindow) return;
-        boolean isTheOnlyTab = window.getTabCount() == 1;
 
         EditorWindow windowAbove = findWindowAbove(position, windowPositions);
         ide.reopenFileIn(windowAbove);
         ide.closeCurrentFileIn(window);
-        if (!isTheOnlyTab) ide.setFocusOn(windowAbove);
+        ide.setFocusOn(windowAbove);
     }
 
     public void moveTabRight() {
@@ -102,7 +100,10 @@ public class TabShifter {
         sort(nextWindows, new Comparator<Map.Entry<EditorWindow, Position>>() {
             @Override
             public int compare(Map.Entry<EditorWindow, Position> o1, Map.Entry<EditorWindow, Position> o2) {
-                return Double.compare(o1.getValue().fromY, o2.getValue().fromY);
+                return Double.compare(
+                        Math.abs(position.fromY - o1.getValue().fromY),
+                        Math.abs(position.fromY - o2.getValue().fromY)
+                );
             }
         });
         return nextWindows.get(0).getKey();
@@ -118,7 +119,10 @@ public class TabShifter {
         sort(nextWindows, new Comparator<Map.Entry<EditorWindow, Position>>() {
             @Override
             public int compare(Map.Entry<EditorWindow, Position> o1, Map.Entry<EditorWindow, Position> o2) {
-                return Double.compare(o1.getValue().fromX, o2.getValue().fromX);
+                return Double.compare(
+                        Math.abs(position.fromX - o1.getValue().fromX),
+                        Math.abs(position.fromX - o2.getValue().fromX)
+                );
             }
         });
         return nextWindows.get(0).getKey();
@@ -134,7 +138,10 @@ public class TabShifter {
         sort(nextWindows, new Comparator<Map.Entry<EditorWindow, Position>>() {
             @Override
             public int compare(Map.Entry<EditorWindow, Position> o1, Map.Entry<EditorWindow, Position> o2) {
-                return Double.compare(o1.getValue().fromX, o2.getValue().fromX);
+                return Double.compare(
+                        Math.abs(position.fromX - o1.getValue().fromX),
+                        Math.abs(position.fromX - o2.getValue().fromX)
+                );
             }
         });
         return nextWindows.get(0).getKey();
@@ -150,7 +157,10 @@ public class TabShifter {
         sort(nextWindows, new Comparator<Map.Entry<EditorWindow, Position>>() {
             @Override
             public int compare(Map.Entry<EditorWindow, Position> o1, Map.Entry<EditorWindow, Position> o2) {
-                return Double.compare(o1.getValue().fromY, o2.getValue().fromY);
+                return Double.compare(
+                        Math.abs(position.fromY - o1.getValue().fromY),
+                        Math.abs(position.fromY - o2.getValue().fromY)
+                );
             }
         });
         return nextWindows.get(0).getKey();
