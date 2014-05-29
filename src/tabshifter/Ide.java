@@ -18,7 +18,7 @@ import static java.lang.Math.max;
 import static javax.swing.SwingUtilities.isDescendingFrom;
 
 public class Ide {
-    private final FileEditorManagerEx editorManager;
+    public final FileEditorManagerEx editorManager;
     private final VirtualFile currentFile;
 
     public Ide(FileEditorManagerEx editorManager, Project project) {
@@ -37,15 +37,11 @@ public class Ide {
     }
 
     public void closeCurrentFileIn(EditorWindow editorWindow) {
-        editorWindow.closeFile(currentFile);
+        editorWindow.closeFile(currentFile, true, false);
     }
 
     public void setFocusOn(EditorWindow editorWindow) {
         editorWindow.setAsCurrentWindow(true);
-    }
-
-    public void reopenMovedTab() {
-        editorManager.openFile(currentFile, true);
     }
 
     public void reopenFileIn(EditorWindow editorWindow) {
@@ -141,6 +137,51 @@ public class Ide {
         }
     }
 
+    public boolean inTheSameSplit(EditorWindow window1, EditorWindow window2) {
+        for (EditorWindow siblingWindow : window1.findSiblings()) {
+            if (siblingWindow.equals(window2)) return true;
+        }
+        return false;
+    }
+
+
+    public void closeCurrentFileIn(Window window) {
+        window.editorWindow.closeFile(currentFile);
+    }
+
+    public void setFocusOn(Window window) {
+        editorManager.setCurrentWindow(window.editorWindow);
+    }
+
+    public void reopenFileIn(Window window) {
+        editorManager.openFileWithProviders(currentFile, true, window.editorWindow);
+    }
+
+    public LayoutElement snapshotWindowLayout() {
+        JPanel rootPanel = (JPanel) editorManager.getSplitters().getComponent(0);
+        return snapshotWindowLayout(rootPanel);
+    }
+
+    private LayoutElement snapshotWindowLayout(JPanel panel) {
+        Component component = panel.getComponent(0);
+
+        if (component instanceof Splitter) {
+            Splitter splitter = (Splitter) component;
+            LayoutElement first = snapshotWindowLayout((JPanel) splitter.getFirstComponent());
+            LayoutElement second = snapshotWindowLayout((JPanel) splitter.getSecondComponent());
+            return new Split(first, second, !splitter.isVertical());
+
+        } else if (component instanceof JPanel || component instanceof JBTabs) {
+            EditorWindow editorWindow = findWindowWith(component);
+            boolean hasOneTab = (editorWindow.getTabCount() == 1);
+            boolean isCurrent = editorManager.getCurrentWindow().equals(editorWindow);
+            return new Window(editorWindow, hasOneTab, isCurrent);
+
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
     private EditorWindow findWindowWith(Component component) {
         if (component == null) return null;
 
@@ -151,5 +192,4 @@ public class Ide {
         }
         return null;
     }
-
 }

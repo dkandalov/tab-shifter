@@ -1,7 +1,5 @@
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx
 import tabshifter.Actions
-import tabshifter.Ide
 
 import static liveplugin.PluginUtil.registerAction
 import static liveplugin.PluginUtil.show
