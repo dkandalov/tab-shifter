@@ -2,8 +2,8 @@ package com.intellij.openapi.fileEditor.impl;
 
 import javax.swing.*;
 
-public class EditorWindowHack extends EditorWindow {
-    protected EditorWindowHack(EditorsSplitters editorsSplitters) {
+public class EditorWindow_AccessPanel_Hack extends EditorWindow {
+    protected EditorWindow_AccessPanel_Hack(EditorsSplitters editorsSplitters) {
         super(editorsSplitters);
     }
 

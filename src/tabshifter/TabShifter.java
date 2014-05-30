@@ -20,7 +20,6 @@ public class TabShifter {
         this.ide = ide;
     }
 
-
     public void moveTabLeft() {
         moveTab(new LeftDirection());
     }
@@ -133,7 +132,7 @@ public class TabShifter {
         }
     }
 
-    private LayoutElement findSiblingOf(Window window, LayoutElement element) {
+    private static LayoutElement findSiblingOf(Window window, LayoutElement element) {
         if (element instanceof Split) {
             Split split = (Split) element;
 
@@ -161,7 +160,7 @@ public class TabShifter {
             return new Split(
                     insertSplit(orientation, window, split.first),
                     insertSplit(orientation, window, split.second),
-                    orientation);
+                    split.orientation);
         } else if (element instanceof Window) {
             if (element.equals(window)) {
                 return new Split(window, new Window(null, true, false), orientation);
@@ -172,7 +171,6 @@ public class TabShifter {
             throw new IllegalStateException();
         }
     }
-
 
     private static Window currentWindowIn(LayoutElement windowLayout) {
         return find(allWindowsIn(windowLayout), new Condition<Window>() {
@@ -242,6 +240,7 @@ public class TabShifter {
         });
         return neighbourWindows.isEmpty() ? null : neighbourWindows.get(0);
     }
+
     private static Window findWindowLeftOf(final Window window, LayoutElement layout) {
         List<Window> allWindows = allWindowsIn(layout);
         List<Window> neighbourWindows = findAll(allWindows, new Condition<Window>() {

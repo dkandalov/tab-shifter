@@ -2,7 +2,6 @@ package tabshifter;
 
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.EditorWindow;
-import com.intellij.openapi.fileEditor.impl.EditorWindowHack;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -12,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.intellij.openapi.fileEditor.impl.EditorWindow_AccessPanel_Hack.panelOf;
 import static javax.swing.SwingUtilities.isDescendingFrom;
 import static tabshifter.Split.Orientation.horizontal;
 import static tabshifter.Split.Orientation.vertical;
@@ -56,7 +56,7 @@ public class Ide {
             Splitter splitter = (Splitter) component;
             LayoutElement first = snapshotWindowLayout((JPanel) splitter.getFirstComponent());
             LayoutElement second = snapshotWindowLayout((JPanel) splitter.getSecondComponent());
-            // note that intellij Splitter has "reverse" meaning of orientation
+            // note that IntelliJ Splitter has "reverse" meaning of orientation
             Split.Orientation orientation = splitter.isVertical() ? horizontal : vertical;
             return new Split(first, second, orientation);
 
@@ -75,7 +75,7 @@ public class Ide {
         if (component == null) return null;
 
         for (EditorWindow window : editorManager.getWindows()) {
-            if (isDescendingFrom(component, EditorWindowHack.panelOf(window))) {
+            if (isDescendingFrom(component, panelOf(window))) {
                 return window;
             }
         }
