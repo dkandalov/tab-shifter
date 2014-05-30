@@ -1,23 +1,23 @@
 <idea-plugin version="2">
   <id>socrates.tabshifter</id>
   <name>Tab Shifter</name>
-  <version>0.1</version>
+  <version>0.2</version>
   <vendor email="dmitry.kandalov@gmail.com" url="https://github.com/dkandalov/tab-shift">Dmitry Kandalov</vendor>
 
   <description><![CDATA[
       Actions to move and split editor tabs.<br>
       <ul>
-          <li>alt+shift+] - moves tab to the right split (or creates new split if it's the rightmost split)</li>
-          <li>alt+shift+[ - moves tab to left split</li>
-          <li>alt+shift+; - moves tab to split below (or creates new split if it's the bottom split)</li>
-          <li>alt+shift+p - moves tab to split above</li>
+          <li>alt+shift+] - move tab to the right split (or create new split if it's the rightmost split)</li>
+          <li>alt+shift+[ - move tab to left split</li>
+          <li>alt+shift+; - move tab to split below (or create new split if it's the bottom split)</li>
+          <li>alt+shift+p - move tab to split above</li>
       </ul>
       <br/>
       This is similar to built-in Move Left/Right tab actions but done in a more practical way.
       <br/>
       Plugin idea by <a href="https://twitter.com/sandromancuso">Sandro Mancuso</a> at
       <a href="http://socratesuk.org/">SoCraTes UK 2013</a>.
-      This is a java copy of <a href="https://gist.github.com/dkandalov/6643735">this mini-plugin</a>.
+      Originally based on <a href="https://gist.github.com/dkandalov/6643735">this mini-plugin</a>.
       <br/>
       For more details please see <a href="https://github.com/dkandalov/tab-shift">GitHub page</a>.
   ]]></description>

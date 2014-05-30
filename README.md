@@ -1,10 +1,10 @@
 What is this?
 ====
 This is [**Tab Shifter**](http://plugins.jetbrains.com/plugin/7475) a tiny plugin for IntelliJ IDEA to move and split editor tabs.
- - alt + shift + \] - shift tab right<br/>
- (moves tab to the next split or creates new split if current tab is in the rightmost split)
- - alt + shift + \[ - shift tab left<br/>
- (moves tab to previous split wrapping around if it's the leftmost split, splits without any tabs disappear)
+ - alt + shift + \] - move tab to the right split (or create new split if it's the rightmost split)
+ - alt + shift + \[ - move tab to left split
+ - alt + shift + ; - move tab to split below (or create new split if it's the bottom split)
+ - alt + shift + p - move tab to split above
 
 Also available in Windows -> Editor Tabs menu.
 
@@ -20,11 +20,10 @@ Otherwise, see screenshots below.
 Editor without any splits.
 <img src="https://raw.githubusercontent.com/dkandalov/tab-shift/master/screenshot0.png" alt="" title="" align="center"/>
 
-Shifted current tab right.
+Moved current tab right. (Built-in action would duplicate current tab.)
 <img src="https://raw.githubusercontent.com/dkandalov/tab-shift/master/screenshot1.png" alt="" title="" align="center"/>
 
-Switched focus to tab in the left split and shifted tab right.
-(Note that tab was *moved* to the right split unlike built-in action which would create yet another split.)
+Switched focus to tab in the left split and moved tab right. (Built-in action which would create yet another split.)
 <img src="https://raw.githubusercontent.com/dkandalov/tab-shift/master/screenshot2.png" alt="" title="" align="center"/>
 
 Shifted current tab right.
@@ -35,4 +34,4 @@ Shifted current tab right.
 Credits
 ====
 Plugin idea by [Sandro Mancuso](https://twitter.com/sandromancuso) at [SoCraTes UK 2013](http://socratesuk.org).
-This is a java copy of [this mini-plugin](https://gist.github.com/dkandalov/6643735).
+Originally based on [this mini-plugin](https://gist.github.com/dkandalov/6643735).
