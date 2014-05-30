@@ -22,77 +22,37 @@ public class TabShifter {
 
 
     public void moveTabLeft() {
-        LayoutElement layout = calculatePositions(ide.snapshotWindowLayout());
-        Window window = currentWindowIn(layout);
-        Window targetWindow = findWindowLeftOf(window, layout);
-
-        Position newPosition;
-
-        boolean isAtEdge = (targetWindow == null);
-        if (isAtEdge) {
-            if (window.hasOneTab || true) return;
-
-
-        } else {
-            boolean willBeUnsplit = window.hasOneTab;
-            if (willBeUnsplit) {
-                LayoutElement unsplitLayout = removeFrom(layout, window);
-                calculatePositions(unsplitLayout);
-            }
-            newPosition = targetWindow.position;
-
-            ide.openCurrentFileIn(targetWindow);
-            ide.closeCurrentFileIn(window);
-        }
-
-        LayoutElement newWindowLayout = calculatePositions(ide.snapshotWindowLayout());
-        ide.setFocusOn(findWindowBy(newPosition, allWindowsIn(newWindowLayout)));
+        moveTab(new LeftDirection());
     }
 
     public void moveTabUp() {
-        LayoutElement layout = calculatePositions(ide.snapshotWindowLayout());
-        Window window = currentWindowIn(layout);
-        Window targetWindow = findWindowAbove(window, layout);
-
-        Position newPosition;
-
-        boolean isAtEdge = (targetWindow == null);
-        if (isAtEdge) {
-            if (window.hasOneTab || true) return;
-
-
-        } else {
-            boolean willBeUnsplit = window.hasOneTab;
-            if (willBeUnsplit) {
-                LayoutElement unsplitLayout = removeFrom(layout, window);
-                calculatePositions(unsplitLayout);
-            }
-            newPosition = targetWindow.position;
-
-            ide.openCurrentFileIn(targetWindow);
-            ide.closeCurrentFileIn(window);
-        }
-
-        LayoutElement newWindowLayout = calculatePositions(ide.snapshotWindowLayout());
-        ide.setFocusOn(findWindowBy(newPosition, allWindowsIn(newWindowLayout)));
+        moveTab(new UpDirection());
     }
 
     public void moveTabRight() {
+        moveTab(new RightDirection());
+    }
+
+    public void moveTabDown() {
+        moveTab(new DownDirection());
+    }
+
+    private void moveTab(MovingDirection direction) {
         LayoutElement layout = calculatePositions(ide.snapshotWindowLayout());
         Window window = currentWindowIn(layout);
-        Window targetWindow = findWindowRightOf(window, layout);
+        Window targetWindow = direction.targetWindow(window, layout);
 
         Position newPosition;
 
         boolean isAtEdge = (targetWindow == null);
         if (isAtEdge) {
-            if (window.hasOneTab) return;
+            if (window.hasOneTab || !direction.canExpand()) return;
 
-            LayoutElement newLayout = insertSplit(vertical, window, layout);
+            LayoutElement newLayout = insertSplit(direction.splitOrientation(), window, layout);
             calculatePositions(newLayout);
             newPosition = findSiblingOf(window, newLayout).position;
 
-            ide.createSplitter(vertical);
+            ide.createSplitter(direction.splitOrientation());
             ide.closeCurrentFileIn(window);
 
         } else {
@@ -111,38 +71,66 @@ public class TabShifter {
         ide.setFocusOn(findWindowBy(newPosition, allWindowsIn(newWindowLayout)));
     }
 
-    public void moveTabDown() {
-        LayoutElement layout = calculatePositions(ide.snapshotWindowLayout());
-        Window window = currentWindowIn(layout);
-        Window targetWindow = findWindowBelow(window, layout);
+    private static interface MovingDirection {
+        Window targetWindow(Window window, LayoutElement layout);
+        Split.Orientation splitOrientation();
+        boolean canExpand();
+    }
 
-        Position newPosition;
-
-        boolean isAtEdge = (targetWindow == null);
-        if (isAtEdge) {
-            if (window.hasOneTab) return;
-
-            LayoutElement newLayout = insertSplit(horizontal, window, layout);
-            calculatePositions(newLayout);
-            newPosition = findSiblingOf(window, newLayout).position;
-
-            ide.createSplitter(horizontal);
-            ide.closeCurrentFileIn(window);
-
-        } else {
-            boolean willBeUnsplit = window.hasOneTab;
-            if (willBeUnsplit) {
-                LayoutElement unsplitLayout = removeFrom(layout, window);
-                calculatePositions(unsplitLayout);
-            }
-            newPosition = targetWindow.position;
-
-            ide.openCurrentFileIn(targetWindow);
-            ide.closeCurrentFileIn(window);
+    private static class DownDirection implements MovingDirection {
+        @Override public Window targetWindow(Window window, LayoutElement layout) {
+            return findWindowBelow(window, layout);
         }
 
-        LayoutElement newWindowLayout = calculatePositions(ide.snapshotWindowLayout());
-        ide.setFocusOn(findWindowBy(newPosition, allWindowsIn(newWindowLayout)));
+        @Override public Split.Orientation splitOrientation() {
+            return horizontal;
+        }
+
+        @Override public boolean canExpand() {
+            return true;
+        }
+    }
+
+    private static class RightDirection implements MovingDirection {
+        @Override public Window targetWindow(Window window, LayoutElement layout) {
+            return findWindowRightOf(window, layout);
+        }
+
+        @Override public Split.Orientation splitOrientation() {
+            return vertical;
+        }
+
+        @Override public boolean canExpand() {
+            return true;
+        }
+    }
+
+    private static class UpDirection implements MovingDirection {
+        @Override public Window targetWindow(Window window, LayoutElement layout) {
+            return findWindowAbove(window, layout);
+        }
+
+        @Override public Split.Orientation splitOrientation() {
+            return horizontal;
+        }
+
+        @Override public boolean canExpand() {
+            return false;
+        }
+    }
+
+    private static class LeftDirection implements MovingDirection {
+        @Override public Window targetWindow(Window window, LayoutElement layout) {
+            return findWindowLeftOf(window, layout);
+        }
+
+        @Override public Split.Orientation splitOrientation() {
+            return vertical;
+        }
+
+        @Override public boolean canExpand() {
+            return false;
+        }
     }
 
     private LayoutElement findSiblingOf(Window window, LayoutElement element) {
