@@ -1,4 +1,4 @@
-package tabshifter;
+package tabshifter.valueobjects;
 
 import static java.lang.Integer.toHexString;
 

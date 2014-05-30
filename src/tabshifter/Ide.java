@@ -7,14 +7,16 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.tabs.JBTabs;
 import org.jetbrains.annotations.NotNull;
+import tabshifter.valueobjects.*;
+import tabshifter.valueobjects.Window;
 
 import javax.swing.*;
 import java.awt.*;
 
 import static com.intellij.openapi.fileEditor.impl.EditorWindow_AccessPanel_Hack.panelOf;
 import static javax.swing.SwingUtilities.isDescendingFrom;
-import static tabshifter.Split.Orientation.horizontal;
-import static tabshifter.Split.Orientation.vertical;
+import static tabshifter.valueobjects.Split.Orientation.horizontal;
+import static tabshifter.valueobjects.Split.Orientation.vertical;
 
 public class Ide {
     public final FileEditorManagerEx editorManager;

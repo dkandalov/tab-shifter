@@ -1,7 +1,4 @@
-package tabshifter;
-
-import static java.lang.Math.max;
-import static java.lang.Math.min;
+package tabshifter.valueobjects;
 
 public class Position {
     public final int fromX;
@@ -14,19 +11,6 @@ public class Position {
         this.fromY = fromY;
         this.toX = toX;
         this.toY = toY;
-    }
-
-    public Position merge(Position that) {
-        boolean sameColumn = (fromX == that.fromX && toX == that.toX);
-        boolean sameRow = (fromY == that.fromY && toY == that.toY);
-        if (!sameColumn && !sameRow) return this;
-
-        return new Position(
-                min(fromX, that.fromX),
-                min(fromY, that.fromY),
-                max(toX, that.toX),
-                max(toY, that.toY)
-        );
     }
 
     public Position withFromX(int value) {

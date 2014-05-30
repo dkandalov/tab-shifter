@@ -4,14 +4,18 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.NotNull;
+import tabshifter.valueobjects.LayoutElement;
+import tabshifter.valueobjects.Position;
+import tabshifter.valueobjects.Split;
+import tabshifter.valueobjects.Window;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 import static com.intellij.util.containers.ContainerUtil.*;
-import static tabshifter.Split.Orientation.horizontal;
-import static tabshifter.Split.Orientation.vertical;
+import static tabshifter.valueobjects.Split.Orientation.horizontal;
+import static tabshifter.valueobjects.Split.Orientation.vertical;
 
 public class TabShifter {
     private static final Logger logger = Logger.getInstance(TabShifter.class.getName());
@@ -37,6 +41,16 @@ public class TabShifter {
         moveTab(new DownDirection());
     }
 
+    /**
+     * Moves tab in the specified direction.
+     *
+     * This is more complicated than it should have been. The main reasons are:
+     *  - closing/opening or opening/closing tab doesn't guarantee that focus will be in the moved tab
+     *      => need to track target window to move focus into it
+     *  - EditorWindow object changes its identity after split/unsplit (i.e. points to another visual window)
+     *      => need to predict target window position and lookup window by expected position
+     *
+     */
     private void moveTab(MovingDirection direction) {
         LayoutElement layout = calculatePositions(ide.snapshotWindowLayout());
         Window window = currentWindowIn(layout);
@@ -68,7 +82,7 @@ public class TabShifter {
         }
 
         LayoutElement newWindowLayout = calculatePositions(ide.snapshotWindowLayout());
-        targetWindow = findWindowBy(newPosition, allWindowsIn(newWindowLayout));
+        targetWindow = findWindowBy(newPosition, newWindowLayout);
 
         if (targetWindow == null) {
             // ideally this should never happen, logging in case something goes wrong
@@ -77,6 +91,7 @@ public class TabShifter {
             ide.setFocusOn(targetWindow);
         }
     }
+
 
     private static interface MovingDirection {
         Window targetWindow(Window window, LayoutElement layout);
@@ -140,54 +155,6 @@ public class TabShifter {
         }
     }
 
-    private static LayoutElement findSiblingOf(Window window, LayoutElement element) {
-        if (element instanceof Split) {
-            Split split = (Split) element;
-
-            if (split.first.equals(window)) return split.second;
-            if (split.second.equals(window)) return split.first;
-
-            LayoutElement first = findSiblingOf(window, split.first);
-            if (first != null) return first;
-            LayoutElement second = findSiblingOf(window, split.second);
-            if (second != null) return second;
-
-            return null;
-
-        } else if (element instanceof Window) {
-            return null;
-
-        } else {
-            throw new IllegalStateException();
-        }
-    }
-
-    private static LayoutElement insertSplit(Split.Orientation orientation, Window window, LayoutElement element) {
-        if (element instanceof Split) {
-            Split split = (Split) element;
-            return new Split(
-                    insertSplit(orientation, window, split.first),
-                    insertSplit(orientation, window, split.second),
-                    split.orientation);
-        } else if (element instanceof Window) {
-            if (element.equals(window)) {
-                return new Split(window, new Window(true, false), orientation);
-            } else {
-                return element;
-            }
-        } else {
-            throw new IllegalStateException();
-        }
-    }
-
-    private static Window currentWindowIn(LayoutElement windowLayout) {
-        return find(allWindowsIn(windowLayout), new Condition<Window>() {
-            @Override
-            public boolean value(Window window) {
-                return window.isCurrent;
-            }
-        });
-    }
 
     private static Window findWindowRightOf(final Window window, LayoutElement layout) {
         List<Window> allWindows = allWindowsIn(layout);
@@ -269,6 +236,38 @@ public class TabShifter {
         return neighbourWindows.isEmpty() ? null : neighbourWindows.get(0);
     }
 
+
+    private static Window currentWindowIn(LayoutElement windowLayout) {
+        return find(allWindowsIn(windowLayout), new Condition<Window>() {
+            @Override
+            public boolean value(Window window) {
+                return window.isCurrent;
+            }
+        });
+    }
+
+    private static LayoutElement findSiblingOf(Window window, LayoutElement element) {
+        if (element instanceof Split) {
+            Split split = (Split) element;
+
+            if (split.first.equals(window)) return split.second;
+            if (split.second.equals(window)) return split.first;
+
+            LayoutElement first = findSiblingOf(window, split.first);
+            if (first != null) return first;
+            LayoutElement second = findSiblingOf(window, split.second);
+            if (second != null) return second;
+
+            return null;
+
+        } else if (element instanceof Window) {
+            return null;
+
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
     private static LayoutElement calculatePositions(LayoutElement element) {
         return calculatePositions(element, new Position(0, 0, element.size().width, element.size().height));
     }
@@ -294,19 +293,18 @@ public class TabShifter {
         return element;
     }
 
-    private static Window findWindowBy(final Position position, List<Window> windows) {
-        Window window = find(windows, new Condition<Window>() {
+    private static Window findWindowBy(final Position position, LayoutElement layout) {
+        return find(allWindowsIn(layout), new Condition<Window>() {
             @Override
             public boolean value(Window window) {
                 return position.equals(window.position);
             }
         });
-        return window;
     }
 
     private static List<Window> allWindowsIn(LayoutElement rootElement) {
         final List<Window> result = new ArrayList<Window>();
-        TabShifter.traverse(rootElement, new Function<LayoutElement, Boolean>() {
+        traverse(rootElement, new Function<LayoutElement, Boolean>() {
             @Override
             public Boolean fun(LayoutElement element) {
                 if (element instanceof Window)
@@ -328,6 +326,7 @@ public class TabShifter {
         }
     }
 
+
     private static LayoutElement removeFrom(LayoutElement element, Window window) {
         if (element instanceof Split) {
             Split split = (Split) element;
@@ -341,6 +340,24 @@ public class TabShifter {
         } else if (element instanceof Window) {
             return element.equals(window) ? null : element;
 
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    private static LayoutElement insertSplit(Split.Orientation orientation, Window window, LayoutElement element) {
+        if (element instanceof Split) {
+            Split split = (Split) element;
+            return new Split(
+                    insertSplit(orientation, window, split.first),
+                    insertSplit(orientation, window, split.second),
+                    split.orientation);
+        } else if (element instanceof Window) {
+            if (element.equals(window)) {
+                return new Split(window, new Window(true, false), orientation);
+            } else {
+                return element;
+            }
         } else {
             throw new IllegalStateException();
         }

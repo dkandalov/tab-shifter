@@ -1,4 +1,4 @@
-package tabshifter;
+package tabshifter.valueobjects;
 
 public class Size {
     public final int width;

@@ -1,4 +1,4 @@
-package tabshifter;
+package tabshifter.valueobjects;
 
 public abstract class LayoutElement {
     public Position position;
