@@ -33,15 +33,15 @@ public class Ide {
     }
 
     public void closeCurrentFileIn(Window window) {
-        window.editorWindow.closeFile(currentFile);
+        ((IdeWindow) window).editorWindow.closeFile(currentFile);
     }
 
     public void openCurrentFileIn(Window window) {
-        editorManager.openFileWithProviders(currentFile, true, window.editorWindow);
+        editorManager.openFileWithProviders(currentFile, true, ((IdeWindow) window).editorWindow);
     }
 
     public void setFocusOn(Window window) {
-        editorManager.setCurrentWindow(window.editorWindow);
+        editorManager.setCurrentWindow(((IdeWindow) window).editorWindow);
     }
 
     public LayoutElement snapshotWindowLayout() {
@@ -64,7 +64,7 @@ public class Ide {
             EditorWindow editorWindow = findWindowWith(component);
             boolean hasOneTab = (editorWindow.getTabCount() == 1);
             boolean isCurrent = editorManager.getCurrentWindow().equals(editorWindow);
-            return new Window(editorWindow, hasOneTab, isCurrent);
+            return new IdeWindow(editorWindow, hasOneTab, isCurrent);
 
         } else {
             throw new IllegalStateException();
@@ -84,5 +84,15 @@ public class Ide {
 
     private static VirtualFile currentFileIn(@NotNull Project project) {
         return ((FileEditorManagerEx) FileEditorManagerEx.getInstance(project)).getCurrentFile();
+    }
+
+
+    private static class IdeWindow extends Window {
+        public final EditorWindow editorWindow;
+
+        public IdeWindow(EditorWindow editorWindow, boolean hasOneTab, boolean isCurrent) {
+            super(hasOneTab, isCurrent);
+            this.editorWindow = editorWindow;
+        }
     }
 }

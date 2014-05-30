@@ -1,8 +1,8 @@
 package tabshifter;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.Function;
-import liveplugin.PluginUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import static tabshifter.Split.Orientation.horizontal;
 import static tabshifter.Split.Orientation.vertical;
 
 public class TabShifter {
+    private static final Logger logger = Logger.getInstance(TabShifter.class.getName());
     private final Ide ide;
 
     public TabShifter(Ide ide) {
@@ -67,7 +68,14 @@ public class TabShifter {
         }
 
         LayoutElement newWindowLayout = calculatePositions(ide.snapshotWindowLayout());
-        ide.setFocusOn(findWindowBy(newPosition, allWindowsIn(newWindowLayout)));
+        targetWindow = findWindowBy(newPosition, allWindowsIn(newWindowLayout));
+
+        if (targetWindow == null) {
+            // ideally this should never happen, logging in case something goes wrong
+            logger.warn("No window for: " + newPosition);
+        } else {
+            ide.setFocusOn(targetWindow);
+        }
     }
 
     private static interface MovingDirection {
@@ -163,7 +171,7 @@ public class TabShifter {
                     split.orientation);
         } else if (element instanceof Window) {
             if (element.equals(window)) {
-                return new Split(window, new Window(null, true, false), orientation);
+                return new Split(window, new Window(true, false), orientation);
             } else {
                 return element;
             }
@@ -293,9 +301,6 @@ public class TabShifter {
                 return position.equals(window.position);
             }
         });
-        if (window == null) {
-            PluginUtil.show("No window for: " + position);
-        }
         return window;
     }
 

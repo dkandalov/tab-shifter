@@ -1,16 +1,12 @@
 package tabshifter;
 
-import com.intellij.openapi.fileEditor.impl.EditorWindow;
-
 import static java.lang.Integer.toHexString;
 
 public class Window extends LayoutElement {
-    public final EditorWindow editorWindow;
     public final boolean hasOneTab;
     public final boolean isCurrent;
 
-    public Window(EditorWindow editorWindow, boolean hasOneTab, boolean isCurrent) {
-        this.editorWindow = editorWindow;
+    public Window(boolean hasOneTab, boolean isCurrent) {
         this.hasOneTab = hasOneTab;
         this.isCurrent = isCurrent;
     }
