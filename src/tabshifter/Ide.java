@@ -13,6 +13,8 @@ import javax.swing.*;
 import java.awt.*;
 
 import static javax.swing.SwingUtilities.isDescendingFrom;
+import static tabshifter.Split.Orientation.horizontal;
+import static tabshifter.Split.Orientation.vertical;
 
 public class Ide {
     public final FileEditorManagerEx editorManager;
@@ -23,8 +25,9 @@ public class Ide {
         this.currentFile = currentFileIn(project);
     }
 
-    public EditorWindow createSplitter(int orientation) {
-        editorManager.createSplitter(orientation, editorManager.getCurrentWindow());
+    public EditorWindow createSplitter(Split.Orientation orientation) {
+        int swingOrientation = (orientation == vertical ? SwingConstants.VERTICAL : SwingConstants.HORIZONTAL);
+        editorManager.createSplitter(swingOrientation, editorManager.getCurrentWindow());
         EditorWindow[] windows = editorManager.getWindows();
         return windows[windows.length - 1];
     }
@@ -53,7 +56,9 @@ public class Ide {
             Splitter splitter = (Splitter) component;
             LayoutElement first = snapshotWindowLayout((JPanel) splitter.getFirstComponent());
             LayoutElement second = snapshotWindowLayout((JPanel) splitter.getSecondComponent());
-            return new Split(first, second, !splitter.isVertical());
+            // note that intellij Splitter has "reverse" meaning of orientation
+            Split.Orientation orientation = splitter.isVertical() ? horizontal : vertical;
+            return new Split(first, second, orientation);
 
         } else if (component instanceof JPanel || component instanceof JBTabs) {
             EditorWindow editorWindow = findWindowWith(component);

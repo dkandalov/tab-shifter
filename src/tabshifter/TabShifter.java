@@ -5,12 +5,13 @@ import com.intellij.util.Function;
 import liveplugin.PluginUtil;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 import static com.intellij.util.containers.ContainerUtil.*;
+import static tabshifter.Split.Orientation.horizontal;
+import static tabshifter.Split.Orientation.vertical;
 
 public class TabShifter {
     private final Ide ide;
@@ -87,11 +88,11 @@ public class TabShifter {
         if (isAtEdge) {
             if (window.hasOneTab) return;
 
-            newPosition = window.position
-                    .withFromX(window.position.fromX + 1)
-                    .withToX(window.position.toX + 1 + (window.size().width / 2));
+            LayoutElement newLayout = insertSplit(vertical, window, layout);
+            calculatePositions(newLayout);
+            newPosition = findSiblingOf(window, newLayout).position;
 
-            ide.createSplitter(SwingConstants.VERTICAL);
+            ide.createSplitter(vertical);
             ide.closeCurrentFileIn(window);
 
         } else {
@@ -121,11 +122,11 @@ public class TabShifter {
         if (isAtEdge) {
             if (window.hasOneTab) return;
 
-            newPosition = window.position
-                    .withFromY(window.position.fromY + 1)
-                    .withToY(window.position.toY + 1 + (window.size().height / 2));
+            LayoutElement newLayout = insertSplit(horizontal, window, layout);
+            calculatePositions(newLayout);
+            newPosition = findSiblingOf(window, newLayout).position;
 
-            ide.createSplitter(SwingConstants.HORIZONTAL);
+            ide.createSplitter(horizontal);
             ide.closeCurrentFileIn(window);
 
         } else {
@@ -142,6 +143,46 @@ public class TabShifter {
 
         LayoutElement newWindowLayout = calculatePositions(ide.snapshotWindowLayout());
         ide.setFocusOn(findWindowBy(newPosition, allWindowsIn(newWindowLayout)));
+    }
+
+    private LayoutElement findSiblingOf(Window window, LayoutElement element) {
+        if (element instanceof Split) {
+            Split split = (Split) element;
+
+            if (split.first.equals(window)) return split.second;
+            if (split.second.equals(window)) return split.first;
+
+            LayoutElement first = findSiblingOf(window, split.first);
+            if (first != null) return first;
+            LayoutElement second = findSiblingOf(window, split.second);
+            if (second != null) return second;
+
+            return null;
+
+        } else if (element instanceof Window) {
+            return null;
+
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    private static LayoutElement insertSplit(Split.Orientation orientation, Window window, LayoutElement element) {
+        if (element instanceof Split) {
+            Split split = (Split) element;
+            return new Split(
+                    insertSplit(orientation, window, split.first),
+                    insertSplit(orientation, window, split.second),
+                    orientation);
+        } else if (element instanceof Window) {
+            if (element.equals(window)) {
+                return new Split(window, new Window(null, true, false), orientation);
+            } else {
+                return element;
+            }
+        } else {
+            throw new IllegalStateException();
+        }
     }
 
 
@@ -243,7 +284,7 @@ public class TabShifter {
 
             Position firstPosition;
             Position secondPosition;
-            if (split.vertical) {
+            if (split.orientation == vertical) {
                 firstPosition = position.withToX(position.toX - split.second.size().width);
                 secondPosition = position.withFromX(position.fromX + split.first.size().width);
             } else {
@@ -303,7 +344,7 @@ public class TabShifter {
 
             if (first == null) return second;
             else if (second == null) return first;
-            else return new Split(first, second, split.vertical);
+            else return new Split(first, second, split.orientation);
 
         } else if (element instanceof Window) {
             return element.equals(window) ? null : element;
