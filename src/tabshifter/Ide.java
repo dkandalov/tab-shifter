@@ -13,7 +13,7 @@ import tabshifter.valueobjects.Window;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.intellij.openapi.fileEditor.impl.EditorWindow_AccessPanel_Hack.panelOf;
+import static tabshifter.EditorWindow_AccessPanel_Hack.panelOf;
 import static javax.swing.SwingUtilities.isDescendingFrom;
 import static tabshifter.valueobjects.Split.Orientation.horizontal;
 import static tabshifter.valueobjects.Split.Orientation.vertical;
