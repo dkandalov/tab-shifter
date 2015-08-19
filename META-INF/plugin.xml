@@ -32,19 +32,19 @@
   <actions>
       <action id="TabShiftActions.ShiftLeft" class="tabshifter.Actions$ShiftLeft" text="Shift Left">
           <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-          <keyboard-shortcut first-keystroke="alt shift OPEN_BRACKET" keymap="$default"/>
+          <keyboard-shortcut first-keystroke="ctrl alt OPEN_BRACKET" keymap="$default"/>
       </action>
       <action id="TabShiftActions.ShiftRight" class="tabshifter.Actions$ShiftRight" text="Shift Right">
           <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-          <keyboard-shortcut first-keystroke="alt shift CLOSE_BRACKET" keymap="$default"/>
+          <keyboard-shortcut first-keystroke="ctrl alt CLOSE_BRACKET" keymap="$default"/>
       </action>
       <action id="TabShiftActions.ShiftDown" class="tabshifter.Actions$ShiftDown" text="Shift Down">
           <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-          <keyboard-shortcut first-keystroke="alt shift SEMICOLON" keymap="$default"/>
+          <keyboard-shortcut first-keystroke="ctrl alt SEMICOLON" keymap="$default"/>
       </action>
       <action id="TabShiftActions.ShiftUp" class="tabshifter.Actions$ShiftUp" text="Shift Up">
           <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-          <keyboard-shortcut first-keystroke="alt shift P" keymap="$default"/>
+          <keyboard-shortcut first-keystroke="ctrl alt P" keymap="$default"/>
       </action>
   </actions>
 
