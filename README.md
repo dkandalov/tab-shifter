@@ -5,7 +5,7 @@ This is [**Tab Shifter**](http://plugins.jetbrains.com/plugin/7475) a tiny plugi
  - ctrl + alt + \[ - move tab to left split
  - ctrl + alt + ; - move tab to split above
  - ctrl + alt + ' - move tab to split below (or create new split if it's the bottom split)
-
+ - ctrl + alt + . - (not part of this plugin) recommended to bind to Goto Next Splitter action
 Also available in Windows -> Editor Tabs menu.
 
 
@@ -14,8 +14,11 @@ Why?
 There are built-in actions to move tabs (see Window -> Editor Tabs -> Move Left/Right).
 Unfortunately, they don't do "the right thing". This is an attempt to fix it.
 
+Basically, this plugin treats splitting as "take current editor and _move_ it to the next split window".
+If there is no split window, then create one.
+
 The best way to understand how tab shifting work is to try it... seriously.
-Otherwise, see screenshots below.
+Otherwise, see screenshots below (TODO create gif animation).
 
 Editor without any splits.
 <img src="https://raw.githubusercontent.com/dkandalov/tab-shift/master/screenshot0.png" alt="" title="" align="center"/>

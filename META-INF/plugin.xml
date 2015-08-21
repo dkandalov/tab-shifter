@@ -11,6 +11,7 @@
           <li>ctrl+alt+[ - move tab to left split</li>
           <li>ctrl+alt+; - move tab to split above</li>
           <li>ctrl+alt+' - move tab to split below (or create new split if it's the bottom split)</li>
+          <li>ctrl+alt+. - (not part of this plugin) recommended to bind to Goto Next Splitter action</li>
       </ul>
       <br/>
       This is similar to built-in Move Left/Right tab actions but done in a more practical way.
