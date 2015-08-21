@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>socrates.tabshifter</id>
   <name>Tab Shifter</name>
-  <version>0.21</version>
+  <version>0.22</version>
   <vendor email="dmitry.kandalov@gmail.com" url="https://github.com/dkandalov/tab-shift">Dmitry Kandalov</vendor>
 
   <description><![CDATA[
