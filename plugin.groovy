@@ -21,13 +21,13 @@ registerAction("TabShiftActions.ShiftRight",
     new Actions.ShiftRight().actionPerformed(event)
 }
 registerAction("TabShiftActions.ShiftDown",
-        "ctrl alt SEMICOLON",
+        "ctrl alt QUOTE",
         "EditorTabsGroup",
         "Shift Down") { AnActionEvent event ->
     new Actions.ShiftDown().actionPerformed(event)
 }
 registerAction("TabShiftActions.ShiftUp",
-        "ctrl alt P",
+        "ctrl alt SEMICOLON",
         "EditorTabsGroup",
         "Shift Up") { AnActionEvent event ->
     new Actions.ShiftUp().actionPerformed(event)

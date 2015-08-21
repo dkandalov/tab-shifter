@@ -7,10 +7,10 @@
   <description><![CDATA[
       Actions to move and split editor tabs.<br>
       <ul>
-          <li>alt+shift+] - move tab to the right split (or create new split if it's the rightmost split)</li>
-          <li>alt+shift+[ - move tab to left split</li>
-          <li>alt+shift+; - move tab to split below (or create new split if it's the bottom split)</li>
-          <li>alt+shift+p - move tab to split above</li>
+          <li>ctrl+alt+] - move tab to the right split (or create new split if it's the rightmost split)</li>
+          <li>ctrl+alt+[ - move tab to left split</li>
+          <li>ctrl+alt+; - move tab to split above</li>
+          <li>ctrl+alt+' - move tab to split below (or create new split if it's the bottom split)</li>
       </ul>
       <br/>
       This is similar to built-in Move Left/Right tab actions but done in a more practical way.
@@ -30,21 +30,21 @@
   <depends>com.intellij.modules.lang</depends>
 
   <actions>
-      <action id="TabShiftActions.ShiftLeft" class="tabshifter.Actions$ShiftLeft" text="Shift Left">
-          <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-          <keyboard-shortcut first-keystroke="ctrl alt OPEN_BRACKET" keymap="$default"/>
-      </action>
       <action id="TabShiftActions.ShiftRight" class="tabshifter.Actions$ShiftRight" text="Shift Right">
           <add-to-group group-id="EditorTabsGroup" anchor="last"/>
           <keyboard-shortcut first-keystroke="ctrl alt CLOSE_BRACKET" keymap="$default"/>
       </action>
-      <action id="TabShiftActions.ShiftDown" class="tabshifter.Actions$ShiftDown" text="Shift Down">
+      <action id="TabShiftActions.ShiftLeft" class="tabshifter.Actions$ShiftLeft" text="Shift Left">
           <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-          <keyboard-shortcut first-keystroke="ctrl alt SEMICOLON" keymap="$default"/>
+          <keyboard-shortcut first-keystroke="ctrl alt OPEN_BRACKET" keymap="$default"/>
       </action>
       <action id="TabShiftActions.ShiftUp" class="tabshifter.Actions$ShiftUp" text="Shift Up">
           <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-          <keyboard-shortcut first-keystroke="ctrl alt P" keymap="$default"/>
+          <keyboard-shortcut first-keystroke="ctrl alt SEMICOLON" keymap="$default"/>
+      </action>
+      <action id="TabShiftActions.ShiftDown" class="tabshifter.Actions$ShiftDown" text="Shift Down">
+          <add-to-group group-id="EditorTabsGroup" anchor="last"/>
+          <keyboard-shortcut first-keystroke="ctrl alt QUOTE" keymap="$default"/>
       </action>
   </actions>
 
