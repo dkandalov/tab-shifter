@@ -6,7 +6,7 @@ import com.intellij.openapi.fileEditor.impl.EditorWindow;
 import javax.swing.*;
 import java.lang.reflect.Field;
 
-public class EditorWindow_AccessPanel_Hack {
+public class EditorWindow_AccessToPanel_Hack {
     private static final Logger logger = Logger.getInstance(TabShifter.class.getName());
 
     public static JPanel panelOf(EditorWindow editorWindow) {

@@ -44,15 +44,16 @@ public class TabShifter {
     /**
      * Moves tab in the specified direction.
      *
-     * This is more complicated than it should have been. The main reasons are:
+     * This is way more complicated than it should have been. The main reasons are:
      *  - closing/opening or opening/closing tab doesn't guarantee that focus will be in the moved tab
      *      => need to track target window to move focus into it
      *  - EditorWindow object changes its identity after split/unsplit (i.e. points to another visual window)
-     *      => need to predict target window position and lookup window by expected position
+     *      => need to predict target window position and look up window by expected position
      *
      */
     private void moveTab(MovingDirection direction) {
         LayoutElement layout = calculatePositions(ide.snapshotWindowLayout());
+        if (layout == LayoutElement.none) return;
         Window window = currentWindowIn(layout);
         Window targetWindow = direction.targetWindow(window, layout);
 
@@ -64,7 +65,9 @@ public class TabShifter {
 
             LayoutElement newLayout = insertSplit(direction.splitOrientation(), window, layout);
             calculatePositions(newLayout);
-            newPosition = findSiblingOf(window, newLayout).position;
+            LayoutElement sibling = findSiblingOf(window, newLayout);
+            if (sibling == null) return; // should never happen
+            newPosition = sibling.position;
 
             ide.createSplitter(direction.splitOrientation());
             ide.closeCurrentFileIn(window);
@@ -93,7 +96,7 @@ public class TabShifter {
     }
 
 
-    private static interface MovingDirection {
+    private interface MovingDirection {
         Window targetWindow(Window window, LayoutElement layout);
         Split.Orientation splitOrientation();
         boolean canExpand();

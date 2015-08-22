@@ -4,17 +4,21 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.EditorWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.tabs.JBTabs;
 import org.jetbrains.annotations.NotNull;
-import tabshifter.valueobjects.*;
+import tabshifter.valueobjects.LayoutElement;
+import tabshifter.valueobjects.Split;
 import tabshifter.valueobjects.Window;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
-import static tabshifter.EditorWindow_AccessPanel_Hack.panelOf;
 import static javax.swing.SwingUtilities.isDescendingFrom;
+import static tabshifter.EditorWindow_AccessToPanel_Hack.panelOf;
 import static tabshifter.valueobjects.Split.Orientation.horizontal;
 import static tabshifter.valueobjects.Split.Orientation.vertical;
 
@@ -52,6 +56,9 @@ public class Ide {
     }
 
     private LayoutElement snapshotWindowLayout(JPanel panel) {
+        if (editorManager.getCurrentWindow() == null) {
+            return LayoutElement.none;
+        }
         Component component = panel.getComponent(0);
 
         if (component instanceof Splitter) {
@@ -95,6 +102,14 @@ public class Ide {
         public IdeWindow(EditorWindow editorWindow, boolean hasOneTab, boolean isCurrent) {
             super(hasOneTab, isCurrent);
             this.editorWindow = editorWindow;
+        }
+
+        @Override public String toString() {
+            Collection<String> fileNames = new ArrayList<String>();
+            for (VirtualFile virtualFile : editorWindow.getFiles()) {
+                fileNames.add(virtualFile.getName());
+            }
+            return "Window(" + StringUtil.join(fileNames, ",") + ")";
         }
     }
 }

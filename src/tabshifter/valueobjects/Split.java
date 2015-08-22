@@ -32,6 +32,6 @@ public class Split extends LayoutElement {
     }
 
     @Override public String toString() {
-        return "Split{" + orientation + " " + first + ", " + second + "}";
+        return "Split(" + orientation + " " + first + ", " + second + ")";
     }
 }
