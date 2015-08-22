@@ -39,7 +39,7 @@ class TabShifterIntegrationTest {
 		))
 	}
 
-	@Test void "shifting tab right twice result in single splitter"() {
+	@Test void "shifting tab right twice results in single splitter"() {
 		assertLayout(window(readmeMd, contributeMd, todoTxt))
 
 		shiftRight(readmeMd)
@@ -80,7 +80,7 @@ class TabShifterIntegrationTest {
 		assertLayout(window(contributeMd, todoTxt, readmeMd))
 	}
 
-	@Test void "shifting tab down ..."() {
+	@Test void "shifting tab right and down results in nested splits"() {
 		assertLayout(window(readmeMd, contributeMd, todoTxt))
 
 		shiftRight(readmeMd)
