@@ -52,7 +52,7 @@ public class TabShifter {
      *
      */
     private void moveTab(MovingDirection direction) {
-        LayoutElement layout = calculatePositions(ide.snapshotWindowLayout());
+        LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
         if (layout == LayoutElement.none) return;
         Window window = currentWindowIn(layout);
         Window targetWindow = direction.targetWindow(window, layout);
@@ -64,7 +64,7 @@ public class TabShifter {
             if (window.hasOneTab || !direction.canExpand()) return;
 
             LayoutElement newLayout = insertSplit(direction.splitOrientation(), window, layout);
-            calculatePositions(newLayout);
+            calculateAndSetPositions(newLayout);
             LayoutElement sibling = findSiblingOf(window, newLayout);
             if (sibling == null) return; // should never happen
             newPosition = sibling.position;
@@ -76,7 +76,7 @@ public class TabShifter {
             boolean willBeUnsplit = window.hasOneTab;
             if (willBeUnsplit) {
                 LayoutElement unsplitLayout = removeFrom(layout, window);
-                calculatePositions(unsplitLayout);
+                calculateAndSetPositions(unsplitLayout);
             }
             newPosition = targetWindow.position;
 
@@ -84,7 +84,7 @@ public class TabShifter {
             ide.closeCurrentFileIn(window);
         }
 
-        LayoutElement newWindowLayout = calculatePositions(ide.snapshotWindowLayout());
+        LayoutElement newWindowLayout = calculateAndSetPositions(ide.snapshotWindowLayout());
         targetWindow = findWindowBy(newPosition, newWindowLayout);
 
         if (targetWindow == null) {
@@ -271,11 +271,11 @@ public class TabShifter {
         }
     }
 
-    private static LayoutElement calculatePositions(LayoutElement element) {
-        return calculatePositions(element, new Position(0, 0, element.size().width, element.size().height));
+    private static LayoutElement calculateAndSetPositions(LayoutElement element) {
+        return calculateAndSetPositions(element, new Position(0, 0, element.size().width, element.size().height));
     }
 
-    private static LayoutElement calculatePositions(LayoutElement element, Position position) {
+    private static LayoutElement calculateAndSetPositions(LayoutElement element, Position position) {
         if (element instanceof Split) {
             Split split = (Split) element;
 
@@ -288,8 +288,8 @@ public class TabShifter {
                 firstPosition = position.withToY(position.toY - split.second.size().height);
                 secondPosition = position.withFromY(position.fromY + split.first.size().height);
             }
-            calculatePositions(split.first, firstPosition);
-            calculatePositions(split.second, secondPosition);
+            calculateAndSetPositions(split.first, firstPosition);
+            calculateAndSetPositions(split.second, secondPosition);
         }
 
         element.position = position;

@@ -5,14 +5,23 @@
     <vendor email="dmitry.kandalov@gmail.com" url="https://github.com/dkandalov/tab-shift">Dmitry Kandalov</vendor>
 
     <description><![CDATA[
-        Actions to move and split editor tabs.<br/>
+        Actions to move and split editor tabs.
+        This is similar to built-in Move Left/Right tab actions but done in a more practical way.<br/>
+        On OSX to move and split tab:
         <ul>
-            <li>On OSX ctrl+alt+ ][;' - move (and split) tab right/left/up/down</li>
-            <li>Other OS alt+shift+ ][;' - move (and split) tab right/left/up/down</li>
-            <li>ctrl+alt+. - (not part of this plugin) recommended to bind to Goto Next Splitter action</li>
+            <li>right - ctrl+alt+]</li>
+            <li>left - ctrl+alt+[</li>
+            <li>up - ctrl+alt+P;</li>
+            <li>down - ctrl+alt+;</li>
         </ul>
-        <br/>
-        This is similar to built-in Move Left/Right tab actions but done in a more practical way.
+        On other OS:
+        <ul>
+            <li>right - alt+shift+]</li>
+            <li>left - alt+shift+[</li>
+            <li>up - alt+shift+P;</li>
+            <li>down - alt+shift+;</li>
+        </ul>
+        Also recommended to bind Goto Next Splitter action as ctrl+alt+. (not part of this plugin).</li>
         <br/>
         Plugin idea by <a href="https://twitter.com/sandromancuso">Sandro Mancuso</a> at
         <a href="http://socratesuk.org/">SoCraTes UK 2013</a>.
@@ -43,15 +52,15 @@
         </action>
         <action id="TabShiftActions.ShiftUp" class="tabshifter.Actions$ShiftUp" text="Shift Up">
             <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="alt shift SEMICOLON"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt SEMICOLON"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt SEMICOLON"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift P"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt P"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt P"/>
         </action>
         <action id="TabShiftActions.ShiftDown" class="tabshifter.Actions$ShiftDown" text="Shift Down">
             <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="alt shift QUOTE"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt QUOTE"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt QUOTE"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift SEMICOLON"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt SEMICOLON"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt SEMICOLON"/>
         </action>
     </actions>
 

@@ -56,7 +56,7 @@ public class Ide {
     }
 
     private LayoutElement snapshotWindowLayout(JPanel panel) {
-        if (editorManager.getCurrentWindow() == null) {
+        if (editorManager.getCurrentWindow() == null || editorManager.getCurrentWindow().getFiles().length == 0) {
             return LayoutElement.none;
         }
         Component component = panel.getComponent(0);
