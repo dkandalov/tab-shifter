@@ -2,7 +2,7 @@
     <id>socrates.tabshifter</id>
     <name>Tab Shifter</name>
     <version>0.23</version>
-    <vendor email="dmitry.kandalov@gmail.com" url="https://github.com/dkandalov/tab-shift">Dmitry Kandalov</vendor>
+    <vendor email="dmitry.kandalov@gmail.com" url="https://github.com/dkandalov/tab-shifter">Dmitry Kandalov</vendor>
 
     <description><![CDATA[
         This is a plugin to move and split editor tabs.
