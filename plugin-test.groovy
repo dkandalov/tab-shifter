@@ -6,7 +6,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileSystemItem
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.ProjectScope
-import liveplugin.testrunner.IntegrationTestsTextRunner
+import liveplugin.testrunner.IntegrationTestsRunner
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -19,13 +19,11 @@ import tabshifter.valueobjects.Split
 import tabshifter.valueobjects.Window
 
 import static liveplugin.PluginUtil.*
-import static liveplugin.implementation.Actions.newDataContext
 import static tabshifter.valueobjects.Split.Orientation.horizontal
 import static tabshifter.valueobjects.Split.Orientation.vertical
-
 // add-to-classpath $HOME/Library/Application Support/IntelliJIdea15/live-plugins/tab-shift/out/production/tab-shifter/
 
-IntegrationTestsTextRunner.runIntegrationTests([TabShifterIntegrationTest], project)
+IntegrationTestsRunner.runIntegrationTests([TabShifterIntegrationTest], project)
 
 class TabShifterIntegrationTest {
 
@@ -103,7 +101,6 @@ class TabShifterIntegrationTest {
 			editorManager.windows.each { window ->
 				window.files.each { window.closeFile(it) }
 			}
-
 			ide = new Ide(editorManager, project)
 			assert ide.snapshotWindowLayout() == LayoutElement.none
 

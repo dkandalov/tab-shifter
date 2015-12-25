@@ -74,7 +74,6 @@ public class Ide {
             boolean hasOneTab = (editorWindow.getTabCount() == 1);
             boolean isCurrent = editorManager.getCurrentWindow().equals(editorWindow);
             return new IdeWindow(editorWindow, hasOneTab, isCurrent);
-
         } else {
             throw new IllegalStateException();
         }
