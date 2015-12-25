@@ -5,29 +5,30 @@
     <vendor email="dmitry.kandalov@gmail.com" url="https://github.com/dkandalov/tab-shift">Dmitry Kandalov</vendor>
 
     <description><![CDATA[
-        Actions to move and split editor tabs.
-        This is similar to built-in Move Left/Right tab actions but done in a more practical way.<br/>
-        On OSX to move and split tab:
+        This is a plugin to move and split editor tabs.
+        It adds several actions to "Main Menu -> Window -> Editor Tabs".
+        These actions are similar to built-in "Move Right/Down" tab actions and essentially fix usability issues.<br/>
+        OSX shortcuts to move tab:
         <ul>
-            <li>right - ctrl+alt+]</li>
-            <li>left - ctrl+alt+[</li>
-            <li>up - ctrl+alt+P;</li>
-            <li>down - ctrl+alt+;</li>
+            <li>ctrl+alt+] - right</li>
+            <li>ctrl+alt+[ - left</li>
+            <li>ctrl+alt+P - up</li>
+            <li>ctrl+alt+; - down</li>
         </ul>
-        On other OS:
+        Other OS shortcuts to move tab:
         <ul>
-            <li>right - alt+shift+]</li>
-            <li>left - alt+shift+[</li>
-            <li>up - alt+shift+P;</li>
-            <li>down - alt+shift+;</li>
+            <li>alt+shift+] - right</li>
+            <li>alt+shift+[ - left</li>
+            <li>alt+shift+P; - up</li>
+            <li>alt+shift+; - down</li>
         </ul>
         Also recommended to bind Goto Next Splitter action as ctrl+alt+. (not part of this plugin).</li>
         <br/>
         Plugin idea by <a href="https://twitter.com/sandromancuso">Sandro Mancuso</a> at
         <a href="http://socratesuk.org/">SoCraTes UK 2013</a>.
-        Originally based on <a href="https://gist.github.com/dkandalov/6643735">this mini-plugin</a>.
+        Created using <a href="https://github.com/dkandalov/live-plugin">LivePlugin</a>.
         <br/>
-        For more details please see <a href="https://github.com/dkandalov/tab-shift">GitHub page</a>.
+        For more details see <a href="https://github.com/dkandalov/tab-shift">GitHub page</a>.
     ]]></description>
 
 
