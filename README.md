@@ -8,7 +8,7 @@ OSX shortcuts:
  - ``ctrl + alt + \[`` - move tab to the left split
  - ``ctrl + alt + ;`` - move tab to the split above
  - ``ctrl + alt + '`` - move tab to the split below (or create new split if it's the bottom split)
- - ``ctrl + alt + .`` - (not part of this plugin) recommended to bind to Goto Next Splitter action
+ - ``ctrl + alt + .`` - (not part of this plugin) recommended binding for ``Goto Next Splitter`` action
 
 Other OS shortcuts:
  - ``alt + shift + \]`` - move tab right

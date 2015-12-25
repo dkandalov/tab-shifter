@@ -7,12 +7,14 @@
     <description><![CDATA[
         This is a plugin to move and split editor tabs.
         It adds several actions to "Main Menu -> Window -> Editor Tabs".
+        <br/>
         OSX shortcuts to move tab:
         <ul>
             <li>ctrl+alt+] - right</li>
             <li>ctrl+alt+[ - left</li>
             <li>ctrl+alt+P - up</li>
             <li>ctrl+alt+; - down</li>
+            <li>ctrl+alt+. - recommended binding for built-in Goto Next Splitter action</li>
         </ul>
         Other OS shortcuts to move tab:
         <ul>
@@ -21,15 +23,12 @@
             <li>alt+shift+P; - up</li>
             <li>alt+shift+; - down</li>
         </ul>
-        Also recommended to bind Goto Next Splitter action as ctrl+alt+. (not part of this plugin).</li>
-        <br/>
-        These actions are similar to built-in "Move Right/Down" tab actions and essentially fix usability issues.<br/>
-        <br/>
+        These actions are similar to built-in "Move Right/Down" tab actions and essentially fix usability issues.
+        For more details see <a href="https://github.com/dkandalov/tab-shift">GitHub page</a>.
+        <br/><br/>
         Plugin idea by <a href="https://twitter.com/sandromancuso">Sandro Mancuso</a> at
         <a href="http://socratesuk.org/">SoCraTes UK 2013</a>.
         Created using <a href="https://github.com/dkandalov/live-plugin">LivePlugin</a>.
-        <br/>
-        For more details see <a href="https://github.com/dkandalov/tab-shift">GitHub page</a>.
     ]]></description>
 
 
