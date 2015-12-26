@@ -2,10 +2,6 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiFileSystemItem
-import com.intellij.psi.search.FilenameIndex
-import com.intellij.psi.search.ProjectScope
 import liveplugin.testrunner.IntegrationTestsRunner
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
@@ -99,9 +95,9 @@ class TabShifterIntegrationTest {
 		invokeOnEDT {
 			project = openProject(System.properties["user.home"] + "/IdeaProjects/junit")
 			editorManager = FileEditorManagerEx.getInstanceEx(project)
-			readmeMd = findFileByName_("README.md", project).virtualFile
-			contributeMd = findFileByName_("CONTRIBUTING.md", project).virtualFile
-			todoTxt = findFileByName_("to-do.txt", project).virtualFile
+			readmeMd = findFileByName("README.md", project).virtualFile
+			contributeMd = findFileByName("CONTRIBUTING.md", project).virtualFile
+			todoTxt = findFileByName("to-do.txt", project).virtualFile
 
 			closeAllFiles(editorManager, project)
 			[todoTxt, contributeMd, readmeMd].each {
@@ -135,7 +131,7 @@ class TabShifterIntegrationTest {
 	private static Matcher window(VirtualFile... files) {
 		new BaseMatcher() {
 			@Override boolean matches(Object o) {
-				o instanceof Window && o.editorWindow.files == files.toList()
+				o instanceof Window && o.editorWindow.files.toList().toSet() == files.toList().toSet()
 			}
 
 			@Override void describeTo(Description description) {
@@ -145,17 +141,23 @@ class TabShifterIntegrationTest {
 	}
 
 	private assertLayout(Matcher matcher) {
-		def error = new AtomicReference()
+		def error = new AtomicReference<Throwable>()
+		def exception = new AtomicReference<Throwable>()
 		invokeOnEDT {
 			try {
 				def layout = ide.snapshotWindowLayout()
 				assertThat(layout, matcher)
 			} catch (AssertionError e) {
 				error.set(e)
+			} catch (Exception e) {
+				exception.set(e)
 			}
 		}
 		if (error.get() != null) {
 			throw new AssertionError(error.get())
+		}
+		if (exception.get() != null) {
+			throw new Exception(exception.get())
 		}
 	}
 
@@ -194,36 +196,6 @@ class TabShifterIntegrationTest {
 		}
 	}
 
-	private static PsiFile findFileByName_(String filePath, Project project, boolean searchInLibraries = false) {
-		def files = findAllFilesByName_(filePath, project, searchInLibraries)
-		if (files.size() > 1) {
-			def filePaths = files.collect{it.virtualFile.canonicalPath}.join("\n")
-			throw new IllegalStateException("There are multiple files which match '${filePath}':\n ${filePaths}")
-		}
-		if (files.size() == 0) {
-			throw new IllegalStateException("There are no files which match: '${filePath}'")
-		}
-		files.first()
-	}
-
-	private static List<PsiFile> findAllFilesByName_(String filePath, Project project, boolean searchInLibraries = false) {
-		runReadAction{
-			def scope = searchInLibraries? ProjectScope.getAllScope(project) : ProjectScope.getProjectScope(project)
-			def pathAndName = filePath.split("/").toList().findAll{ !it.empty }
-			def reversePath = (pathAndName.size() > 1 ? pathAndName.reverse().tail() : [])
-			def name = pathAndName.last()
-			FilenameIndex
-					.getFilesByName(project, name, scope)
-					.toList()
-					.findAll{ file -> matches_(reversePath, file) }
-		}
-	}
-
-	private static boolean matches_(List<String> reversePath, PsiFileSystemItem fileSystemItem) {
-		if (reversePath.empty) true
-		else if (fileSystemItem.parent.name != reversePath.first()) false
-		else matches(reversePath.tail(), fileSystemItem.parent)
-	}
 
 	private project
 	private Ide ide
