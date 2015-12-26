@@ -10,7 +10,6 @@ import liveplugin.testrunner.IntegrationTestsRunner
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-import org.hamcrest.MatcherAssert
 import org.junit.Test
 import tabshifter.Actions
 import tabshifter.Ide
@@ -18,7 +17,10 @@ import tabshifter.valueobjects.LayoutElement
 import tabshifter.valueobjects.Split
 import tabshifter.valueobjects.Window
 
+import java.util.concurrent.atomic.AtomicReference
+
 import static liveplugin.PluginUtil.*
+import static org.hamcrest.MatcherAssert.assertThat
 import static tabshifter.valueobjects.Split.Orientation.horizontal
 import static tabshifter.valueobjects.Split.Orientation.vertical
 // add-to-classpath $HOME/Library/Application Support/IntelliJIdea15/live-plugins/tab-shift/out/production/tab-shifter/
@@ -55,7 +57,7 @@ class TabShifterIntegrationTest {
 		shiftRight(contributeMd)
 
 		assertLayout(split(vertical,
-				window(todoTxt), window(readmeMd, contributeMd)
+				window(todoTxt), window(contributeMd, readmeMd)
 		))
 	}
 
@@ -66,7 +68,7 @@ class TabShifterIntegrationTest {
 		shiftRight(contributeMd)
 		shiftRight(todoTxt)
 
-		assertLayout(window(readmeMd, contributeMd, todoTxt))
+		assertLayout(window(todoTxt, contributeMd, readmeMd))
 	}
 
 	@Test void "shifting tab right and left results in single window"() {
@@ -75,7 +77,7 @@ class TabShifterIntegrationTest {
 		shiftRight(readmeMd)
 		shiftLeft(readmeMd)
 
-		assertLayout(window(contributeMd, todoTxt, readmeMd))
+		assertLayout(window(readmeMd, contributeMd, todoTxt))
 	}
 
 	@Test void "shifting tab right and down results in nested splits"() {
@@ -97,20 +99,23 @@ class TabShifterIntegrationTest {
 		invokeOnEDT {
 			project = openProject(System.properties["user.home"] + "/IdeaProjects/junit")
 			editorManager = FileEditorManagerEx.getInstanceEx(project)
-
-			editorManager.windows.each { window ->
-				window.files.each { window.closeFile(it) }
-			}
-			ide = new Ide(editorManager, project)
-			assert ide.snapshotWindowLayout() == LayoutElement.none
-
 			readmeMd = findFileByName_("README.md", project).virtualFile
 			contributeMd = findFileByName_("CONTRIBUTING.md", project).virtualFile
 			todoTxt = findFileByName_("to-do.txt", project).virtualFile
-			[readmeMd, contributeMd, todoTxt].each {
+
+			closeAllFiles(editorManager, project)
+			[todoTxt, contributeMd, readmeMd].each {
 				editorManager.openFile(it, true)
 			}
 		}
+	}
+
+	public void closeAllFiles(FileEditorManagerEx editorManager, Project project) {
+		editorManager.windows.each { window ->
+			window.files.each { window.closeFile(it) }
+		}
+		ide = new Ide(editorManager, project)
+		assert ide.snapshotWindowLayout() == LayoutElement.none
 	}
 
 	private static Matcher split(Split.Orientation orientation, Matcher firstMatcher, Matcher secondMatcher) {
@@ -140,9 +145,17 @@ class TabShifterIntegrationTest {
 	}
 
 	private assertLayout(Matcher matcher) {
+		def error = new AtomicReference()
 		invokeOnEDT {
-			def layout = ide.snapshotWindowLayout()
-			MatcherAssert.assertThat(layout, matcher)
+			try {
+				def layout = ide.snapshotWindowLayout()
+				assertThat(layout, matcher)
+			} catch (AssertionError e) {
+				error.set(e)
+			}
+		}
+		if (error.get() != null) {
+			throw new AssertionError(error.get())
 		}
 	}
 
