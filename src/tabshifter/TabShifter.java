@@ -41,6 +41,30 @@ public class TabShifter {
         moveTab(new DownDirection());
     }
 
+    public void moveFocusLeft() {
+        moveFocus(new LeftDirection());
+    }
+
+	public void moveFocusUp() {
+		moveFocus(new UpDirection());
+    }
+
+    public void moveFocusRight() {
+	    moveFocus(new RightDirection());
+    }
+
+    public void moveFocusDown() {
+	    moveFocus(new DownDirection());
+    }
+
+	private void moveFocus(MovingDirection direction) {
+		LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
+		if (layout == LayoutElement.none) return;
+		Window window = currentWindowIn(layout);
+		Window targetWindow = direction.targetWindow(window, layout);
+		ide.setFocusOn(targetWindow);
+	}
+
     /**
      * Moves tab in the specified direction.
      *
@@ -144,6 +168,7 @@ public class TabShifter {
         }
     }
 
+	// TODO use constants instead of classes
     private static class LeftDirection implements MovingDirection {
         @Override public Window targetWindow(Window window, LayoutElement layout) {
             return findWindowLeftOf(window, layout);

@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>socrates.tabshifter</id>
     <name>Tab Shifter</name>
-    <version>0.23</version>
+    <version>0.3</version>
     <vendor email="dmitry.kandalov@gmail.com" url="https://github.com/dkandalov/tab-shifter">Dmitry Kandalov</vendor>
 
     <description><![CDATA[
@@ -39,12 +39,6 @@
     <depends>com.intellij.modules.lang</depends>
 
     <actions>
-        <action id="TabShiftActions.ShiftRight" class="tabshifter.Actions$ShiftRight" text="Shift Right">
-            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="alt shift CLOSE_BRACKET"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt CLOSE_BRACKET"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt CLOSE_BRACKET"/>
-        </action>
         <action id="TabShiftActions.ShiftLeft" class="tabshifter.Actions$ShiftLeft" text="Shift Left">
             <add-to-group group-id="EditorTabsGroup" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt shift OPEN_BRACKET"/>
@@ -57,11 +51,24 @@
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt P"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt P"/>
         </action>
+        <action id="TabShiftActions.ShiftRight" class="tabshifter.Actions$ShiftRight" text="Shift Right">
+            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift CLOSE_BRACKET"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt CLOSE_BRACKET"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt CLOSE_BRACKET"/>
+        </action>
         <action id="TabShiftActions.ShiftDown" class="tabshifter.Actions$ShiftDown" text="Shift Down">
             <add-to-group group-id="EditorTabsGroup" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt shift SEMICOLON"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt SEMICOLON"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt SEMICOLON"/>
+        </action>
+
+        <action id="TabShiftActions.MoveFocusLeft" class="tabshifter.Actions$MoveFocusLeft" text="Move Focus Left">
+            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift OPEN_BRACKET"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift OPEN_BRACKET"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt OPEN_BRACKET"/>
         </action>
     </actions>
 
