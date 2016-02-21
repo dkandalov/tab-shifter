@@ -8,22 +8,30 @@
         This is a plugin to move and split editor tabs.
         It adds several actions to "Main Menu -> Window -> Editor Tabs".
         <br/>
-        OSX shortcuts to move tab:
+        Shortcuts for OSX to split and move tab:
         <ul>
             <li>ctrl+alt+] - right</li>
             <li>ctrl+alt+[ - left</li>
             <li>ctrl+alt+P - up</li>
             <li>ctrl+alt+; - down</li>
-            <li>ctrl+alt+. - recommended binding for built-in Goto Next Splitter action</li>
         </ul>
-        Other OS shortcuts to move tab:
+        Shortcuts for other OS to split and move tab:
         <ul>
             <li>alt+shift+] - right</li>
             <li>alt+shift+[ - left</li>
-            <li>alt+shift+P; - up</li>
+            <li>alt+shift+P - up</li>
             <li>alt+shift+; - down</li>
         </ul>
+        To move focus between splits:
+        <ul>
+            <li>ctrl+alt+shift+] - right</li>
+            <li>ctrl+alt+shift+[ - left</li>
+            <li>ctrl+alt+shift+P - up</li>
+            <li>ctrl+alt+shift+; - down</li>
+            <li>ctrl+alt+. - recommended binding for built-in Goto Next Splitter action</li>
+        </ul>
         These actions are similar to built-in "Move Right/Down" tab actions and essentially fix usability issues.
+        If you like the idea, please vote for <a href="https://youtrack.jetbrains.com/issue/IDEA-68692">this issue on youtrack</a>.
         For more details see <a href="https://github.com/dkandalov/tab-shift">GitHub page</a>.
         <br/><br/>
         Plugin idea by <a href="https://twitter.com/sandromancuso">Sandro Mancuso</a> at
@@ -66,9 +74,27 @@
 
         <action id="TabShiftActions.MoveFocusLeft" class="tabshifter.Actions$MoveFocusLeft" text="Move Focus Left">
             <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="alt shift OPEN_BRACKET"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift OPEN_BRACKET"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt OPEN_BRACKET"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift OPEN_BRACKET"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt shift OPEN_BRACKET"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt shift OPEN_BRACKET"/>
+        </action>
+        <action id="TabShiftActions.MoveFocusUp" class="tabshifter.Actions$MoveFocusUp" text="Move Focus Up">
+            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift P"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt shift P"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt shift P"/>
+        </action>
+        <action id="TabShiftActions.MoveFocusRight" class="tabshifter.Actions$MoveFocusRight" text="Move Focus Right">
+            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift CLOSE_BRACKET"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt shift CLOSE_BRACKET"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt shift CLOSE_BRACKET"/>
+        </action>
+        <action id="TabShiftActions.MoveFocusDown" class="tabshifter.Actions$MoveFocusDown" text="Move Focus Down">
+            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift SEMICOLON"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt shift SEMICOLON"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt shift SEMICOLON"/>
         </action>
     </actions>
 
