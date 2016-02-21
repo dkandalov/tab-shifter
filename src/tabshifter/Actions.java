@@ -6,56 +6,58 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 
+import static tabshifter.TabShifter.*;
+
 @SuppressWarnings("ComponentNotRegistered")
 public class Actions {
     public static class ShiftLeft extends AnAction implements DumbAware {
-        @Override public void actionPerformed(AnActionEvent event) {
-            Project project = event.getProject();
-            FileEditorManagerEx editorManager = editorManagerIn(project);
-            if (project == null || editorManager == null) return;
-
-	        new TabShifter(new Ide(editorManager, project)).moveTabLeft();
+	    @Override public void actionPerformed(AnActionEvent event) {
+	        tabShifter(event).moveTab(left);
         }
     }
 	public static class ShiftUp extends AnAction implements DumbAware {
 		@Override public void actionPerformed(AnActionEvent event) {
-			Project project = event.getProject();
-			FileEditorManagerEx editorManager = editorManagerIn(project);
-			if (project == null || editorManager == null) return;
-
-			new TabShifter(new Ide(editorManager, project)).moveTabUp();
+			tabShifter(event).moveTab(up);
 		}
 	}
 	public static class ShiftRight extends AnAction implements DumbAware {
-	    @Override public void actionPerformed(AnActionEvent event) {
-            Project project = event.getProject();
-            FileEditorManagerEx editorManager = editorManagerIn(project);
-            if (project == null || editorManager == null) return;
-
-	        new TabShifter(new Ide(editorManager, project)).moveTabRight();
-        }
-
+		@Override public void actionPerformed(AnActionEvent event) {
+		    tabShifter(event).moveTab(right);
+	    }
     }
 	public static class ShiftDown extends AnAction implements DumbAware {
-	    @Override public void actionPerformed(AnActionEvent event) {
-            Project project = event.getProject();
-            FileEditorManagerEx editorManager = editorManagerIn(project);
-            if (project == null || editorManager == null) return;
-
-	        new TabShifter(new Ide(editorManager, project)).moveTabDown();
-        }
-
-    }
+		@Override public void actionPerformed(AnActionEvent event) {
+		    tabShifter(event).moveTab(down);
+	    }
+	}
 
 	public static class MoveFocusLeft extends AnAction implements DumbAware {
 		@Override public void actionPerformed(AnActionEvent event) {
-			Project project = event.getProject();
-			FileEditorManagerEx editorManager = editorManagerIn(project);
-			if (project == null || editorManager == null) return;
-
-			Ide ide = new Ide(editorManager, project);
-			new TabShifter(ide).moveFocusLeft();
+			tabShifter(event).moveFocus(left);
 		}
+	}
+	public static class MoveFocusUp extends AnAction implements DumbAware {
+		@Override public void actionPerformed(AnActionEvent event) {
+			tabShifter(event).moveFocus(up);
+		}
+	}
+	public static class MoveFocusRight extends AnAction implements DumbAware {
+		@Override public void actionPerformed(AnActionEvent event) {
+			tabShifter(event).moveFocus(right);
+		}
+	}
+	public static class MoveFocusDown extends AnAction implements DumbAware {
+		@Override public void actionPerformed(AnActionEvent event) {
+			tabShifter(event).moveFocus(down);
+		}
+	}
+
+	private static TabShifter tabShifter(AnActionEvent event) {
+		Project project = event.getProject();
+		FileEditorManagerEx editorManager = editorManagerIn(project);
+		if (project == null || editorManager == null) return TabShifter.none;
+
+		return new TabShifter(new Ide(editorManager, project));
 	}
 
 	private static FileEditorManagerEx editorManagerIn(Project project) {

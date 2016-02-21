@@ -1,3 +1,4 @@
+import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import tabshifter.Actions
 
@@ -8,36 +9,20 @@ import static liveplugin.PluginUtil.show
 
 if (isIdeStartup) return
 
-registerAction("TabShiftActions.ShiftLeft",
-		"ctrl alt OPEN_BRACKET",
-		"EditorTabsGroup",
-		"Shift Left") { AnActionEvent event ->
-	new Actions.ShiftLeft().actionPerformed(event)
-}
-registerAction("TabShiftActions.ShiftUp",
-		"ctrl alt P",
-		"EditorTabsGroup",
-		"Shift Up") { AnActionEvent event ->
-	new Actions.ShiftUp().actionPerformed(event)
-}
-registerAction("TabShiftActions.ShiftRight",
-		"ctrl alt CLOSE_BRACKET",
-		"EditorTabsGroup",
-		"Shift Right") { AnActionEvent event ->
-	new Actions.ShiftRight().actionPerformed(event)
-}
-registerAction("TabShiftActions.ShiftDown",
-		"ctrl alt SEMICOLON",
-		"EditorTabsGroup",
-		"Shift Down") { AnActionEvent event ->
-	new Actions.ShiftDown().actionPerformed(event)
+def register(String id, String shortcut, String text, AnAction action) {
+	registerAction("TabShiftActions.${id}", shortcut, "EditorTabsGroup", text) { AnActionEvent event ->
+		action.actionPerformed(event)
+	}
 }
 
-registerAction("TabShiftActions.MoveFocusLeft",
-		"alt shift OPEN_BRACKET",
-		"EditorTabsGroup",
-		"Move Focus Left") { AnActionEvent event ->
-	new Actions.MoveFocusLeft().actionPerformed(event)
-}
+register("ShiftLeft", "ctrl alt OPEN_BRACKET", "Shift Left", new Actions.ShiftLeft())
+register("ShiftUp", "ctrl alt P", "Shift Up", new Actions.ShiftUp())
+register("ShiftRight", "ctrl alt CLOSE_BRACKET", "Shift Right", new Actions.ShiftRight())
+register("ShiftDown", "ctrl alt SEMICOLON", "Shift Down", new Actions.ShiftDown())
+
+register("MoveFocusLeft", "alt shift OPEN_BRACKET", "Move Focus Left", new Actions.MoveFocusLeft())
+register("MoveFocusUp", "alt shift P", "Move Focus Up", new Actions.MoveFocusUp())
+register("MoveFocusRight", "alt shift CLOSE_BRACKET", "Move Focus Right", new Actions.MoveFocusRight())
+register("MoveFocusDown", "alt shift SEMICOLON", "Move Focus Down", new Actions.MoveFocusDown())
 
 show("Reloaded Tab Shifter plugin")

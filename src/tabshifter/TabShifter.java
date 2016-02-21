@@ -18,50 +18,24 @@ import static tabshifter.valueobjects.Split.Orientation.horizontal;
 import static tabshifter.valueobjects.Split.Orientation.vertical;
 
 public class TabShifter {
+	public static final TabShifter none = new TabShifter(null) {
+		@Override public void moveFocus(TabShifter.Direction direction) {}
+		@Override public void moveTab(TabShifter.Direction direction) {}
+	};
+
     private static final Logger logger = Logger.getInstance(TabShifter.class.getName());
     private final Ide ide;
+
 
     public TabShifter(Ide ide) {
         this.ide = ide;
     }
 
-    public void moveTabLeft() {
-        moveTab(new LeftDirection());
-    }
-
-    public void moveTabUp() {
-        moveTab(new UpDirection());
-    }
-
-    public void moveTabRight() {
-        moveTab(new RightDirection());
-    }
-
-    public void moveTabDown() {
-        moveTab(new DownDirection());
-    }
-
-    public void moveFocusLeft() {
-        moveFocus(new LeftDirection());
-    }
-
-	public void moveFocusUp() {
-		moveFocus(new UpDirection());
-    }
-
-    public void moveFocusRight() {
-	    moveFocus(new RightDirection());
-    }
-
-    public void moveFocusDown() {
-	    moveFocus(new DownDirection());
-    }
-
-	private void moveFocus(MovingDirection direction) {
+	public void moveFocus(Direction direction) {
 		LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
 		if (layout == LayoutElement.none) return;
 		Window window = currentWindowIn(layout);
-		Window targetWindow = direction.targetWindow(window, layout);
+		Window targetWindow = direction.findTargetWindow(window, layout);
 		ide.setFocusOn(targetWindow);
 	}
 
@@ -75,11 +49,11 @@ public class TabShifter {
      *      => need to predict target window position and look up window by expected position
      *
      */
-    private void moveTab(MovingDirection direction) {
+    public void moveTab(Direction direction) {
         LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
         if (layout == LayoutElement.none) return;
         Window window = currentWindowIn(layout);
-        Window targetWindow = direction.targetWindow(window, layout);
+        Window targetWindow = direction.findTargetWindow(window, layout);
 
         Position newPosition;
 
@@ -120,14 +94,16 @@ public class TabShifter {
     }
 
 
-    private interface MovingDirection {
-        Window targetWindow(Window window, LayoutElement layout);
-        Split.Orientation splitOrientation();
-        boolean canExpand();
-    }
+	public interface Direction {
+		Window findTargetWindow(Window window, LayoutElement layout);
 
-    private static class DownDirection implements MovingDirection {
-        @Override public Window targetWindow(Window window, LayoutElement layout) {
+		Split.Orientation splitOrientation();
+
+		boolean canExpand();
+	}
+
+    public static final Direction down = new Direction() {
+        @Override public Window findTargetWindow(Window window, LayoutElement layout) {
             return findWindowBelow(window, layout);
         }
 
@@ -138,10 +114,10 @@ public class TabShifter {
         @Override public boolean canExpand() {
             return true;
         }
-    }
+    };
 
-    private static class RightDirection implements MovingDirection {
-        @Override public Window targetWindow(Window window, LayoutElement layout) {
+	public static final Direction right = new Direction() {
+        @Override public Window findTargetWindow(Window window, LayoutElement layout) {
             return findWindowRightOf(window, layout);
         }
 
@@ -152,10 +128,10 @@ public class TabShifter {
         @Override public boolean canExpand() {
             return true;
         }
-    }
+    };
 
-    private static class UpDirection implements MovingDirection {
-        @Override public Window targetWindow(Window window, LayoutElement layout) {
+	public static final Direction up = new Direction() {
+        @Override public Window findTargetWindow(Window window, LayoutElement layout) {
             return findWindowAbove(window, layout);
         }
 
@@ -166,11 +142,10 @@ public class TabShifter {
         @Override public boolean canExpand() {
             return false;
         }
-    }
+    };
 
-	// TODO use constants instead of classes
-    private static class LeftDirection implements MovingDirection {
-        @Override public Window targetWindow(Window window, LayoutElement layout) {
+    public static final Direction left = new Direction() {
+        @Override public Window findTargetWindow(Window window, LayoutElement layout) {
             return findWindowLeftOf(window, layout);
         }
 
@@ -181,7 +156,7 @@ public class TabShifter {
         @Override public boolean canExpand() {
             return false;
         }
-    }
+    };
 
 
     private static Window findWindowRightOf(final Window window, LayoutElement layout) {
