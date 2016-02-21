@@ -4,14 +4,14 @@ Tab Shifter
 It adds several actions to ``Main Menu -> Window -> Editor Tabs``.
 
 OSX shortcuts:
- - ``ctrl + alt + \]`` - move tab to the right split (or create new split if it's the rightmost split)
- - ``ctrl + alt + \[`` - move tab to the left split
+ - ``ctrl + alt + ]`` - move tab to the right split (or create new split if it's the rightmost split)
+ - ``ctrl + alt + [`` - move tab to the left split
  - ``ctrl + alt + P`` - move tab to the split above
  - ``ctrl + alt + '`` - move tab to the split below (or create new split if it's the bottom split)
 
 Other OS shortcuts:
- - ``alt + shift + \]`` - move tab right
- - ``alt + shift + \[`` - move tab left
+ - ``alt + shift + ]`` - move tab right
+ - ``alt + shift + [`` - move tab left
  - ``alt + shift + P`` - move tab up
  - ``alt + shift + '`` - move tab down
 
