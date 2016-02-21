@@ -6,7 +6,7 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 
-import static tabshifter.TabShifter.*;
+import static tabshifter.Directions.*;
 
 @SuppressWarnings("ComponentNotRegistered")
 public class Actions {

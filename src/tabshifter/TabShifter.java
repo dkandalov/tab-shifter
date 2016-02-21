@@ -2,27 +2,19 @@ package tabshifter;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Condition;
-import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
 import tabshifter.valueobjects.LayoutElement;
 import tabshifter.valueobjects.Position;
 import tabshifter.valueobjects.Split;
 import tabshifter.valueobjects.Window;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
 import static com.intellij.util.containers.ContainerUtil.*;
-import static tabshifter.valueobjects.Split.Orientation.horizontal;
 import static tabshifter.valueobjects.Split.Orientation.vertical;
 
 public class TabShifter {
 	public static final TabShifter none = new TabShifter(null) {
-		@Override public void moveFocus(TabShifter.Direction direction) {}
-		@Override public void moveTab(TabShifter.Direction direction) {}
+		@Override public void moveFocus(Directions.Direction direction) {}
+		@Override public void moveTab(Directions.Direction direction) {}
 	};
-
     private static final Logger logger = Logger.getInstance(TabShifter.class.getName());
     private final Ide ide;
 
@@ -31,7 +23,7 @@ public class TabShifter {
         this.ide = ide;
     }
 
-	public void moveFocus(Direction direction) {
+	public void moveFocus(Directions.Direction direction) {
 		LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
 		if (layout == LayoutElement.none) return;
 		Window window = currentWindowIn(layout);
@@ -49,7 +41,7 @@ public class TabShifter {
      *      => need to predict target window position and look up window by expected position
      *
      */
-    public void moveTab(Direction direction) {
+    public void moveTab(Directions.Direction direction) {
         LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
         if (layout == LayoutElement.none) return;
         Window window = currentWindowIn(layout);
@@ -94,154 +86,8 @@ public class TabShifter {
     }
 
 
-	public interface Direction {
-		Window findTargetWindow(Window window, LayoutElement layout);
-
-		Split.Orientation splitOrientation();
-
-		boolean canExpand();
-	}
-
-    public static final Direction down = new Direction() {
-        @Override public Window findTargetWindow(Window window, LayoutElement layout) {
-            return findWindowBelow(window, layout);
-        }
-
-        @Override public Split.Orientation splitOrientation() {
-            return horizontal;
-        }
-
-        @Override public boolean canExpand() {
-            return true;
-        }
-    };
-
-	public static final Direction right = new Direction() {
-        @Override public Window findTargetWindow(Window window, LayoutElement layout) {
-            return findWindowRightOf(window, layout);
-        }
-
-        @Override public Split.Orientation splitOrientation() {
-            return vertical;
-        }
-
-        @Override public boolean canExpand() {
-            return true;
-        }
-    };
-
-	public static final Direction up = new Direction() {
-        @Override public Window findTargetWindow(Window window, LayoutElement layout) {
-            return findWindowAbove(window, layout);
-        }
-
-        @Override public Split.Orientation splitOrientation() {
-            return horizontal;
-        }
-
-        @Override public boolean canExpand() {
-            return false;
-        }
-    };
-
-    public static final Direction left = new Direction() {
-        @Override public Window findTargetWindow(Window window, LayoutElement layout) {
-            return findWindowLeftOf(window, layout);
-        }
-
-        @Override public Split.Orientation splitOrientation() {
-            return vertical;
-        }
-
-        @Override public boolean canExpand() {
-            return false;
-        }
-    };
-
-
-    private static Window findWindowRightOf(final Window window, LayoutElement layout) {
-        List<Window> allWindows = allWindowsIn(layout);
-        List<Window> neighbourWindows = findAll(allWindows, new Condition<Window>() {
-            @Override
-            public boolean value(Window window1) {
-                return window.position.toX == window1.position.fromX;
-            }
-        });
-        sort(neighbourWindows, new Comparator<Window>() {
-            @Override
-            public int compare(@NotNull Window o1, @NotNull Window o2) {
-                return Double.compare(
-                        Math.abs(window.position.fromY - o1.position.fromY),
-                        Math.abs(window.position.fromY - o2.position.fromY)
-                );
-            }
-        });
-        return neighbourWindows.isEmpty() ? null : neighbourWindows.get(0);
-    }
-
-    private static Window findWindowBelow(final Window window, LayoutElement layout) {
-        List<Window> allWindows = allWindowsIn(layout);
-        List<Window> neighbourWindows = findAll(allWindows, new Condition<Window>() {
-            @Override
-            public boolean value(Window window1) {
-                return window.position.toY == window1.position.fromY;
-            }
-        });
-        sort(neighbourWindows, new Comparator<Window>() {
-            @Override
-            public int compare(@NotNull Window o1, @NotNull Window o2) {
-                return Double.compare(
-                        Math.abs(window.position.fromX - o1.position.fromX),
-                        Math.abs(window.position.fromX - o2.position.fromX)
-                );
-            }
-        });
-        return neighbourWindows.isEmpty() ? null : neighbourWindows.get(0);
-    }
-
-    private static Window findWindowAbove(final Window window, LayoutElement layout) {
-        List<Window> allWindows = allWindowsIn(layout);
-        List<Window> neighbourWindows = findAll(allWindows, new Condition<Window>() {
-            @Override
-            public boolean value(Window window1) {
-                return window.position.fromY == window1.position.toY;
-            }
-        });
-        sort(neighbourWindows, new Comparator<Window>() {
-            @Override
-            public int compare(@NotNull Window o1, @NotNull Window o2) {
-                return Double.compare(
-                        Math.abs(window.position.fromX - o1.position.fromX),
-                        Math.abs(window.position.fromX - o2.position.fromX)
-                );
-            }
-        });
-        return neighbourWindows.isEmpty() ? null : neighbourWindows.get(0);
-    }
-
-    private static Window findWindowLeftOf(final Window window, LayoutElement layout) {
-        List<Window> allWindows = allWindowsIn(layout);
-        List<Window> neighbourWindows = findAll(allWindows, new Condition<Window>() {
-            @Override
-            public boolean value(Window window1) {
-                return window.position.fromX == window1.position.toX;
-            }
-        });
-        sort(neighbourWindows, new Comparator<Window>() {
-            @Override
-            public int compare(@NotNull Window o1, @NotNull Window o2) {
-                return Double.compare(
-                        Math.abs(window.position.fromY - o1.position.fromY),
-                        Math.abs(window.position.fromY - o2.position.fromY)
-                );
-            }
-        });
-        return neighbourWindows.isEmpty() ? null : neighbourWindows.get(0);
-    }
-
-
-    private static Window currentWindowIn(LayoutElement windowLayout) {
-        return find(allWindowsIn(windowLayout), new Condition<Window>() {
+	private static Window currentWindowIn(LayoutElement windowLayout) {
+        return find(Directions.allWindowsIn(windowLayout), new Condition<Window>() {
             @Override
             public boolean value(Window window) {
                 return window.isCurrent;
@@ -297,7 +143,7 @@ public class TabShifter {
     }
 
     private static Window findWindowBy(final Position position, LayoutElement layout) {
-        return find(allWindowsIn(layout), new Condition<Window>() {
+        return find(Directions.allWindowsIn(layout), new Condition<Window>() {
             @Override
             public boolean value(Window window) {
                 return position.equals(window.position);
@@ -305,32 +151,8 @@ public class TabShifter {
         });
     }
 
-    private static List<Window> allWindowsIn(LayoutElement rootElement) {
-        final List<Window> result = new ArrayList<Window>();
-        traverse(rootElement, new Function<LayoutElement, Boolean>() {
-            @Override
-            public Boolean fun(LayoutElement element) {
-                if (element instanceof Window)
-                    result.add((Window) element);
-                return true;
-            }
-        });
-        return result;
-    }
 
-    private static void traverse(LayoutElement element, Function<LayoutElement, Boolean> function) {
-        Boolean shouldStop = !function.fun(element);
-        if (shouldStop) return;
-
-        if (element instanceof Split) {
-            Split split = (Split) element;
-            traverse(split.first, function);
-            traverse(split.second, function);
-        }
-    }
-
-
-    private static LayoutElement removeFrom(LayoutElement element, Window window) {
+	private static LayoutElement removeFrom(LayoutElement element, Window window) {
         if (element instanceof Split) {
             Split split = (Split) element;
             LayoutElement first = removeFrom(split.first, window);
