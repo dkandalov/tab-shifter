@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>socrates.tabshifter</id>
     <name>Tab Shifter</name>
-    <version>0.24</version>
+    <version>0.25</version>
     <vendor email="dmitry.kandalov@gmail.com" url="https://github.com/dkandalov/tab-shifter">Dmitry Kandalov</vendor>
 
     <description><![CDATA[
@@ -40,10 +40,10 @@
     ]]></description>
 
 
-    <!-- http://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
+    <!-- See http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html -->
     <idea-version since-build="111"/>
 
-    <!-- http://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products -->
+    <!-- See http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.lang</depends>
 
     <actions>
