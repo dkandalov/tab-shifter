@@ -2,12 +2,13 @@ package tabshifter;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Condition;
+import org.jetbrains.annotations.Nullable;
 import tabshifter.valueobjects.LayoutElement;
 import tabshifter.valueobjects.Position;
 import tabshifter.valueobjects.Split;
 import tabshifter.valueobjects.Window;
 
-import static com.intellij.util.containers.ContainerUtil.*;
+import static com.intellij.util.containers.ContainerUtil.find;
 import static tabshifter.valueobjects.Split.Orientation.vertical;
 
 public class TabShifter {
@@ -26,8 +27,13 @@ public class TabShifter {
 	public void moveFocus(Directions.Direction direction) {
 		LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
 		if (layout == LayoutElement.none) return;
+
 		Window window = currentWindowIn(layout);
+		if (window == null) return;
+
 		Window targetWindow = direction.findTargetWindow(window, layout);
+		if (targetWindow == null) return;
+
 		ide.setFocusOn(targetWindow);
 	}
 
@@ -45,6 +51,8 @@ public class TabShifter {
         LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
         if (layout == LayoutElement.none) return;
         Window window = currentWindowIn(layout);
+	    if (window == null) return;
+
         Window targetWindow = direction.findTargetWindow(window, layout);
 
         Position newPosition;
@@ -86,10 +94,9 @@ public class TabShifter {
     }
 
 
-	private static Window currentWindowIn(LayoutElement windowLayout) {
+	@Nullable private static Window currentWindowIn(LayoutElement windowLayout) {
         return find(Directions.allWindowsIn(windowLayout), new Condition<Window>() {
-            @Override
-            public boolean value(Window window) {
+            @Override public boolean value(Window window) {
                 return window.isCurrent;
             }
         });
@@ -142,7 +149,7 @@ public class TabShifter {
         return element;
     }
 
-    private static Window findWindowBy(final Position position, LayoutElement layout) {
+    @Nullable private static Window findWindowBy(final Position position, LayoutElement layout) {
         return find(Directions.allWindowsIn(layout), new Condition<Window>() {
             @Override
             public boolean value(Window window) {

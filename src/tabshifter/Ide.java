@@ -23,7 +23,7 @@ import static tabshifter.valueobjects.Split.Orientation.horizontal;
 import static tabshifter.valueobjects.Split.Orientation.vertical;
 
 public class Ide {
-    public final FileEditorManagerEx editorManager;
+    private final FileEditorManagerEx editorManager;
     private final VirtualFile currentFile;
 
     public Ide(FileEditorManagerEx editorManager, Project project) {

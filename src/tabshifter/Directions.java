@@ -3,6 +3,7 @@ package tabshifter;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tabshifter.valueobjects.LayoutElement;
 import tabshifter.valueobjects.Split;
 import tabshifter.valueobjects.Window;
@@ -18,7 +19,7 @@ import static tabshifter.valueobjects.Split.Orientation.vertical;
 
 public class Directions {
 	public static final Direction left = new Direction() {
-		@Override public Window findTargetWindow(Window window, LayoutElement layout) {
+		@Override @Nullable public Window findTargetWindow(Window window, LayoutElement layout) {
 			return findWindowLeftOf(window, layout);
 		}
 
@@ -31,7 +32,7 @@ public class Directions {
 		}
 	};
 	public static final Direction up = new Direction() {
-		@Override public Window findTargetWindow(Window window, LayoutElement layout) {
+		@Override @Nullable public Window findTargetWindow(Window window, LayoutElement layout) {
 			return findWindowAbove(window, layout);
 		}
 
@@ -44,7 +45,7 @@ public class Directions {
 		}
 	};
 	public static final Direction right = new Direction() {
-		@Override public Window findTargetWindow(Window window, LayoutElement layout) {
+		@Override @Nullable public Window findTargetWindow(Window window, LayoutElement layout) {
 			return findWindowRightOf(window, layout);
 		}
 
@@ -57,7 +58,7 @@ public class Directions {
 		}
 	};
 	public static final Direction down = new Direction() {
-        @Override public Window findTargetWindow(Window window, LayoutElement layout) {
+        @Override @Nullable public Window findTargetWindow(Window window, LayoutElement layout) {
             return findWindowBelow(window, layout);
         }
 
@@ -153,8 +154,7 @@ public class Directions {
 	static List<Window> allWindowsIn(LayoutElement rootElement) {
         final List<Window> result = new ArrayList<Window>();
         traverse(rootElement, new Function<LayoutElement, Boolean>() {
-            @Override
-            public Boolean fun(LayoutElement element) {
+            @Override public Boolean fun(LayoutElement element) {
                 if (element instanceof Window)
                     result.add((Window) element);
                 return true;
@@ -175,7 +175,7 @@ public class Directions {
 	}
 
 	public interface Direction {
-		Window findTargetWindow(Window window, LayoutElement layout);
+		@Nullable Window findTargetWindow(Window window, LayoutElement layout);
 
 		Split.Orientation splitOrientation();
 
