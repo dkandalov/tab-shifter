@@ -16,10 +16,11 @@ import tabshifter.valueobjects.Window
 import java.util.concurrent.atomic.AtomicReference
 
 import static liveplugin.PluginUtil.*
+import static org.hamcrest.CoreMatchers.equalTo
 import static org.hamcrest.MatcherAssert.assertThat
 import static tabshifter.valueobjects.Split.Orientation.horizontal
 import static tabshifter.valueobjects.Split.Orientation.vertical
-// add-to-classpath $HOME/Library/Application Support/IntelliJIdea15/live-plugins/tab-shift/out/production/tab-shifter/
+// add-to-classpath $PLUGIN_PATH/out/production/tab-shifter/
 
 IntegrationTestsRunner.runIntegrationTests([TabShifterIntegrationTest], project)
 
@@ -91,9 +92,43 @@ class TabShifterIntegrationTest {
 		))
 	}
 
+	@Test void "moving tab focus right"() {
+		assertLayout(window(readmeMd, contributeMd, todoTxt))
+		shiftRight(todoTxt)
+		assertLayout(split(vertical,
+				window(readmeMd, contributeMd),
+				window(todoTxt))
+		)
+
+		moveFocusRight(readmeMd)
+
+		assertFocusIsOn(todoTxt)
+	}
+
+	@Test void "moving tab focus down"() {
+		assertLayout(window(readmeMd, contributeMd, todoTxt))
+		shiftDown(todoTxt)
+		assertLayout(split(horizontal,
+				window(readmeMd, contributeMd),
+				window(todoTxt))
+		)
+
+		moveFocusDown(readmeMd)
+
+		assertFocusIsOn(todoTxt)
+	}
+
+	@Test void "moving tab focus right does nothing when it's the rightmost window"() {
+		assertLayout(window(readmeMd, contributeMd, todoTxt))
+
+		moveFocusRight(readmeMd)
+
+		assertFocusIsOn(readmeMd)
+	}
+
 	TabShifterIntegrationTest() {
 		invokeOnEDT {
-			project = openProject(System.properties["user.home"] + "/IdeaProjects/junit")
+			project = openProject(System.properties.getProperty("user.home") + "/IdeaProjects/junit")
 			editorManager = FileEditorManagerEx.getInstanceEx(project)
 			readmeMd = findFileByName("README.md", project).virtualFile
 			contributeMd = findFileByName("CONTRIBUTING.md", project).virtualFile
@@ -135,29 +170,21 @@ class TabShifterIntegrationTest {
 			}
 
 			@Override void describeTo(Description description) {
-				description.appendText("Window(" + files.collect{it.name}.join(",") + ")")
+				description.appendText("Window(" + files*.name.join(",") + ")")
 			}
 		}
 	}
 
+	private assertFocusIsOn(VirtualFile file) {
+		assertOnEDT {
+			assertThat(file, equalTo(editorManager.currentWindow.selectedFile))
+		}
+	}
+
 	private assertLayout(Matcher matcher) {
-		def error = new AtomicReference<Throwable>()
-		def exception = new AtomicReference<Throwable>()
-		invokeOnEDT {
-			try {
-				def layout = ide.snapshotWindowLayout()
-				assertThat(layout, matcher)
-			} catch (AssertionError e) {
-				error.set(e)
-			} catch (Exception e) {
-				exception.set(e)
-			}
-		}
-		if (error.get() != null) {
-			throw new AssertionError(error.get())
-		}
-		if (exception.get() != null) {
-			throw new Exception(exception.get())
+		assertOnEDT {
+			def layout = ide.snapshotWindowLayout()
+			assertThat(layout, matcher)
 		}
 	}
 
@@ -175,11 +202,47 @@ class TabShifterIntegrationTest {
 
 	private shift(VirtualFile file, AnAction shiftAction) {
 		invokeOnEDT {
-			def layout = ide.snapshotWindowLayout()
-			def window = findWindowWith(file, layout)
+			def window = findWindowWith(file, ide.snapshotWindowLayout())
 			ide.setFocusOn(window)
 			editorManager.openFile(file, true)
 			shiftAction.actionPerformed(anActionEvent(newDataContext(["project": project])))
+		}
+	}
+
+	private moveFocusRight(VirtualFile file) {
+		moveFocus(file, new Actions.MoveFocusRight())
+	}
+
+	private moveFocusDown(VirtualFile file) {
+		moveFocus(file, new Actions.MoveFocusDown())
+	}
+
+	private moveFocus(VirtualFile file, AnAction moveFocusAction) {
+		invokeOnEDT {
+			def window = findWindowWith(file, ide.snapshotWindowLayout())
+			ide.setFocusOn(window)
+			editorManager.openFile(file, true)
+			moveFocusAction.actionPerformed(anActionEvent(newDataContext(["project": project])))
+		}
+	}
+
+	private static assertOnEDT(Closure closure) {
+		def error = new AtomicReference<Throwable>()
+		def exception = new AtomicReference<Throwable>()
+		invokeOnEDT {
+			try {
+				closure.call()
+			} catch (AssertionError e) {
+				error.set(e)
+			} catch (Exception e) {
+				exception.set(e)
+			}
+		}
+		if (error.get() != null) {
+			throw new AssertionError(error.get())
+		}
+		if (exception.get() != null) {
+			throw new Exception(exception.get())
 		}
 	}
 

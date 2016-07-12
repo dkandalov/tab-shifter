@@ -5,11 +5,11 @@ import tabshifter.Actions
 import static liveplugin.PluginUtil.registerAction
 import static liveplugin.PluginUtil.show
 
-// add-to-classpath $HOME/Library/Application Support/IntelliJIdea15/live-plugins/tab-shift/out/production/tab-shifter/
+// add-to-classpath $PLUGIN_PATH/out/production/tab-shifter/
 
 if (isIdeStartup) return
 
-def register(String id, String shortcut, String text, AnAction action) {
+static register(String id, String shortcut, String text, AnAction action) {
 	registerAction("TabShiftActions.${id}", shortcut, "EditorTabsGroup", text) { AnActionEvent event ->
 		action.actionPerformed(event)
 	}
