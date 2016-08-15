@@ -25,4 +25,6 @@ register("MoveFocusUp", "ctrl alt shift P", "Move Focus Up", new Actions.MoveFoc
 register("MoveFocusRight", "ctrl alt shift CLOSE_BRACKET", "Move Focus Right", new Actions.MoveFocusRight())
 register("MoveFocusDown", "ctrl alt shift SEMICOLON", "Move Focus Down", new Actions.MoveFocusDown())
 
+register("GrowRight", "ctrl E, RIGHT", "Move Focus Down", new Actions.GrowRight())
+
 show("Reloaded Tab Shifter plugin")

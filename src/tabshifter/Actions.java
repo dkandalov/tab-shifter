@@ -52,6 +52,19 @@ public class Actions {
 		}
 	}
 
+
+	public static class GrowRight extends AnAction implements DumbAware {
+		@Override public void actionPerformed(AnActionEvent event) {
+			tabShifter(event).grow(right);
+		}
+	}
+
+	public static class GrowLeft extends AnAction implements DumbAware {
+		@Override public void actionPerformed(AnActionEvent event) {
+			tabShifter(event).grow(left);
+		}
+	}
+
 	private static TabShifter tabShifter(AnActionEvent event) {
 		Project project = event.getProject();
 		FileEditorManagerEx editorManager = editorManagerIn(project);

@@ -2,20 +2,26 @@ package tabshifter;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Condition;
+import com.intellij.ui.JBSplitter;
 import org.jetbrains.annotations.Nullable;
 import tabshifter.valueobjects.LayoutElement;
 import tabshifter.valueobjects.Position;
 import tabshifter.valueobjects.Split;
 import tabshifter.valueobjects.Window;
 
+import javax.swing.*;
+import java.util.Optional;
+
+import com.intellij.openapi.fileEditor.impl.EditorWindow;
+import static tabshifter.EditorWindow_AccessToPanel_Hack.panelOf;
 import static com.intellij.util.containers.ContainerUtil.find;
 import static tabshifter.valueobjects.Split.Orientation.vertical;
 
 public class TabShifter {
-	public static final TabShifter none = new TabShifter(null) {
-		@Override public void moveFocus(Directions.Direction direction) {}
-		@Override public void moveTab(Directions.Direction direction) {}
-	};
+    public static final TabShifter none = new TabShifter(null) {
+        @Override public void moveFocus(Directions.Direction direction) {}
+        @Override public void moveTab(Directions.Direction direction) {}
+    };
     private static final Logger logger = Logger.getInstance(TabShifter.class.getName());
     private final Ide ide;
 
@@ -24,18 +30,18 @@ public class TabShifter {
         this.ide = ide;
     }
 
-	public void moveFocus(Directions.Direction direction) {
-		LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
-		if (layout == LayoutElement.none) return;
+    public void moveFocus(Directions.Direction direction) {
+        LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
+        if (layout == LayoutElement.none) return;
 
-		Window window = currentWindowIn(layout);
-		if (window == null) return;
+        Window window = currentWindowIn(layout);
+        if (window == null) return;
 
-		Window targetWindow = direction.findTargetWindow(window, layout);
-		if (targetWindow == null) return;
+        Window targetWindow = direction.findTargetWindow(window, layout);
+        if (targetWindow == null) return;
 
-		ide.setFocusOn(targetWindow);
-	}
+        ide.setFocusOn(targetWindow);
+    }
 
     /**
      * Moves tab in the specified direction.
@@ -51,7 +57,7 @@ public class TabShifter {
         LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
         if (layout == LayoutElement.none) return;
         Window window = currentWindowIn(layout);
-	    if (window == null) return;
+        if (window == null) return;
 
         Window targetWindow = direction.findTargetWindow(window, layout);
 
@@ -94,7 +100,97 @@ public class TabShifter {
     }
 
 
-	@Nullable private static Window currentWindowIn(LayoutElement windowLayout) {
+
+    public static JPanel findPanel(LayoutElement element) {
+
+        JPanel panel = null;
+        while (element != null) {
+            if (element instanceof Split) {
+                element = ((Split) element).first;
+            } else if (element instanceof Ide.IdeWindow) {
+                panel = panelOf(((Ide.IdeWindow) element).editorWindow);
+                break;
+            } else {
+                throw new RuntimeException("Unknown element type: " + element.getClass().getName());
+            }
+        }
+
+        return panel;
+
+
+
+    }
+
+    public void grow(Directions.Direction direction) {
+        LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
+
+        if (layout instanceof Split) {
+            Split split = (Split) layout;
+            Window window = currentWindowIn(split);
+            JPanel panel = panelOf(((Ide.IdeWindow) window).editorWindow);
+
+            JBSplitter splitter = (JBSplitter) panel.getParent();
+            boolean hasParentSplitter = splitter.getParent().getParent() instanceof JBSplitter;
+            boolean isFirst = splitter.getFirstComponent() == panel;
+
+
+            float increment = 0.05f;
+            if (direction == Directions.left)
+                increment *= -1f;
+
+            if (hasParentSplitter && (
+                    (isFirst && direction == Directions.left) ||
+                            (!isFirst && direction == Directions.right))) {
+
+                JBSplitter parentSplitter = (JBSplitter) splitter.getParent().getParent();
+                float proportion = parentSplitter.getProportion() + increment;
+                float  newProportion = Math.min(Math.max(proportion,0),1);
+
+                parentSplitter.setProportion(newProportion);
+
+                return;
+            }
+            float proportion = splitter.getProportion() + increment;
+            float  newProportion = Math.min(Math.max(proportion,0),1);
+
+            splitter.setProportion(newProportion);
+
+
+
+        }
+
+        if (layout == LayoutElement.none)
+            return;
+
+
+
+        Window window = currentWindowIn(layout);
+        if (window == null)
+            return;
+
+
+
+
+        //Window targetWindow = direction.findTargetWindow(window, layout);
+        LayoutElement sibling = findSiblingOf(window, layout);
+
+        // Log the current position
+        logger.info(
+                String.format(
+                        "Target position %s / size %s\nsibling position %s / size %s",
+                        window.position.toString(),
+                        window.size().toString(),
+                        (sibling == null) ? "None" :
+                                sibling.position.toString(),
+                        (sibling == null) ? "None" :
+                                sibling.size().toString()));
+        
+
+
+    }
+
+
+    @Nullable private static Window currentWindowIn(LayoutElement windowLayout) {
         return find(Directions.allWindowsIn(windowLayout), new Condition<Window>() {
             @Override public boolean value(Window window) {
                 return window.isCurrent;
@@ -111,6 +207,7 @@ public class TabShifter {
 
             LayoutElement first = findSiblingOf(window, split.first);
             if (first != null) return first;
+
             LayoutElement second = findSiblingOf(window, split.second);
             if (second != null) return second;
 
@@ -149,6 +246,9 @@ public class TabShifter {
         return element;
     }
 
+
+
+
     @Nullable private static Window findWindowBy(final Position position, LayoutElement layout) {
         return find(Directions.allWindowsIn(layout), new Condition<Window>() {
             @Override
@@ -159,7 +259,7 @@ public class TabShifter {
     }
 
 
-	private static LayoutElement removeFrom(LayoutElement element, Window window) {
+    private static LayoutElement removeFrom(LayoutElement element, Window window) {
         if (element instanceof Split) {
             Split split = (Split) element;
             LayoutElement first = removeFrom(split.first, window);

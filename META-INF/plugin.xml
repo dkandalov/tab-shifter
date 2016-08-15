@@ -1,6 +1,6 @@
 <idea-plugin version="2">
-    <id>socrates.tabshifter</id>
-    <name>Tab Shifter</name>
+    <id>socrates.tabshifter.withresize</id>
+    <name>Tab Shifter w/Resize</name>
     <version>0.25</version>
     <vendor email="dmitry.kandalov@gmail.com" url="https://github.com/dkandalov/tab-shifter">Dmitry Kandalov</vendor>
 
@@ -95,6 +95,20 @@
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift SEMICOLON"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt shift SEMICOLON"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt shift SEMICOLON"/>
+        </action>
+
+        <action id="TabShiftActions.GrowRight" class="tabshifter.Actions$GrowRight" text="Grow Split right">
+            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl E" second-keystroke="RIGHT"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl E" second-keystroke="RIGHT"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl E" second-keystroke="RIGHT"/>
+        </action>
+
+        <action id="TabShiftActions.GrowLeft" class="tabshifter.Actions$GrowLeft" text="Grow Split Left">
+            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl E" second-keystroke="LEFT"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl E" second-keystroke="LEFT"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl E" second-keystroke="LEFT"/>
         </action>
     </actions>
 

@@ -7,10 +7,10 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.tabs.JBTabs;
-import org.jetbrains.annotations.NotNull;
 import tabshifter.valueobjects.LayoutElement;
 import tabshifter.valueobjects.Split;
 import tabshifter.valueobjects.Window;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import static javax.swing.SwingUtilities.isDescendingFrom;
+
 import static tabshifter.EditorWindow_AccessToPanel_Hack.panelOf;
 import static tabshifter.valueobjects.Split.Orientation.horizontal;
 import static tabshifter.valueobjects.Split.Orientation.vertical;
@@ -30,6 +31,9 @@ public class Ide {
         this.editorManager = editorManager;
         this.currentFile = currentFileIn(project);
     }
+
+
+
 
     public EditorWindow createSplitter(Split.Orientation orientation) {
         int swingOrientation = (orientation == vertical ? SwingConstants.VERTICAL : SwingConstants.HORIZONTAL);
@@ -95,7 +99,7 @@ public class Ide {
     }
 
 
-    private static class IdeWindow extends Window {
+    public static class IdeWindow extends Window {
         public final EditorWindow editorWindow;
 
         public IdeWindow(EditorWindow editorWindow, boolean hasOneTab, boolean isCurrent) {
