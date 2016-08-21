@@ -1,15 +1,38 @@
 package tabshifter.valueobjects;
 
+import com.intellij.openapi.ui.Splitter;
+import com.intellij.util.Function;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.lang.Math.max;
 
 public class Split extends LayoutElement {
+	/**
+	 * Note that IntelliJ {@link Splitter} has reverse meaning of orientation.
+	 */
     public enum Orientation {
-        vertical, horizontal
+		/**
+		 * Most lines and editors are "vertical".
+		 * ┌─┬─┐
+		 * │ │ │
+		 * └─┴─┘
+		 */
+		vertical,
+		/**
+		 * Most lines and editors are "horizontal".
+		 * ┌───┐
+		 * ├───┤
+		 * └───┘
+		 */
+		horizontal
     }
 
     public final LayoutElement first;
     public final LayoutElement second;
     public final Orientation orientation;
+
 
     public Split(LayoutElement first, LayoutElement second, Orientation orientation) {
         this.first = first;
@@ -34,4 +57,17 @@ public class Split extends LayoutElement {
     @Override public String toString() {
         return "Split(" + orientation + " " + first + ", " + second + ")";
     }
+
+	public static List<Split> allSplitsIn(LayoutElement rootElement) {
+		final List<Split> result = new ArrayList<Split>();
+		traverse(rootElement, new Function<LayoutElement, Boolean>() {
+			@Override public Boolean fun(LayoutElement element) {
+				if (element instanceof Split) {
+					result.add((Split) element);
+				}
+				return true;
+			}
+		});
+		return result;
+	}
 }

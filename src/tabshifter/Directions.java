@@ -1,14 +1,12 @@
 package tabshifter;
 
 import com.intellij.openapi.util.Condition;
-import com.intellij.util.Function;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tabshifter.valueobjects.LayoutElement;
 import tabshifter.valueobjects.Split;
 import tabshifter.valueobjects.Window;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -16,6 +14,7 @@ import static com.intellij.util.containers.ContainerUtil.findAll;
 import static com.intellij.util.containers.ContainerUtil.sort;
 import static tabshifter.valueobjects.Split.Orientation.horizontal;
 import static tabshifter.valueobjects.Split.Orientation.vertical;
+import static tabshifter.valueobjects.Window.allWindowsIn;
 
 public class Directions {
 	public static final Direction left = new Direction() {
@@ -151,28 +150,6 @@ public class Directions {
         return neighbourWindows.isEmpty() ? null : neighbourWindows.get(0);
     }
 
-	static List<Window> allWindowsIn(LayoutElement rootElement) {
-        final List<Window> result = new ArrayList<Window>();
-        traverse(rootElement, new Function<LayoutElement, Boolean>() {
-            @Override public Boolean fun(LayoutElement element) {
-                if (element instanceof Window)
-                    result.add((Window) element);
-                return true;
-            }
-        });
-        return result;
-    }
-
-	private static void traverse(LayoutElement element, Function<LayoutElement, Boolean> function) {
-	    Boolean shouldStop = !function.fun(element);
-	    if (shouldStop) return;
-
-	    if (element instanceof Split) {
-	        Split split = (Split) element;
-	        traverse(split.first, function);
-	        traverse(split.second, function);
-	    }
-	}
 
 	public interface Direction {
 		@Nullable Window findTargetWindow(Window window, LayoutElement layout);

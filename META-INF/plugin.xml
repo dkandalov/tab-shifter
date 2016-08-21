@@ -97,14 +97,14 @@
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt shift SEMICOLON"/>
         </action>
 
-        <action id="TabShiftActions.GrowRight" class="tabshifter.Actions$GrowRight" text="Grow Split Right">
+        <action id="TabShiftActions.StretchRight" class="tabshifter.Actions$StretchRight" text="Stretch Splitter Right">
             <add-to-group group-id="EditorTabsGroup" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl E" second-keystroke="RIGHT"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl E" second-keystroke="RIGHT"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl E" second-keystroke="RIGHT"/>
         </action>
 
-        <action id="TabShiftActions.GrowLeft" class="tabshifter.Actions$GrowLeft" text="Grow Split Left">
+        <action id="TabShiftActions.StretchLeft" class="tabshifter.Actions$StretchLeft" text="Stretch Splitter Left">
             <add-to-group group-id="EditorTabsGroup" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl E" second-keystroke="LEFT"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl E" second-keystroke="LEFT"/>

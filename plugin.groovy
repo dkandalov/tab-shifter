@@ -24,7 +24,7 @@ register("MoveFocusUp", "ctrl alt shift P", "Move Focus Up", new Actions.MoveFoc
 register("MoveFocusRight", "ctrl alt shift CLOSE_BRACKET", "Move Focus Right", new Actions.MoveFocusRight())
 register("MoveFocusDown", "ctrl alt shift SEMICOLON", "Move Focus Down", new Actions.MoveFocusDown())
 
-register("GrowRight", "ctrl E, RIGHT", "Grow Split Right", new Actions.GrowRight())
-register("GrowLeft", "ctrl E, LEFT", "Grow Split Left", new Actions.GrowLeft())
+register("StretchRight", "meta shift CLOSE_BRACKET", "Stretch Splitter Right", new Actions.StretchRight())
+register("StretchLeft", "meta shift OPEN_BRACKET", "Stretch Splitter Left", new Actions.StretchLeft())
 
 show("Reloaded Tab Shifter plugin")

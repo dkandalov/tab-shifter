@@ -53,15 +53,15 @@ public class Actions {
 	}
 
 
-	public static class GrowRight extends AnAction implements DumbAware {
+	public static class StretchRight extends AnAction implements DumbAware {
 		@Override public void actionPerformed(AnActionEvent event) {
-			tabShifter(event).grow(right);
+			tabShifter(event).stretchSplitter(right);
 		}
 	}
 
-	public static class GrowLeft extends AnAction implements DumbAware {
+	public static class StretchLeft extends AnAction implements DumbAware {
 		@Override public void actionPerformed(AnActionEvent event) {
-			tabShifter(event).grow(left);
+			tabShifter(event).stretchSplitter(left);
 		}
 	}
 

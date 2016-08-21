@@ -32,9 +32,6 @@ public class Ide {
         this.currentFile = currentFileIn(project);
     }
 
-
-
-
     public EditorWindow createSplitter(Split.Orientation orientation) {
         int swingOrientation = (orientation == vertical ? SwingConstants.VERTICAL : SwingConstants.HORIZONTAL);
         editorManager.createSplitter(swingOrientation, editorManager.getCurrentWindow());
@@ -69,9 +66,7 @@ public class Ide {
             Splitter splitter = (Splitter) component;
             LayoutElement first = snapshotWindowLayout((JPanel) splitter.getFirstComponent());
             LayoutElement second = snapshotWindowLayout((JPanel) splitter.getSecondComponent());
-            // note that IntelliJ Splitter has "reverse" meaning of orientation
-            Split.Orientation orientation = splitter.isVertical() ? horizontal : vertical;
-            return new Split(first, second, orientation);
+            return new IdeSplitter(first, second, splitter);
 
         } else if (component instanceof JPanel || component instanceof JBTabs) {
             EditorWindow editorWindow = findWindowWith(component);
@@ -98,8 +93,22 @@ public class Ide {
         return ((FileEditorManagerEx) FileEditorManagerEx.getInstance(project)).getCurrentFile();
     }
 
+	public void growSplitProportion(Split split, float increment) {
+		Splitter splitter = ((IdeSplitter) split).splitter;
+		splitter.setProportion(splitter.getProportion() + increment);
+	}
 
-    public static class IdeWindow extends Window {
+
+	private static class IdeSplitter extends Split {
+		public final Splitter splitter;
+
+		public IdeSplitter(LayoutElement first, LayoutElement second, Splitter splitter) {
+			super(first, second, splitter.isVertical() ? horizontal : vertical);
+			this.splitter = splitter;
+		}
+	}
+
+	private static class IdeWindow extends Window {
         public final EditorWindow editorWindow;
 
         public IdeWindow(EditorWindow editorWindow, boolean hasOneTab, boolean isCurrent) {

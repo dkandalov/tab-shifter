@@ -16,7 +16,7 @@ public class EditorWindow_AccessToPanel_Hack {
             panelField = EditorWindow.class.getDeclaredField("myPanel");
             panelField.setAccessible(true);
         } catch (NoSuchFieldException e) {
-            logger.warn("Could find myPanel field");
+            logger.warn("Couldn't find myPanel field");
             return null;
         }
         try {
