@@ -4,7 +4,6 @@ import tabshifter.Actions
 
 import static liveplugin.PluginUtil.registerAction
 import static liveplugin.PluginUtil.show
-
 // add-to-classpath $PLUGIN_PATH/out/production/tab-shifter/
 
 if (isIdeStartup) return
@@ -25,6 +24,7 @@ register("MoveFocusUp", "ctrl alt shift P", "Move Focus Up", new Actions.MoveFoc
 register("MoveFocusRight", "ctrl alt shift CLOSE_BRACKET", "Move Focus Right", new Actions.MoveFocusRight())
 register("MoveFocusDown", "ctrl alt shift SEMICOLON", "Move Focus Down", new Actions.MoveFocusDown())
 
-register("GrowRight", "ctrl E, RIGHT", "Move Focus Down", new Actions.GrowRight())
+register("GrowRight", "ctrl E, RIGHT", "Grow Split Right", new Actions.GrowRight())
+register("GrowLeft", "ctrl E, LEFT", "Grow Split Left", new Actions.GrowLeft())
 
 show("Reloaded Tab Shifter plugin")

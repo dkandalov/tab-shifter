@@ -97,7 +97,7 @@
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt shift SEMICOLON"/>
         </action>
 
-        <action id="TabShiftActions.GrowRight" class="tabshifter.Actions$GrowRight" text="Grow Split right">
+        <action id="TabShiftActions.GrowRight" class="tabshifter.Actions$GrowRight" text="Grow Split Right">
             <add-to-group group-id="EditorTabsGroup" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl E" second-keystroke="RIGHT"/>
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl E" second-keystroke="RIGHT"/>

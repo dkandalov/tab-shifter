@@ -4,23 +4,22 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Condition;
 import com.intellij.ui.JBSplitter;
 import org.jetbrains.annotations.Nullable;
+import tabshifter.Directions.Direction;
 import tabshifter.valueobjects.LayoutElement;
 import tabshifter.valueobjects.Position;
 import tabshifter.valueobjects.Split;
 import tabshifter.valueobjects.Window;
 
 import javax.swing.*;
-import java.util.Optional;
 
-import com.intellij.openapi.fileEditor.impl.EditorWindow;
-import static tabshifter.EditorWindow_AccessToPanel_Hack.panelOf;
 import static com.intellij.util.containers.ContainerUtil.find;
+import static tabshifter.EditorWindow_AccessToPanel_Hack.panelOf;
 import static tabshifter.valueobjects.Split.Orientation.vertical;
 
 public class TabShifter {
     public static final TabShifter none = new TabShifter(null) {
-        @Override public void moveFocus(Directions.Direction direction) {}
-        @Override public void moveTab(Directions.Direction direction) {}
+        @Override public void moveFocus(Direction direction) {}
+        @Override public void moveTab(Direction direction) {}
     };
     private static final Logger logger = Logger.getInstance(TabShifter.class.getName());
     private final Ide ide;
@@ -30,7 +29,7 @@ public class TabShifter {
         this.ide = ide;
     }
 
-    public void moveFocus(Directions.Direction direction) {
+    public void moveFocus(Direction direction) {
         LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
         if (layout == LayoutElement.none) return;
 
@@ -53,7 +52,7 @@ public class TabShifter {
      *      => need to predict target window position and look up window by expected position
      *
      */
-    public void moveTab(Directions.Direction direction) {
+    public void moveTab(Direction direction) {
         LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
         if (layout == LayoutElement.none) return;
         Window window = currentWindowIn(layout);
@@ -93,101 +92,62 @@ public class TabShifter {
 
         if (targetWindow == null) {
             // ideally this should never happen, logging in case something goes wrong
-            logger.warn("No window for: " + newPosition);
+            logger.warn("No window for: " + newPosition + "; windowLayout: " + newWindowLayout);
         } else {
             ide.setFocusOn(targetWindow);
         }
     }
 
+	public void grow(Direction direction) {
+		LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
 
+		if (layout instanceof Split) {
+			Split split = (Split) layout;
+			Window window = currentWindowIn(split);
+			if (window == null) return;
+			JPanel panel = panelOf(((Ide.IdeWindow) window).editorWindow);
+			if (panel == null) return;
 
-    public static JPanel findPanel(LayoutElement element) {
+			JBSplitter splitter = (JBSplitter) panel.getParent();
+			boolean hasParentSplitter = splitter.getParent().getParent() instanceof JBSplitter;
+			boolean isFirst = splitter.getFirstComponent() == panel;
 
-        JPanel panel = null;
-        while (element != null) {
-            if (element instanceof Split) {
-                element = ((Split) element).first;
-            } else if (element instanceof Ide.IdeWindow) {
-                panel = panelOf(((Ide.IdeWindow) element).editorWindow);
-                break;
-            } else {
-                throw new RuntimeException("Unknown element type: " + element.getClass().getName());
-            }
-        }
+			float increment = 0.05f;
+			if (direction == Directions.left) {
+				increment *= -1f;
+			}
 
-        return panel;
+			if (hasParentSplitter && ((isFirst && direction == Directions.left) || (!isFirst && direction == Directions.right))) {
+				JBSplitter parentSplitter = (JBSplitter) splitter.getParent().getParent();
+				float proportion = parentSplitter.getProportion() + increment;
+				float newProportion = Math.min(Math.max(proportion, 0), 1);
 
+				parentSplitter.setProportion(newProportion);
 
+				return;
+			}
+			float proportion = splitter.getProportion() + increment;
+			float newProportion = Math.min(Math.max(proportion, 0), 1);
 
-    }
+			splitter.setProportion(newProportion);
+		}
 
-    public void grow(Directions.Direction direction) {
-        LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
+		if (layout == LayoutElement.none) return;
 
-        if (layout instanceof Split) {
-            Split split = (Split) layout;
-            Window window = currentWindowIn(split);
-            JPanel panel = panelOf(((Ide.IdeWindow) window).editorWindow);
+		Window window = currentWindowIn(layout);
+		if (window == null) return;
 
-            JBSplitter splitter = (JBSplitter) panel.getParent();
-            boolean hasParentSplitter = splitter.getParent().getParent() instanceof JBSplitter;
-            boolean isFirst = splitter.getFirstComponent() == panel;
+		LayoutElement sibling = findSiblingOf(window, layout);
 
-
-            float increment = 0.05f;
-            if (direction == Directions.left)
-                increment *= -1f;
-
-            if (hasParentSplitter && (
-                    (isFirst && direction == Directions.left) ||
-                            (!isFirst && direction == Directions.right))) {
-
-                JBSplitter parentSplitter = (JBSplitter) splitter.getParent().getParent();
-                float proportion = parentSplitter.getProportion() + increment;
-                float  newProportion = Math.min(Math.max(proportion,0),1);
-
-                parentSplitter.setProportion(newProportion);
-
-                return;
-            }
-            float proportion = splitter.getProportion() + increment;
-            float  newProportion = Math.min(Math.max(proportion,0),1);
-
-            splitter.setProportion(newProportion);
-
-
-
-        }
-
-        if (layout == LayoutElement.none)
-            return;
-
-
-
-        Window window = currentWindowIn(layout);
-        if (window == null)
-            return;
-
-
-
-
-        //Window targetWindow = direction.findTargetWindow(window, layout);
-        LayoutElement sibling = findSiblingOf(window, layout);
-
-        // Log the current position
-        logger.info(
-                String.format(
-                        "Target position %s / size %s\nsibling position %s / size %s",
-                        window.position.toString(),
-                        window.size().toString(),
-                        (sibling == null) ? "None" :
-                                sibling.position.toString(),
-                        (sibling == null) ? "None" :
-                                sibling.size().toString()));
-        
-
-
-    }
+		// Log the current position
+		logger.info(String.format(
+				"Target position %s / size %s\nsibling position %s / size %s",
+				window.position.toString(),
+				window.size().toString(),
+				sibling == null ? "None" : sibling.position.toString(),
+				sibling == null ? "None" : sibling.size().toString())
+		);
+	}
 
 
     @Nullable private static Window currentWindowIn(LayoutElement windowLayout) {
