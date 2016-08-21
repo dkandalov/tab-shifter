@@ -47,6 +47,13 @@
     <depends>com.intellij.modules.lang</depends>
 
     <actions>
+        <!--
+          - On OS X can't use alt+shift+arrows and cmd+shift+arrows shortcuts because they collide with existing actions (e.g. "Move Cursor to Line End with Selection").
+            Although it would be great to use cmd+shift+arrows because they are used for stretching toolwindows.
+          - On Windows can't use ctrl+alt+P because it clashes with Extract Parameter.
+          - Ctrl+alt+arrows clash with unused SwitchManagerAppComponent shortcuts.
+        -->
+
         <action id="TabShiftActions.ShiftLeft" class="tabshifter.Actions$ShiftLeft" text="Shift Left">
             <add-to-group group-id="EditorTabsGroup" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt shift OPEN_BRACKET"/>
@@ -99,16 +106,27 @@
 
         <action id="TabShiftActions.StretchRight" class="tabshifter.Actions$StretchRight" text="Stretch Splitter Right">
             <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl E" second-keystroke="RIGHT"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl E" second-keystroke="RIGHT"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl E" second-keystroke="RIGHT"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt CLOSE_BRACKET"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift CLOSE_BRACKET"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift CLOSE_BRACKET"/>
         </action>
-
         <action id="TabShiftActions.StretchLeft" class="tabshifter.Actions$StretchLeft" text="Stretch Splitter Left">
             <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl E" second-keystroke="LEFT"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl E" second-keystroke="LEFT"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl E" second-keystroke="LEFT"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt OPEN_BRACKET"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift OPEN_BRACKET"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift OPEN_BRACKET"/>
+        </action>
+        <action id="TabShiftActions.StretchUp" class="tabshifter.Actions$StretchUp" text="Stretch Splitter Up">
+            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
+            <!--<keyboard-shortcut keymap="$default" first-keystroke=""/>-->
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift P"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift P"/>
+        </action>
+        <action id="TabShiftActions.StretchDown" class="tabshifter.Actions$StretchDown" text="Stretch Splitter Down">
+            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
+            <!--<keyboard-shortcut keymap="$default" first-keystroke=""/>-->
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift SEMICOLON"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift SEMICOLON"/>
         </action>
     </actions>
 

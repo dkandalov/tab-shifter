@@ -1,6 +1,5 @@
 package tabshifter.valueobjects;
 
-import com.intellij.openapi.ui.Splitter;
 import com.intellij.util.Function;
 
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import static java.lang.Math.max;
 
 public class Split extends LayoutElement {
 	/**
-	 * Note that IntelliJ {@link Splitter} has reverse meaning of orientation.
+	 * Note that IntelliJ Splitter has reverse meaning of orientation.
 	 */
     public enum Orientation {
 		/**

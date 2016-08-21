@@ -30,7 +30,11 @@ public class TabShifter {
         this.ide = ide;
     }
 
-    public void moveFocus(Direction direction) {
+	/**
+	 * Potentially this mysterious component com.intellij.ui.switcher.SwitchManagerAppComponent
+	 * could be used for switching focus, but it's currently doesn't work very well and is not enabled.
+	 */
+	public void moveFocus(Direction direction) {
         LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
         if (layout == LayoutElement.none) return;
 
@@ -51,7 +55,6 @@ public class TabShifter {
      *      => need to track target window to move focus into it
      *  - EditorWindow object changes its identity after split/unsplit (i.e. points to another visual window)
      *      => need to predict target window position and look up window by expected position
-     *
      */
     public void moveTab(Direction direction) {
         LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
@@ -107,16 +110,17 @@ public class TabShifter {
 		if (window == null) return;
 
 		Split split = findParentSplitOf(window, layout);
-		while (split != null && split.orientation == horizontal) {
+		Split.Orientation orientationToSkip = (direction == Directions.left || direction == Directions.right) ? horizontal : vertical;
+		while (split != null && split.orientation == orientationToSkip) {
 			split = findParentSplitOf(split, layout);
 		}
 		if (split == null) return;
 
-		float increment = 0.05f;
-		if (direction == Directions.left) {
-			increment = -increment;
+		if (direction == Directions.right || direction == Directions.down) {
+			ide.growSplitProportion(split);
+		} else {
+			ide.shrinkSplitProportion(split);
 		}
-		ide.growSplitProportion(split, increment);
 	}
 
 	@Nullable private static Split findParentSplitOf(LayoutElement layoutElement, LayoutElement layout) {
@@ -127,7 +131,6 @@ public class TabShifter {
 		}
 		return null;
 	}
-
 
 	@Nullable private static Window currentWindowIn(LayoutElement windowLayout) {
         return find(allWindowsIn(windowLayout), new Condition<Window>() {

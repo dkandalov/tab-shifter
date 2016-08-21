@@ -58,10 +58,19 @@ public class Actions {
 			tabShifter(event).stretchSplitter(right);
 		}
 	}
-
 	public static class StretchLeft extends AnAction implements DumbAware {
 		@Override public void actionPerformed(AnActionEvent event) {
 			tabShifter(event).stretchSplitter(left);
+		}
+	}
+	public static class StretchUp extends AnAction implements DumbAware {
+		@Override public void actionPerformed(AnActionEvent event) {
+			tabShifter(event).stretchSplitter(up);
+		}
+	}
+	public static class StretchDown extends AnAction implements DumbAware {
+		@Override public void actionPerformed(AnActionEvent event) {
+			tabShifter(event).stretchSplitter(down);
 		}
 	}
 

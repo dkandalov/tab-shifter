@@ -4,13 +4,14 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.EditorWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.tabs.JBTabs;
+import org.jetbrains.annotations.NotNull;
 import tabshifter.valueobjects.LayoutElement;
 import tabshifter.valueobjects.Split;
 import tabshifter.valueobjects.Window;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import static javax.swing.SwingUtilities.isDescendingFrom;
-
 import static tabshifter.EditorWindow_AccessToPanel_Hack.panelOf;
 import static tabshifter.valueobjects.Split.Orientation.horizontal;
 import static tabshifter.valueobjects.Split.Orientation.vertical;
@@ -26,10 +26,16 @@ import static tabshifter.valueobjects.Split.Orientation.vertical;
 public class Ide {
     private final FileEditorManagerEx editorManager;
     private final VirtualFile currentFile;
+	private final float widthStretch;
+	private final float heightStretch;
 
-    public Ide(FileEditorManagerEx editorManager, Project project) {
+	public Ide(FileEditorManagerEx editorManager, Project project) {
         this.editorManager = editorManager;
         this.currentFile = currentFileIn(project);
+
+		// Use these particular registry values to be consistent with in com.intellij.ide.actions.WindowAction.BaseSizeAction.
+		this.widthStretch = Registry.intValue("ide.windowSystem.hScrollChars", 5) / 100f;
+		this.heightStretch = Registry.intValue("ide.windowSystem.vScrollChars", 5) / 100f;
     }
 
     public EditorWindow createSplitter(Split.Orientation orientation) {
@@ -93,9 +99,18 @@ public class Ide {
         return ((FileEditorManagerEx) FileEditorManagerEx.getInstance(project)).getCurrentFile();
     }
 
-	public void growSplitProportion(Split split, float increment) {
+	public void growSplitProportion(Split split) {
+		updateProportion(split, 1);
+	}
+
+	public void shrinkSplitProportion(Split split) {
+		updateProportion(split, -1);
+	}
+
+	private void updateProportion(Split split, float direction) {
+		float stretch = direction * (split.orientation == vertical ? widthStretch : heightStretch);
 		Splitter splitter = ((IdeSplitter) split).splitter;
-		splitter.setProportion(splitter.getProportion() + increment);
+		splitter.setProportion(splitter.getProportion() + stretch);
 	}
 
 

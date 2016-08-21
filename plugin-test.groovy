@@ -20,7 +20,9 @@ import static org.hamcrest.CoreMatchers.equalTo
 import static org.hamcrest.MatcherAssert.assertThat
 import static tabshifter.valueobjects.Split.Orientation.horizontal
 import static tabshifter.valueobjects.Split.Orientation.vertical
+//
 // add-to-classpath $PLUGIN_PATH/out/production/tab-shifter/
+//
 
 IntegrationTestsRunner.runIntegrationTests([TabShifterIntegrationTest], project)
 

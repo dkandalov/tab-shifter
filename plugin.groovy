@@ -2,9 +2,10 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import tabshifter.Actions
 
-import static liveplugin.PluginUtil.registerAction
-import static liveplugin.PluginUtil.show
+import static liveplugin.PluginUtil.*
+//
 // add-to-classpath $PLUGIN_PATH/out/production/tab-shifter/
+//
 
 if (isIdeStartup) return
 
@@ -24,7 +25,9 @@ register("MoveFocusUp", "ctrl alt shift P", "Move Focus Up", new Actions.MoveFoc
 register("MoveFocusRight", "ctrl alt shift CLOSE_BRACKET", "Move Focus Right", new Actions.MoveFocusRight())
 register("MoveFocusDown", "ctrl alt shift SEMICOLON", "Move Focus Down", new Actions.MoveFocusDown())
 
-register("StretchRight", "meta shift CLOSE_BRACKET", "Stretch Splitter Right", new Actions.StretchRight())
-register("StretchLeft", "meta shift OPEN_BRACKET", "Stretch Splitter Left", new Actions.StretchLeft())
+register("StretchRight", "alt shift CLOSE_BRACKET", "Stretch Splitter Right", new Actions.StretchRight())
+register("StretchLeft", "alt shift OPEN_BRACKET", "Stretch Splitter Left", new Actions.StretchLeft())
+register("StretchUp", "alt shift P", "Stretch Splitter Up", new Actions.StretchUp())
+register("StretchDown", "alt shift SEMICOLON", "Stretch Splitter Down", new Actions.StretchDown())
 
 show("Reloaded Tab Shifter plugin")
