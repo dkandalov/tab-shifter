@@ -58,80 +58,76 @@
           - Ctrl+alt+arrows clash with unused SwitchManagerAppComponent shortcuts.
         -->
 
-        <action id="TabShiftActions.ShiftLeft" class="tabshifter.Actions$ShiftLeft" text="Shift Left">
-            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="alt shift OPEN_BRACKET"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt OPEN_BRACKET"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt OPEN_BRACKET"/>
-        </action>
-        <action id="TabShiftActions.ShiftUp" class="tabshifter.Actions$ShiftUp" text="Shift Up">
-            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="alt shift P"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt P"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt P"/>
-        </action>
-        <action id="TabShiftActions.ShiftRight" class="tabshifter.Actions$ShiftRight" text="Shift Right">
-            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="alt shift CLOSE_BRACKET"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt CLOSE_BRACKET"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt CLOSE_BRACKET"/>
-        </action>
-        <action id="TabShiftActions.ShiftDown" class="tabshifter.Actions$ShiftDown" text="Shift Down">
-            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="alt shift SEMICOLON"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt SEMICOLON"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt SEMICOLON"/>
-        </action>
+        <group id="TabShiftActions" text="Tab Shifter" popup="true">
+            <add-to-group group-id="WindowMenu" anchor="after" relative-to-action="EditorTabsGroup"/>
 
-        <action id="TabShiftActions.MoveFocusLeft" class="tabshifter.Actions$MoveFocusLeft" text="Move Focus Left">
-            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift OPEN_BRACKET"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt shift OPEN_BRACKET"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt shift OPEN_BRACKET"/>
-        </action>
-        <action id="TabShiftActions.MoveFocusUp" class="tabshifter.Actions$MoveFocusUp" text="Move Focus Up">
-            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift P"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt shift P"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt shift P"/>
-        </action>
-        <action id="TabShiftActions.MoveFocusRight" class="tabshifter.Actions$MoveFocusRight" text="Move Focus Right">
-            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift CLOSE_BRACKET"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt shift CLOSE_BRACKET"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt shift CLOSE_BRACKET"/>
-        </action>
-        <action id="TabShiftActions.MoveFocusDown" class="tabshifter.Actions$MoveFocusDown" text="Move Focus Down">
-            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift SEMICOLON"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt shift SEMICOLON"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt shift SEMICOLON"/>
-        </action>
+            <action id="TabShiftActions.ShiftLeft" class="tabshifter.Actions$ShiftLeft" text="Shift Left">
+                <keyboard-shortcut keymap="$default" first-keystroke="alt shift OPEN_BRACKET"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt OPEN_BRACKET"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt OPEN_BRACKET"/>
+            </action>
+            <action id="TabShiftActions.ShiftUp" class="tabshifter.Actions$ShiftUp" text="Shift Up">
+                <keyboard-shortcut keymap="$default" first-keystroke="alt shift P"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt P"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt P"/>
+            </action>
+            <action id="TabShiftActions.ShiftRight" class="tabshifter.Actions$ShiftRight" text="Shift Right">
+                <keyboard-shortcut keymap="$default" first-keystroke="alt shift CLOSE_BRACKET"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt CLOSE_BRACKET"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt CLOSE_BRACKET"/>
+            </action>
+            <action id="TabShiftActions.ShiftDown" class="tabshifter.Actions$ShiftDown" text="Shift Down">
+                <keyboard-shortcut keymap="$default" first-keystroke="alt shift SEMICOLON"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt SEMICOLON"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt SEMICOLON"/>
+            </action>
 
-        <action id="TabShiftActions.StretchRight" class="tabshifter.Actions$StretchRight" text="Stretch Splitter Right">
-            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt CLOSE_BRACKET"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift CLOSE_BRACKET"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift CLOSE_BRACKET"/>
-        </action>
-        <action id="TabShiftActions.StretchLeft" class="tabshifter.Actions$StretchLeft" text="Stretch Splitter Left">
-            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt OPEN_BRACKET"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift OPEN_BRACKET"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift OPEN_BRACKET"/>
-        </action>
-        <action id="TabShiftActions.StretchUp" class="tabshifter.Actions$StretchUp" text="Stretch Splitter Up">
-            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-            <!--<keyboard-shortcut keymap="$default" first-keystroke=""/>-->
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift P"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift P"/>
-        </action>
-        <action id="TabShiftActions.StretchDown" class="tabshifter.Actions$StretchDown" text="Stretch Splitter Down">
-            <add-to-group group-id="EditorTabsGroup" anchor="last"/>
-            <!--<keyboard-shortcut keymap="$default" first-keystroke=""/>-->
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift SEMICOLON"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift SEMICOLON"/>
-        </action>
+            <separator/>
+
+            <action id="TabShiftActions.MoveFocusLeft" class="tabshifter.Actions$MoveFocusLeft" text="Move Focus Left">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift OPEN_BRACKET"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt shift OPEN_BRACKET"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt shift OPEN_BRACKET"/>
+            </action>
+            <action id="TabShiftActions.MoveFocusUp" class="tabshifter.Actions$MoveFocusUp" text="Move Focus Up">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift P"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt shift P"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt shift P"/>
+            </action>
+            <action id="TabShiftActions.MoveFocusRight" class="tabshifter.Actions$MoveFocusRight" text="Move Focus Right">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift CLOSE_BRACKET"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt shift CLOSE_BRACKET"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt shift CLOSE_BRACKET"/>
+            </action>
+            <action id="TabShiftActions.MoveFocusDown" class="tabshifter.Actions$MoveFocusDown" text="Move Focus Down">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift SEMICOLON"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl alt shift SEMICOLON"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl alt shift SEMICOLON"/>
+            </action>
+
+            <separator/>
+
+            <action id="TabShiftActions.StretchRight" class="tabshifter.Actions$StretchRight" text="Stretch Splitter Right">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt CLOSE_BRACKET"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift CLOSE_BRACKET"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift CLOSE_BRACKET"/>
+            </action>
+            <action id="TabShiftActions.StretchLeft" class="tabshifter.Actions$StretchLeft" text="Stretch Splitter Left">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt OPEN_BRACKET"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift OPEN_BRACKET"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift OPEN_BRACKET"/>
+            </action>
+            <action id="TabShiftActions.StretchUp" class="tabshifter.Actions$StretchUp" text="Stretch Splitter Up">
+                <!--<keyboard-shortcut keymap="$default" first-keystroke=""/>-->
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift P"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift P"/>
+            </action>
+            <action id="TabShiftActions.StretchDown" class="tabshifter.Actions$StretchDown" text="Stretch Splitter Down">
+                <!--<keyboard-shortcut keymap="$default" first-keystroke=""/>-->
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift SEMICOLON"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift SEMICOLON"/>
+            </action>
+        </group>
     </actions>
 
 </idea-plugin>

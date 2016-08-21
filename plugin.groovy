@@ -10,7 +10,7 @@ import static liveplugin.PluginUtil.*
 if (isIdeStartup) return
 
 static register(String id, String shortcut, String text, AnAction action) {
-	registerAction("TabShiftActions.${id}", shortcut, "EditorTabsGroup", text) { AnActionEvent event ->
+	registerAction("TabShiftActions.${id}", shortcut, "TabShiftActions", text) { AnActionEvent event ->
 		action.actionPerformed(event)
 	}
 }
