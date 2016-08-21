@@ -1,6 +1,6 @@
 Tab Shifter
 ====
-[**Tab Shifter**](http://plugins.jetbrains.com/plugin/7475) is a tiny plugin for IntelliJ IDEA to move and split editor tabs.<br/>
+[**Tab Shifter**](http://plugins.jetbrains.com/plugin/7475) is a plugin for IntelliJ IDEA to move/split and stretch editor tabs.<br/>
 It adds several actions to ``Main Menu -> Window -> Editor Tabs``.
 
 OSX shortcuts:
@@ -8,12 +8,16 @@ OSX shortcuts:
  - ``ctrl + alt + [`` - move tab to the left split
  - ``ctrl + alt + P`` - move tab to the split above
  - ``ctrl + alt + '`` - move tab to the split below (or create new split if it's the bottom split)
+ - ``alt + shift + ['`` - stretch split left
+ - ``alt + shift + ]'`` - stretch split right
 
 Other OS shortcuts:
  - ``alt + shift + ]`` - move tab right
  - ``alt + shift + [`` - move tab left
  - ``alt + shift + P`` - move tab up
  - ``alt + shift + '`` - move tab down
+ - ``ctrl + alt + ['`` - stretch split left
+ - ``ctrl + alt + ]'`` - stretch split right
 
 To move focus between splits:
  - ``ctrl+alt+shift+]`` - right
