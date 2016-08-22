@@ -76,13 +76,11 @@ public class Actions {
 
 	private static TabShifter tabShifter(AnActionEvent event) {
 		Project project = event.getProject();
-		FileEditorManagerEx editorManager = editorManagerIn(project);
-		if (project == null || editorManager == null) return TabShifter.none;
-
-		return new TabShifter(new Ide(editorManager, project));
+		FileEditorManagerEx editorManager = (project == null ? null : FileEditorManagerEx.getInstanceEx(project));
+		if (project == null || editorManager == null || editorManager.getAllEditors().length == 0) {
+			return TabShifter.none;
+		} else {
+			return new TabShifter(new Ide(editorManager, project));
+		}
 	}
-
-	private static FileEditorManagerEx editorManagerIn(Project project) {
-        return project == null ? null : FileEditorManagerEx.getInstanceEx(project);
-    }
 }
