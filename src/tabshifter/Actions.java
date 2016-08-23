@@ -10,11 +10,11 @@ import static tabshifter.Directions.*;
 
 @SuppressWarnings("ComponentNotRegistered")
 public class Actions {
-    public static class ShiftLeft extends AnAction implements DumbAware {
-	    @Override public void actionPerformed(AnActionEvent event) {
-	        tabShifter(event).moveTab(left);
-        }
-    }
+	public static class ShiftLeft extends AnAction implements DumbAware {
+		@Override public void actionPerformed(AnActionEvent event) {
+			tabShifter(event).moveTab(left);
+		}
+	}
 	public static class ShiftUp extends AnAction implements DumbAware {
 		@Override public void actionPerformed(AnActionEvent event) {
 			tabShifter(event).moveTab(up);
@@ -22,13 +22,13 @@ public class Actions {
 	}
 	public static class ShiftRight extends AnAction implements DumbAware {
 		@Override public void actionPerformed(AnActionEvent event) {
-		    tabShifter(event).moveTab(right);
-	    }
-    }
+			tabShifter(event).moveTab(right);
+		}
+	}
 	public static class ShiftDown extends AnAction implements DumbAware {
 		@Override public void actionPerformed(AnActionEvent event) {
-		    tabShifter(event).moveTab(down);
-	    }
+			tabShifter(event).moveTab(down);
+		}
 	}
 
 	public static class MoveFocusLeft extends AnAction implements DumbAware {

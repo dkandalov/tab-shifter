@@ -4,7 +4,7 @@ import com.intellij.util.Function;
 
 public abstract class LayoutElement {
 
-    public Position position;
+	public Position position;
 
 	public abstract Size size();
 
