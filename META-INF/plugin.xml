@@ -5,8 +5,8 @@
     <vendor email="dmitry.kandalov@gmail.com" url="https://github.com/dkandalov/tab-shifter">Dmitry Kandalov</vendor>
 
     <description><![CDATA[
-        This is a plugin to move/split and resize editor tabs.
-        It adds several actions to "Main Menu -> Window -> Editor Tabs".
+        This is a plugin with a bunch of actions to move tabs between editor splits and resize splits.
+        Actions are added to "Main Menu -> Window -> Tab Shifter".
         <br/>
         OSX shortcuts:
         <ul>
