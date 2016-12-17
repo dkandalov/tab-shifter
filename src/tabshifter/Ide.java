@@ -115,7 +115,6 @@ public class Ide {
 
 	public boolean toggleMaximizeRestoreSpliter(Split split, boolean inFirst) {
 		Splitter splitter = ((IdeSplitter) split).splitter;
-		int id = java.lang.System.identityHashCode(split);
 
 		// zoom out if the proportion equals the one during maximization
 		if (this.maximizeState != null && this.maximizeState.newProportion == splitter.getProportion()) {
@@ -133,8 +132,8 @@ public class Ide {
 	}
 
 	public void hideToolWindows() {
-		for (String windowId : this.toolWindowManager.getToolWindowIds()) {
-			this.toolWindowManager.hideToolWindow(windowId, true);
+		for (String windowId : toolWindowManager.getToolWindowIds()) {
+			toolWindowManager.hideToolWindow(windowId, true);
 		}
 	}
 

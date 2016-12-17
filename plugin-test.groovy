@@ -143,7 +143,7 @@ class TabShifterIntegrationTest {
 		}
 	}
 
-	public void closeAllFiles(FileEditorManagerEx editorManager, Project project) {
+	private void closeAllFiles(FileEditorManagerEx editorManager, Project project) {
 		editorManager.windows.each { window ->
 			window.files.each { window.closeFile(it) }
 		}
