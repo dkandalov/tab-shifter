@@ -26,7 +26,7 @@ import static tabshifter.valueobjects.Split.Orientation.vertical;
 
 public class Ide {
 	private final FileEditorManagerEx editorManager;
-	private final VirtualFile currentFile;
+	private final Project project;
 	private final float widthStretch;
 	private final float heightStretch;
 	private final ToolWindowManagerEx toolWindowManager;
@@ -34,9 +34,9 @@ public class Ide {
 
 	public Ide(FileEditorManagerEx editorManager, Project project) {
 		this.editorManager = editorManager;
-		this.currentFile = currentFileIn(project);
-		this.maximizeState = null;
 		this.toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
+		this.project = project;
+		this.maximizeState = null;
 
 		// Use these particular registry values to be consistent with in com.intellij.ide.actions.WindowAction.BaseSizeAction.
 		this.widthStretch = Registry.intValue("ide.windowSystem.hScrollChars", 5) / 100f;
@@ -51,11 +51,11 @@ public class Ide {
 	}
 
 	public void closeCurrentFileIn(Window window) {
-		((IdeWindow) window).editorWindow.closeFile(currentFile);
+		((IdeWindow) window).editorWindow.closeFile(currentFileIn(project));
 	}
 
 	public void openCurrentFileIn(Window window) {
-		editorManager.openFileWithProviders(currentFile, true, ((IdeWindow) window).editorWindow);
+		editorManager.openFileWithProviders(currentFileIn(project), true, ((IdeWindow) window).editorWindow);
 	}
 
 	public void setFocusOn(Window window) {
