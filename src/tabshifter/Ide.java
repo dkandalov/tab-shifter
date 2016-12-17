@@ -7,6 +7,7 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.ui.tabs.JBTabs;
 import org.jetbrains.annotations.NotNull;
 import tabshifter.valueobjects.LayoutElement;
@@ -28,10 +29,14 @@ public class Ide {
 	private final VirtualFile currentFile;
 	private final float widthStretch;
 	private final float heightStretch;
+	private final ToolWindowManagerEx toolWindowManager;
+	private MaximizeState maximizeState;
 
 	public Ide(FileEditorManagerEx editorManager, Project project) {
 		this.editorManager = editorManager;
 		this.currentFile = currentFileIn(project);
+		this.maximizeState = null;
+		this.toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
 
 		// Use these particular registry values to be consistent with in com.intellij.ide.actions.WindowAction.BaseSizeAction.
 		this.widthStretch = Registry.intValue("ide.windowSystem.hScrollChars", 5) / 100f;
@@ -101,6 +106,36 @@ public class Ide {
 
 	public void growSplitProportion(Split split) {
 		updateProportion(split, 1);
+	}
+
+	private class MaximizeState {
+		float oldProportion;
+		float newProportion;
+	}
+
+	public boolean toggleMaximizeRestoreSpliter(Split split, boolean inFirst) {
+		Splitter splitter = ((IdeSplitter) split).splitter;
+		int id = java.lang.System.identityHashCode(split);
+
+		// zoom out if the proportion equals the one during maximization
+		if (this.maximizeState != null && this.maximizeState.newProportion == splitter.getProportion()) {
+			splitter.setProportion(this.maximizeState.oldProportion);
+			this.maximizeState = null;
+			return false;
+		}
+
+		// maximize
+		this.maximizeState = new MaximizeState();
+		this.maximizeState.oldProportion = splitter.getProportion();
+		splitter.setProportion(inFirst ? 1.0F : 0.0F);
+		this.maximizeState.newProportion = splitter.getProportion();
+		return true;
+	}
+
+	public void hideToolWindows() {
+		for (String windowId : this.toolWindowManager.getToolWindowIds()) {
+			this.toolWindowManager.hideToolWindow(windowId, true);
+		}
 	}
 
 	public void shrinkSplitProportion(Split split) {

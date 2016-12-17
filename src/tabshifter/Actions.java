@@ -74,13 +74,32 @@ public class Actions {
 		}
 	}
 
-	private static TabShifter tabShifter(AnActionEvent event) {
-		Project project = event.getProject();
-		FileEditorManagerEx editorManager = (project == null ? null : FileEditorManagerEx.getInstanceEx(project));
-		if (project == null || editorManager == null || editorManager.getAllEditors().length == 0) {
-			return TabShifter.none;
-		} else {
-			return new TabShifter(new Ide(editorManager, project));
+	public static class ToggleMaximizeRestore extends AnAction implements DumbAware {
+		@Override public void actionPerformed(AnActionEvent event) {
+			tabShifter(event).toggleMaximizeRestoreSplitter();
 		}
 	}
+
+	private static TabShifter tabShifter(AnActionEvent event) {
+		Project project = event.getProject();
+		if (project == null) {
+			return TabShifter.none;
+		}
+
+		// re-use old tabShifter to preserve state
+		if (projectTabShifter.containsKey(project.getProjectFilePath())) {
+			return projectTabShifter.get(project.getProjectFilePath());
+		}
+
+		FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
+		if (editorManager == null || editorManager.getAllEditors().length == 0) {
+			return TabShifter.none;
+		} else {
+			TabShifter tabShifter = new TabShifter(new Ide(editorManager, project));
+			projectTabShifter.put(project.getProjectFilePath(), tabShifter);
+			return tabShifter;
+		}
+	}
+
+	private static java.util.Map<String, TabShifter> projectTabShifter = new java.util.HashMap<String, TabShifter>();
 }

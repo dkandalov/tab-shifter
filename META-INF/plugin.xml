@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>socrates.tabshifter</id>
     <name>Tab Shifter</name>
-    <version>0.25</version>
+    <version>0.26</version>
     <vendor email="dmitry.kandalov@gmail.com" url="https://github.com/dkandalov/tab-shifter">Dmitry Kandalov</vendor>
 
     <description><![CDATA[
@@ -16,6 +16,7 @@
             <li>ctrl+alt+; - shift tab down</li>
             <li>alt+ctrl+[ - stretch split left</li>
             <li>alt+ctrl+] - stretch split right</li>
+            <li>alt+shift+M - maximize/restore split</li>
         </ul>
         Other OS shortcuts:
         <ul>
@@ -25,6 +26,7 @@
             <li>alt+shift+; - shift tab down</li>
             <li>ctrl+alt+[ - stretch split left</li>
             <li>ctrl+alt+] - stretch split right</li>
+            <li>alt+shift+M - maximize/restore split</li>
         </ul>
         To move focus between splits:
         <ul>
@@ -127,6 +129,13 @@
                 <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift SEMICOLON" replace-all="true"/>
                 <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift SEMICOLON" replace-all="true"/>
             </action>
+
+            <action id="TabShiftActions.ToggleMaximizeRestore" class="tabshifter.Actions$ToggleMaximizeRestore" text="Minimize/Maximize Splitter">
+                <keyboard-shortcut keymap="$default" first-keystroke="alt shift M"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift M" replace-all="true"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift M" replace-all="true"/>
+            </action>
+
         </group>
     </actions>
 
