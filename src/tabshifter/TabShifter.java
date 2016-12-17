@@ -123,6 +123,21 @@ public class TabShifter {
 		}
 	}
 
+	public void toggleMaximizeRestoreSplitter() {
+		LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
+		if (layout == LayoutElement.none) return;
+
+		Window window = currentWindowIn(layout);
+		Split split = findParentSplitOf(window, layout);
+		if (split == null) return;
+		boolean inFirst = split.first.equals(window);
+
+		boolean maximized = ide.toggleMaximizeRestoreSpliter(split, inFirst);
+		if (maximized) {
+			ide.hideToolWindows();
+		}
+	}
+
 	@Nullable private static Split findParentSplitOf(LayoutElement layoutElement, LayoutElement layout) {
 		for (Split split : allSplitsIn(layout)) {
 			if (split.first.equals(layoutElement) || split.second.equals(layoutElement)) {
