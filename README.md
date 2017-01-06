@@ -10,8 +10,8 @@ OSX shortcuts:
  - ``ctrl + alt + [`` - move tab to the left split
  - ``ctrl + alt + P`` - move tab to the split above
  - ``ctrl + alt + '`` - move tab to the split below (or create new split if it's the bottom split)
- - ``alt + shift + ['`` - stretch split left
- - ``alt + shift + ]'`` - stretch split right
+ - ``alt + shift + [`` - stretch split left
+ - ``alt + shift + ]`` - stretch split right
  - ``alt + shift + M`` - maximize/restore split
 
 Other OS shortcuts:
@@ -19,8 +19,8 @@ Other OS shortcuts:
  - ``alt + shift + [`` - move tab left
  - ``alt + shift + P`` - move tab up
  - ``alt + shift + '`` - move tab down
- - ``ctrl + alt + ['`` - stretch split left
- - ``ctrl + alt + ]'`` - stretch split right
+ - ``ctrl + alt + [`` - stretch split left
+ - ``ctrl + alt + ]`` - stretch split right
  - ``alt + shift + M`` - maximize/restore split
 
 To move focus between splits:
