@@ -132,7 +132,7 @@ public class TabShifter {
 		if (split == null) return;
 		boolean inFirst = split.first.equals(window);
 
-		boolean maximized = ide.toggleMaximizeRestoreSpliter(split, inFirst);
+		boolean maximized = ide.toggleMaximizeRestoreSplitter(split, inFirst);
 		if (maximized) {
 			ide.hideToolWindows();
 		}

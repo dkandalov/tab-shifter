@@ -108,12 +108,12 @@ public class Ide {
 		updateProportion(split, 1);
 	}
 
-	private class MaximizeState {
+	private static class MaximizeState {
 		float oldProportion;
 		float newProportion;
 	}
 
-	public boolean toggleMaximizeRestoreSpliter(Split split, boolean inFirst) {
+	public boolean toggleMaximizeRestoreSplitter(Split split, boolean inFirst) {
 		Splitter splitter = ((IdeSplitter) split).splitter;
 
 		// zoom out if the proportion equals the one during maximization
