@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/dkandalov/tab-shifter.svg?branch=master)](https://travis-ci.org/dkandalov/tab-shifter)
+
 Tab Shifter
 ====
 [**Tab Shifter**](http://plugins.jetbrains.com/plugin/7475) is a plugin for IntelliJ IDEA 
