@@ -166,7 +166,7 @@ public class Ide {
 		}
 
 		@Override public String toString() {
-			Collection<String> fileNames = new ArrayList<String>();
+			Collection<String> fileNames = new ArrayList<>();
 			for (VirtualFile virtualFile : editorWindow.getFiles()) {
 				fileNames.add(virtualFile.getName());
 			}

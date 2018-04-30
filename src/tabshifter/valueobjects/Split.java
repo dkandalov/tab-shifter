@@ -1,7 +1,5 @@
 package tabshifter.valueobjects;
 
-import com.intellij.util.Function;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,14 +56,12 @@ public class Split extends LayoutElement {
 	}
 
 	public static List<Split> allSplitsIn(LayoutElement rootElement) {
-		final List<Split> result = new ArrayList<Split>();
-		traverse(rootElement, new Function<LayoutElement, Boolean>() {
-			@Override public Boolean fun(LayoutElement element) {
-				if (element instanceof Split) {
-					result.add((Split) element);
-				}
-				return true;
+		final List<Split> result = new ArrayList<>();
+		traverse(rootElement, element -> {
+			if (element instanceof Split) {
+				result.add((Split) element);
 			}
+			return true;
 		});
 		return result;
 	}

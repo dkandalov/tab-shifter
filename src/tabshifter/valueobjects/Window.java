@@ -1,7 +1,5 @@
 package tabshifter.valueobjects;
 
-import com.intellij.util.Function;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,14 +23,12 @@ public class Window extends LayoutElement {
 	}
 
 	public static List<Window> allWindowsIn(LayoutElement rootElement) {
-		final List<Window> result = new ArrayList<Window>();
-		traverse(rootElement, new Function<LayoutElement, Boolean>() {
-			@Override public Boolean fun(LayoutElement element) {
-				if (element instanceof Window) {
-					result.add((Window) element);
-				}
-				return true;
+		final List<Window> result = new ArrayList<>();
+		traverse(rootElement, element -> {
+			if (element instanceof Window) {
+				result.add((Window) element);
 			}
+			return true;
 		});
 		return result;
 	}

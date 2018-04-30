@@ -1,7 +1,6 @@
 package tabshifter;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.Condition;
 import org.jetbrains.annotations.Nullable;
 import tabshifter.Directions.Direction;
 import tabshifter.valueobjects.LayoutElement;
@@ -51,10 +50,10 @@ public class TabShifter {
 	 * Moves tab in the specified direction.
      *
 	 * This is way more complicated than it should have been. The main reasons are:
-	 * - closing/opening or opening/closing tab doesn't guarantee that focus will be in the moved tab
-	 * => need to track target window to move focus into it
+	 * - closing/opening or opening/closing tab doesn't guarantee that focus will be in the moved tab,
+	 *   therefore, need to track target window to move focus into it
 	 * - EditorWindow object changes its identity after split/unsplit (i.e. points to another visual window)
-	 * => need to predict target window position and look up window by expected position
+	 *   therefore, need to predict target window position and look up window by expected position
 	 */
 	public void moveTab(Direction direction) {
 		LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
@@ -148,11 +147,7 @@ public class TabShifter {
 	}
 
 	@Nullable private static Window currentWindowIn(LayoutElement windowLayout) {
-		return find(allWindowsIn(windowLayout), new Condition<Window>() {
-			@Override public boolean value(Window window) {
-				return window.isCurrent;
-			}
-		});
+		return find(allWindowsIn(windowLayout), window -> window.isCurrent);
 	}
 
 	private static LayoutElement findSiblingOf(Window window, LayoutElement element) {
@@ -204,12 +199,7 @@ public class TabShifter {
 	}
 
 	@Nullable private static Window findWindowBy(final Position position, LayoutElement layout) {
-		return find(allWindowsIn(layout), new Condition<Window>() {
-			@Override
-			public boolean value(Window window) {
-				return position.equals(window.position);
-			}
-		});
+		return find(allWindowsIn(layout), window -> position.equals(window.position));
 	}
 
 	private static LayoutElement removeFrom(LayoutElement element, Window window) {
