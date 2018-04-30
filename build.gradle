@@ -1,0 +1,39 @@
+buildscript {
+	repositories {
+		mavenCentral()
+		maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+		maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
+	}
+}
+
+plugins {
+	id "org.jetbrains.intellij" version "0.2.17"
+}
+apply plugin:"java"
+apply plugin:"idea"
+apply plugin:"org.jetbrains.intellij"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+	maven { url "lib" }
+}
+
+sourceSets {
+	main {
+		java { srcDir "src" }
+	}
+}
+
+intellij {
+	def ideVersion = System.getenv().getOrDefault("TAB_SHIFTER_IDEA_VERSION", "IC-172.3757.29")
+	println("Using ide version: $ideVersion")
+	version ideVersion
+	type "UI"
+	pluginName "tab-shifter"
+	downloadSources true
+	sameSinceUntilBuild false
+	updateSinceUntilBuild false
+}
