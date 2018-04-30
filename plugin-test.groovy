@@ -21,7 +21,7 @@ import static org.hamcrest.MatcherAssert.assertThat
 import static tabshifter.valueobjects.Split.Orientation.horizontal
 import static tabshifter.valueobjects.Split.Orientation.vertical
 //
-// add-to-classpath $PLUGIN_PATH/out/production/tab-shifter/
+// add-to-classpath $PLUGIN_PATH/build/libs/tab-shifter.jar
 //
 
 IntegrationTestsRunner.runIntegrationTests([TabShifterIntegrationTest], project)

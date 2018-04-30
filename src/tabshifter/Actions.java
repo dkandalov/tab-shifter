@@ -96,16 +96,14 @@ public class Actions {
 		}
 
 		FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
-		if (editorManager == null || editorManager.getAllEditors().length == 0) {
-			return TabShifter.none;
-		} else {
-			TabShifter tabShifter = new TabShifter(new Ide(editorManager, project));
-			projectTabShifter.put(project.getProjectFilePath(), tabShifter);
+		if (editorManager == null || editorManager.getAllEditors().length == 0) return TabShifter.none;
 
-			Disposer.register(project, () -> projectTabShifter.remove(project.getProjectFilePath()));
+		TabShifter tabShifter = new TabShifter(new Ide(editorManager, project));
+		projectTabShifter.put(project.getProjectFilePath(), tabShifter);
 
-			return tabShifter;
-		}
+		Disposer.register(project, () -> projectTabShifter.remove(project.getProjectFilePath()));
+
+		return tabShifter;
 	}
 
 	private static Map<String, TabShifter> projectTabShifter = new HashMap<>();
