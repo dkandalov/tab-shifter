@@ -1,4 +1,4 @@
-<idea-plugin version="2">
+<idea-plugin>
     <id>socrates.tabshifter</id>
     <name>Tab Shifter</name>
     <version>0.26</version>
