@@ -40,13 +40,13 @@ public class Split extends LayoutElement {
 	@Override public Size size() {
 		if (orientation == Orientation.vertical) {
 			return new Size(
-					first.size().width + second.size().width,
-					max(first.size().height, second.size().height)
+				first.size().width + second.size().width,
+				max(first.size().height, second.size().height)
 			);
 		} else {
 			return new Size(
-					max(first.size().width, second.size().width),
-					first.size().height + second.size().height
+				max(first.size().width, second.size().width),
+				first.size().height + second.size().height
 			);
 		}
 	}

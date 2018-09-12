@@ -20,7 +20,7 @@ public abstract class LayoutElement {
 	};
 
 	public static void traverse(LayoutElement element, Function<LayoutElement, Boolean> function) {
-		Boolean shouldStop = !function.fun(element);
+		boolean shouldStop = !function.fun(element);
 		if (shouldStop) return;
 
 		if (element instanceof Split) {
