@@ -7,7 +7,7 @@ buildscript {
 }
 
 plugins {
-	id "org.jetbrains.intellij" version "0.2.17"
+	id "org.jetbrains.intellij" version "0.4.10"
 }
 apply plugin:"java"
 apply plugin:"idea"
@@ -28,7 +28,10 @@ sourceSets {
 }
 
 intellij {
-	def ideVersion = System.getenv().getOrDefault("TAB_SHIFTER_IDEA_VERSION", "IC-172.3757.29")
+	def ideVersion = System.getenv().getOrDefault("TAB_SHIFTER_IDEA_VERSION",
+		"IC-172.3757.29"
+//		"LATEST-EAP-SNAPSHOT"
+	)
 	println("Using ide version: $ideVersion")
 	version ideVersion
 	type "UI"
