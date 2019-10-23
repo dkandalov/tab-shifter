@@ -43,11 +43,10 @@ public class Ide {
 		this.heightStretch = Registry.intValue("ide.windowSystem.vScrollChars", 5) / 100f;
 	}
 
-	public EditorWindow createSplitter(Split.Orientation orientation) {
+	public void createSplitter(Split.Orientation orientation) {
 		int swingOrientation = (orientation == vertical ? SwingConstants.VERTICAL : SwingConstants.HORIZONTAL);
 		editorManager.createSplitter(swingOrientation, editorManager.getCurrentWindow());
-		EditorWindow[] windows = editorManager.getWindows();
-		return windows[windows.length - 1];
+		editorManager.getWindows();
 	}
 
 	public void closeCurrentFileIn(Window window) {

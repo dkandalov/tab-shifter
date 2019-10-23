@@ -76,8 +76,6 @@ public class TabShifter {
 			newPosition = sibling.position;
 
 			ide.createSplitter(direction.splitOrientation());
-			ide.closeCurrentFileIn(window);
-
 		} else {
 			boolean willBeUnsplit = window.hasOneTab;
 			if (willBeUnsplit) {
@@ -87,8 +85,8 @@ public class TabShifter {
 			newPosition = targetWindow.position;
 
 			ide.openCurrentFileIn(targetWindow);
-			ide.closeCurrentFileIn(window);
 		}
+		ide.closeCurrentFileIn(window);
 
 		LayoutElement newWindowLayout = calculateAndSetPositions(ide.snapshotWindowLayout());
 		targetWindow = findWindowBy(newPosition, newWindowLayout);
@@ -160,10 +158,7 @@ public class TabShifter {
 			LayoutElement first = findSiblingOf(window, split.first);
 			if (first != null) return first;
 
-			LayoutElement second = findSiblingOf(window, split.second);
-			if (second != null) return second;
-
-			return null;
+			return findSiblingOf(window, split.second);
 
 		} else if (element instanceof Window) {
 			return null;
