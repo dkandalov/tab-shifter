@@ -12,7 +12,6 @@ import java.util.Map;
 
 import static tabshifter.Directions.*;
 
-@SuppressWarnings("ComponentNotRegistered")
 public class Actions {
 	public static class ShiftLeft extends AnAction implements DumbAware {
 		@Override public void actionPerformed(AnActionEvent event) {
@@ -86,9 +85,7 @@ public class Actions {
 
 	private static TabShifter tabShifter(AnActionEvent event) {
 		Project project = event.getProject();
-		if (project == null) {
-			return TabShifter.none;
-		}
+		if (project == null) return TabShifter.none;
 
 		// re-use old tabShifter to preserve state
 		if (projectTabShifter.containsKey(project.getProjectFilePath())) {
