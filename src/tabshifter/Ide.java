@@ -1,28 +1,27 @@
 package tabshifter;
 
-import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.EditorWindow;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Splitter;
-import com.intellij.openapi.util.registry.Registry;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
-import com.intellij.ui.tabs.JBTabs;
-import org.jetbrains.annotations.NotNull;
-import tabshifter.valueobjects.LayoutElement;
-import tabshifter.valueobjects.Split;
+import com.intellij.openapi.fileEditor.*;
+import com.intellij.openapi.fileEditor.ex.*;
+import com.intellij.openapi.fileEditor.impl.*;
+import com.intellij.openapi.project.*;
+import com.intellij.openapi.ui.*;
+import com.intellij.openapi.util.registry.*;
+import com.intellij.openapi.util.text.*;
+import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.wm.ex.*;
+import com.intellij.ui.tabs.*;
+import com.intellij.util.messages.*;
+import org.jetbrains.annotations.*;
 import tabshifter.valueobjects.Window;
+import tabshifter.valueobjects.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
-import static javax.swing.SwingUtilities.isDescendingFrom;
-import static tabshifter.EditorWindow_AccessToPanel_Hack.panelOf;
-import static tabshifter.valueobjects.Split.Orientation.horizontal;
-import static tabshifter.valueobjects.Split.Orientation.vertical;
+import static javax.swing.SwingUtilities.*;
+import static tabshifter.EditorWindow_AccessToPanel_Hack.*;
+import static tabshifter.valueobjects.Split.Orientation.*;
 
 public class Ide {
 	private final FileEditorManagerEx editorManager;
@@ -49,8 +48,20 @@ public class Ide {
 		editorManager.getWindows();
 	}
 
-	public void closeCurrentFileIn(Window window) {
-		((IdeWindow) window).editorWindow.closeFile(currentFileIn(project));
+	public void closeCurrentFileIn(Window window, Runnable onFileClosed) {
+		VirtualFile fileToClose = currentFileIn(project);
+
+		MessageBusConnection connection = project.getMessageBus().connect();
+		connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
+			@Override public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+				if (file.equals(fileToClose)) {
+					onFileClosed.run();
+					connection.disconnect();
+				}
+			}
+		});
+
+		((IdeWindow) window).editorWindow.closeFile(fileToClose);
 	}
 
 	public void openCurrentFileIn(Window window) {

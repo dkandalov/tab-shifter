@@ -1,18 +1,14 @@
 package tabshifter;
 
-import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.Nullable;
-import tabshifter.Directions.Direction;
-import tabshifter.valueobjects.LayoutElement;
-import tabshifter.valueobjects.Position;
-import tabshifter.valueobjects.Split;
-import tabshifter.valueobjects.Window;
+import com.intellij.openapi.diagnostic.*;
+import org.jetbrains.annotations.*;
+import tabshifter.Directions.*;
+import tabshifter.valueobjects.*;
 
-import static com.intellij.util.containers.ContainerUtil.find;
-import static tabshifter.valueobjects.Split.Orientation.horizontal;
-import static tabshifter.valueobjects.Split.Orientation.vertical;
-import static tabshifter.valueobjects.Split.allSplitsIn;
-import static tabshifter.valueobjects.Window.allWindowsIn;
+import static com.intellij.util.containers.ContainerUtil.*;
+import static tabshifter.valueobjects.Split.Orientation.*;
+import static tabshifter.valueobjects.Split.*;
+import static tabshifter.valueobjects.Window.*;
 
 public class TabShifter {
 	public static final TabShifter none = new TabShifter(null) {
@@ -86,17 +82,18 @@ public class TabShifter {
 
 			ide.openCurrentFileIn(targetWindow);
 		}
-		ide.closeCurrentFileIn(window);
+		ide.closeCurrentFileIn(window, () -> {
+			LayoutElement newWindowLayout = calculateAndSetPositions(ide.snapshotWindowLayout());
+			// Do this because identity of the window object can change after closing the current file.
+			Window targetWindowLookedUpAgain = findWindowBy(newPosition, newWindowLayout);
 
-		LayoutElement newWindowLayout = calculateAndSetPositions(ide.snapshotWindowLayout());
-		targetWindow = findWindowBy(newPosition, newWindowLayout);
-
-		if (targetWindow == null) {
-			// ideally this should never happen, logging in case something goes wrong
-			logger.warn("No window for: " + newPosition + "; windowLayout: " + newWindowLayout);
-		} else {
-			ide.setFocusOn(targetWindow);
-		}
+			if (targetWindowLookedUpAgain == null) {
+				// ideally this should never happen, logging in case something goes wrong
+				logger.warn("No window for: " + newPosition + "; windowLayout: " + newWindowLayout);
+			} else {
+				ide.setFocusOn(targetWindowLookedUpAgain);
+			}
+		});
 	}
 
 	public void stretchSplitter(Direction direction) {
