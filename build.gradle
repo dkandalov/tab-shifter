@@ -25,8 +25,8 @@ sourceSets {
 }
 
 intellij {
-	def ideVersion = System.getenv().getOrDefault("TAB_SHIFTER_IDEA_VERSION",
-		"IC-172.3757.29"
+	def ideVersion = System.getenv().getOrDefault("IJ_VERSION",
+		"201.6668.113"
 //		"LATEST-EAP-SNAPSHOT"
 	)
 	println("Using ide version: $ideVersion")

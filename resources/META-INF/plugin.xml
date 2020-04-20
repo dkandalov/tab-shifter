@@ -47,7 +47,7 @@
 
 
     <!-- See http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html -->
-    <idea-version since-build="111"/>
+    <idea-version since-build="201.6668.113"/>
 
     <!-- See http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.lang</depends>
