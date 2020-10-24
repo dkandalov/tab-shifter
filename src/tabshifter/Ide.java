@@ -141,6 +141,16 @@ public class Ide {
 		return true;
 	}
 
+	public void evenSplitter(Split split) {
+		Splitter splitter = ((IdeSplitter) split).splitter;
+
+		// equal
+		this.maximizeState = new MaximizeState();
+		this.maximizeState.oldProportion = splitter.getProportion();
+		splitter.setProportion(0.5F);
+		this.maximizeState.newProportion = splitter.getProportion();
+	}
+
 	public void hideToolWindows() {
 		for (String windowId : toolWindowManager.getToolWindowIds()) {
 			toolWindowManager.hideToolWindow(windowId, true);

@@ -83,6 +83,12 @@ public class Actions {
 		}
 	}
 
+	public static class EvenSplitter extends AnAction implements DumbAware {
+		@Override public void actionPerformed(AnActionEvent event) {
+			tabShifter(event).evenSplitter();
+		}
+	}
+
 	private static TabShifter tabShifter(AnActionEvent event) {
 		Project project = event.getProject();
 		if (project == null) return TabShifter.none;

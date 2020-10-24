@@ -135,7 +135,12 @@
                 <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift M" replace-all="true"/>
                 <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift M" replace-all="true"/>
             </action>
-
+            <action id="tabshifter.Actions.EvenSplitter" class="tabshifter.Actions$EvenSplitter" text="Even Splitter"
+                    description="Position Splitter to middle">
+                <keyboard-shortcut keymap="$default" first-keystroke="alt shift EQUALS"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift EQUALS" replace-all="true"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift EQUALS" replace-all="true"/>
+            </action>
         </group>
     </actions>
 
