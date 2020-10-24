@@ -132,6 +132,17 @@ public class TabShifter {
 		}
 	}
 
+	public void evenSplitter() {
+		LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
+		if (layout == LayoutElement.none) return;
+
+		Window window = currentWindowIn(layout);
+		Split split = findParentSplitOf(window, layout);
+		if (split == null) return;
+
+		ide.evenSplitter(split);
+	}
+
 	@Nullable private static Split findParentSplitOf(LayoutElement layoutElement, LayoutElement layout) {
 		for (Split split : allSplitsIn(layout)) {
 			if (split.first.equals(layoutElement) || split.second.equals(layoutElement)) {

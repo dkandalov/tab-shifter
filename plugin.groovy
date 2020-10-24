@@ -31,5 +31,6 @@ register("StretchUp", "alt shift P", "Stretch Splitter Up", new Actions.StretchU
 register("StretchDown", "alt shift SEMICOLON", "Stretch Splitter Down", new Actions.StretchDown())
 
 register("ToggleMaximizeRestore", "ctrl alt M", "Maximize/Restore Splitter", new Actions.ToggleMaximizeRestore())
+register("EvenSplitter", "ctrl alt N", "Even Splitter", new Actions.EvenSplitter())
 
 show("Reloaded Tab Shifter plugin")
