@@ -122,26 +122,22 @@ public class Ide {
 		Splitter splitter = ((IdeSplitter) split).splitter;
 
 		// zoom out if the proportion equals the one during maximization
-		if (maximizeState != null && maximizeState.newProportion == splitter.getProportion()) {
-			splitter.setProportion(maximizeState.oldProportion);
+		if (maximizeState != null && maximizeState.maximisedProportion == splitter.getProportion()) {
+			splitter.setProportion(maximizeState.originalProportion);
 			maximizeState = null;
 			return false;
 		}
 
-		float oldProportion = splitter.getProportion();
+		float originalProportion = splitter.getProportion();
 		splitter.setProportion(inFirst ? 1.0F : 0.0F);
-		float newProportion = splitter.getProportion();
-		maximizeState = new MaximizeState(oldProportion, newProportion);
+		float maximisedProportion = splitter.getProportion();
+		maximizeState = new MaximizeState(originalProportion, maximisedProportion);
 		return true;
 	}
 
 	public void equalSizeSplitter(Split split) {
-		Splitter splitter = ((IdeSplitter) split).splitter;
-
-		float oldProportion = splitter.getProportion();
-		splitter.setProportion(0.5F);
-		float newProportion = splitter.getProportion();
-		maximizeState = new MaximizeState(oldProportion, newProportion);
+		((IdeSplitter) split).splitter.setProportion(0.5F);
+		maximizeState = null;
 	}
 
 	public void hideToolWindows() {
@@ -162,12 +158,12 @@ public class Ide {
 
 
 	private static class MaximizeState {
-		public final float oldProportion;
-		public final float newProportion;
+		public final float originalProportion;
+		public final float maximisedProportion;
 
-		public MaximizeState(float oldProportion, float newProportion) {
-			this.oldProportion = oldProportion;
-			this.newProportion = newProportion;
+		public MaximizeState(float originalProportion, float maximisedProportion) {
+			this.originalProportion = originalProportion;
+			this.maximisedProportion = maximisedProportion;
 		}
 	}
 
