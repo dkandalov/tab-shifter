@@ -77,15 +77,15 @@ public class Actions {
 		}
 	}
 
-	public static class ToggleMaximizeRestore extends AnAction implements DumbAware {
+	public static class EqualSizeSplit extends AnAction implements DumbAware {
 		@Override public void actionPerformed(AnActionEvent event) {
-			tabShifter(event).toggleMaximizeRestoreSplitter();
+			tabShifter(event).equalSizeSplit();
 		}
 	}
 
-	public static class EvenSplitter extends AnAction implements DumbAware {
+	public static class ToggleMaximizeRestore extends AnAction implements DumbAware {
 		@Override public void actionPerformed(AnActionEvent event) {
-			tabShifter(event).evenSplitter();
+			tabShifter(event).toggleMaximizeRestoreSplitter();
 		}
 	}
 

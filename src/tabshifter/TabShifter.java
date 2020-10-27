@@ -132,7 +132,7 @@ public class TabShifter {
 		}
 	}
 
-	public void evenSplitter() {
+	public void equalSizeSplit() {
 		LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
 		if (layout == LayoutElement.none) return;
 
@@ -140,7 +140,7 @@ public class TabShifter {
 		Split split = findParentSplitOf(window, layout);
 		if (split == null) return;
 
-		ide.evenSplitter(split);
+		ide.equalSizeSplitter(split);
 	}
 
 	@Nullable private static Split findParentSplitOf(LayoutElement layoutElement, LayoutElement layout) {

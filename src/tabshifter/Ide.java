@@ -135,7 +135,7 @@ public class Ide {
 		return true;
 	}
 
-	public void evenSplitter(Split split) {
+	public void equalSizeSplitter(Split split) {
 		Splitter splitter = ((IdeSplitter) split).splitter;
 
 		float oldProportion = splitter.getProportion();

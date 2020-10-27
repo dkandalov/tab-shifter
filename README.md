@@ -5,7 +5,7 @@ Tab Shifter
 [**Tab Shifter**](http://plugins.jetbrains.com/plugin/7475) is a plugin for IntelliJ IDEA 
 with a bunch of actions to move tabs between editor splits and resize splits
 <br/>
-Actions are added to to ``Main Menu -> Window -> Tab Shifter``.
+Actions are added to ``Main Menu -> Window -> Tab Shifter``.
 
 OSX shortcuts:
  - ``ctrl + alt + ]`` - move tab to the right split (or create new split if it's the rightmost split)
@@ -14,6 +14,7 @@ OSX shortcuts:
  - ``ctrl + alt + '`` - move tab to the split below (or create new split if it's the bottom split)
  - ``alt + shift + [`` - stretch split left
  - ``alt + shift + ]`` - stretch split right
+ - ``alt + shift + =`` - equal size split
  - ``alt + shift + M`` - maximize/restore split
 
 Other OS shortcuts:
@@ -23,6 +24,7 @@ Other OS shortcuts:
  - ``alt + shift + '`` - move tab down
  - ``ctrl + alt + [`` - stretch split left
  - ``ctrl + alt + ]`` - stretch split right
+ - ``ctrl + alt + =`` - equal size split
  - ``alt + shift + M`` - maximize/restore split
 
 To move focus between splits:
@@ -37,7 +39,7 @@ Obviously, the above shortcuts can be changed in ``IDE Settings -> Keymap``.
 
 Why?
 ====
-Basically, this plugin treats splitting as "take current editor and *move* it to the next split window".
+Basically, this plugin treats splitting as "take the current editor and *move* it to the next split window".
 If there is no split window, then create new one.
 
 <img src="https://raw.githubusercontent.com/dkandalov/tab-shift/master/tab-shifter.gif" alt="" title="" align="center"/>
@@ -48,7 +50,7 @@ Unfortunately, they don't do the right thing. For example:
  - use built-in action to move tab right (``Main Menu -> Window -> Editor Tabs -> Move Right``);
    editor will be split into two and the tab will move to the right editor.
  - move back to leftmost editor and use built-in action to move tab right;
-   leftmost editor will be split into two editors again (three editors in total) 
+   the leftmost editor will be split into two editors again (three editors in total) 
    the tab will move into the middle editor. 
    **Desired behavior** is to recognize that there is already editor on the right side and move tab into it. 
 

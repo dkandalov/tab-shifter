@@ -16,6 +16,7 @@
             <li>ctrl+alt+; - shift tab down</li>
             <li>alt+ctrl+[ - stretch split left</li>
             <li>alt+ctrl+] - stretch split right</li>
+            <li>alt+ctrl+= - equal size split</li>
             <li>alt+shift+M - maximize/restore split</li>
         </ul>
         Other OS shortcuts:
@@ -26,6 +27,7 @@
             <li>alt+shift+; - shift tab down</li>
             <li>ctrl+alt+[ - stretch split left</li>
             <li>ctrl+alt+] - stretch split right</li>
+            <li>ctrl+alt+= - equal size split</li>
             <li>alt+shift+M - maximize/restore split</li>
         </ul>
         To move focus between splits:
@@ -130,16 +132,16 @@
                 <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift SEMICOLON" replace-all="true"/>
             </action>
 
-            <action id="TabShiftActions.ToggleMaximizeRestore" class="tabshifter.Actions$ToggleMaximizeRestore" text="Maximize/Restore Splitter">
-                <keyboard-shortcut keymap="$default" first-keystroke="alt shift M"/>
-                <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift M" replace-all="true"/>
-                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift M" replace-all="true"/>
-            </action>
-            <action id="tabshifter.Actions.EvenSplitter" class="tabshifter.Actions$EvenSplitter" text="Even Splitter"
+            <action id="tabshifter.Actions.EqualSizeSplit" class="tabshifter.Actions$EqualSizeSplit" text="Equal Size Splitter"
                     description="Position Splitter to middle">
                 <keyboard-shortcut keymap="$default" first-keystroke="alt shift EQUALS"/>
                 <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift EQUALS" replace-all="true"/>
                 <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift EQUALS" replace-all="true"/>
+            </action>
+            <action id="TabShiftActions.ToggleMaximizeRestore" class="tabshifter.Actions$ToggleMaximizeRestore" text="Maximize/Restore Splitter">
+                <keyboard-shortcut keymap="$default" first-keystroke="alt shift M"/>
+                <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift M" replace-all="true"/>
+                <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift M" replace-all="true"/>
             </action>
         </group>
     </actions>
