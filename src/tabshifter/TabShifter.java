@@ -6,6 +6,7 @@ import tabshifter.Directions.*;
 import tabshifter.valueobjects.*;
 
 import static com.intellij.util.containers.ContainerUtil.*;
+import static tabshifter.Directions.*;
 import static tabshifter.valueobjects.Split.Orientation.*;
 import static tabshifter.valueobjects.Split.*;
 import static tabshifter.valueobjects.Window.*;
@@ -104,13 +105,13 @@ public class TabShifter {
 		if (window == null) return;
 
 		Split split = findParentSplitOf(window, layout);
-		Split.Orientation orientationToSkip = (direction == Directions.left || direction == Directions.right) ? horizontal : vertical;
+		Split.Orientation orientationToSkip = (direction == left || direction == right) ? horizontal : vertical;
 		while (split != null && split.orientation == orientationToSkip) {
 			split = findParentSplitOf(split, layout);
 		}
 		if (split == null) return;
 
-		if (direction == Directions.right || direction == Directions.down) {
+		if (direction == right || direction == down) {
 			ide.growSplitProportion(split);
 		} else {
 			ide.shrinkSplitProportion(split);
@@ -132,7 +133,7 @@ public class TabShifter {
 		}
 	}
 
-	public void equalSizeSplit() {
+	public void equalSizeSplitter() {
 		LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
 		if (layout == LayoutElement.none) return;
 
