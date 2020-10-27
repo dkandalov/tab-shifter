@@ -109,5 +109,5 @@ public class Actions {
 		return tabShifter;
 	}
 
-	private static Map<String, TabShifter> projectTabShifter = new HashMap<>();
+	private static final Map<String, TabShifter> projectTabShifter = new HashMap<>();
 }

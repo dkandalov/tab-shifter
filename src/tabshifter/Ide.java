@@ -118,37 +118,30 @@ public class Ide {
 		updateProportion(split, 1);
 	}
 
-	private static class MaximizeState {
-		float oldProportion;
-		float newProportion;
-	}
-
 	public boolean toggleMaximizeRestoreSplitter(Split split, boolean inFirst) {
 		Splitter splitter = ((IdeSplitter) split).splitter;
 
 		// zoom out if the proportion equals the one during maximization
-		if (this.maximizeState != null && this.maximizeState.newProportion == splitter.getProportion()) {
-			splitter.setProportion(this.maximizeState.oldProportion);
-			this.maximizeState = null;
+		if (maximizeState != null && maximizeState.newProportion == splitter.getProportion()) {
+			splitter.setProportion(maximizeState.oldProportion);
+			maximizeState = null;
 			return false;
 		}
 
-		// maximize
-		this.maximizeState = new MaximizeState();
-		this.maximizeState.oldProportion = splitter.getProportion();
+		float oldProportion = splitter.getProportion();
 		splitter.setProportion(inFirst ? 1.0F : 0.0F);
-		this.maximizeState.newProportion = splitter.getProportion();
+		float newProportion = splitter.getProportion();
+		maximizeState = new MaximizeState(oldProportion, newProportion);
 		return true;
 	}
 
 	public void evenSplitter(Split split) {
 		Splitter splitter = ((IdeSplitter) split).splitter;
 
-		// equal
-		this.maximizeState = new MaximizeState();
-		this.maximizeState.oldProportion = splitter.getProportion();
+		float oldProportion = splitter.getProportion();
 		splitter.setProportion(0.5F);
-		this.maximizeState.newProportion = splitter.getProportion();
+		float newProportion = splitter.getProportion();
+		maximizeState = new MaximizeState(oldProportion, newProportion);
 	}
 
 	public void hideToolWindows() {
@@ -167,6 +160,16 @@ public class Ide {
 		splitter.setProportion(splitter.getProportion() + stretch);
 	}
 
+
+	private static class MaximizeState {
+		public final float oldProportion;
+		public final float newProportion;
+
+		public MaximizeState(float oldProportion, float newProportion) {
+			this.oldProportion = oldProportion;
+			this.newProportion = newProportion;
+		}
+	}
 
 	private static class IdeSplitter extends Split {
 		public final Splitter splitter;
