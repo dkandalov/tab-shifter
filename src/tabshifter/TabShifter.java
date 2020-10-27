@@ -137,8 +137,7 @@ public class TabShifter {
 		LayoutElement layout = calculateAndSetPositions(ide.snapshotWindowLayout());
 		if (layout == LayoutElement.none) return;
 
-		Window window = currentWindowIn(layout);
-		Split split = findParentSplitOf(window, layout);
+		Split split = findParentSplitOf(currentWindowIn(layout), layout);
 		if (split == null) return;
 
 		ide.equalSizeSplitter(split);

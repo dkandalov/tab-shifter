@@ -137,7 +137,6 @@ public class Ide {
 
 	public void equalSizeSplitter(Split split) {
 		((IdeSplitter) split).splitter.setProportion(0.5F);
-		maximizeState = null;
 	}
 
 	public void hideToolWindows() {
