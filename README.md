@@ -3,31 +3,31 @@
 Tab Shifter
 ====
 [**Tab Shifter**](http://plugins.jetbrains.com/plugin/7475) is a plugin for IntelliJ IDEA 
-with a bunch of actions to move tabs between editor splits and resize splits
+with a bunch of actions to move tabs between editor splitters and resize splitters
 <br/>
 Actions are added to `Main Menu -> Window -> Tab Shifter`.
 
 OSX shortcuts:
- - `ctrl + alt + ]` - move tab to the right split (or create new split if it's the rightmost split)
- - `ctrl + alt + [` - move tab to the left split
- - `ctrl + alt + P` - move tab to the split above
- - `ctrl + alt + '` - move tab to the split below (or create new split if it's the bottom split)
- - `alt + shift + [` - stretch split left
- - `alt + shift + ]` - stretch split right
- - `alt + shift + =` - equal size split
- - `alt + shift + M` - maximize/restore split
+ - `ctrl + alt + ]` - move tab to the right splitter (or create a new one if it's the rightmost splitter)
+ - `ctrl + alt + [` - move tab to the left splitter
+ - `ctrl + alt + P` - move tab to the splitter above
+ - `ctrl + alt + '` - move tab to the splitter below (or create a new one if it's the bottom splitter)
+ - `alt + shift + [` - stretch splitter left
+ - `alt + shift + ]` - stretch splitter right
+ - `alt + shift + =` - equal size splitter
+ - `alt + shift + M` - maximize/restore splitter
 
 Other OS shortcuts:
  - `alt + shift + ]` - move tab right
  - `alt + shift + [` - move tab left
  - `alt + shift + P` - move tab up
  - `alt + shift + '` - move tab down
- - `ctrl + alt + [` - stretch split left
- - `ctrl + alt + ]` - stretch split right
- - `ctrl + alt + =` - equal size split
- - `alt + shift + M` - maximize/restore split
+ - `ctrl + alt + [` - stretch splitter left
+ - `ctrl + alt + ]` - stretch splitter right
+ - `ctrl + alt + =` - equal size splitter
+ - `alt + shift + M` - maximize/restore splitter
 
-To move focus between splits:
+To move focus between splitters:
  - `ctrl+alt+shift+]` - right
  - `ctrl+alt+shift+[` - left
  - `ctrl+alt+shift+P` - up

@@ -5,7 +5,7 @@
     <vendor email="dmitry.kandalov@gmail.com" url="https://github.com/dkandalov/tab-shifter">Dmitry Kandalov</vendor>
 
     <description><![CDATA[
-        This is a plugin with a bunch of actions to move tabs between editor splits and resize splits.
+        This is a plugin with a bunch of actions to move tabs between editor splitters and resize splitters.
         Actions are added to "Main Menu -> Window -> Tab Shifter".
         <br/>
         OSX shortcuts:
@@ -14,10 +14,10 @@
             <li>ctrl+alt+[ - shift tab left</li>
             <li>ctrl+alt+P - shift tab up</li>
             <li>ctrl+alt+; - shift tab down</li>
-            <li>alt+ctrl+[ - stretch split left</li>
-            <li>alt+ctrl+] - stretch split right</li>
-            <li>alt+ctrl+= - equal size split</li>
-            <li>alt+shift+M - maximize/restore split</li>
+            <li>alt+ctrl+[ - stretch splitter left</li>
+            <li>alt+ctrl+] - stretch splitter right</li>
+            <li>alt+ctrl+= - equal size splitter</li>
+            <li>alt+shift+M - maximize/restore splitter</li>
         </ul>
         Other OS shortcuts:
         <ul>
@@ -25,12 +25,12 @@
             <li>alt+shift+[ - shift tab left</li>
             <li>alt+shift+P - shift tab up</li>
             <li>alt+shift+; - shift tab down</li>
-            <li>ctrl+alt+[ - stretch split left</li>
-            <li>ctrl+alt+] - stretch split right</li>
-            <li>ctrl+alt+= - equal size split</li>
-            <li>alt+shift+M - maximize/restore split</li>
+            <li>ctrl+alt+[ - stretch splitter left</li>
+            <li>ctrl+alt+] - stretch splitter right</li>
+            <li>ctrl+alt+= - equal size splitter</li>
+            <li>alt+shift+M - maximize/restore splitter</li>
         </ul>
-        To move focus between splits:
+        To move focus between splitters:
         <ul>
             <li>ctrl+alt+shift+] - right</li>
             <li>ctrl+alt+shift+[ - left</li>
@@ -132,8 +132,7 @@
                 <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift SEMICOLON" replace-all="true"/>
             </action>
 
-            <action id="tabshifter.Actions.EqualSizeSplit" class="tabshifter.Actions$EqualSizeSplit" text="Equal Size Splitter"
-                    description="Position Splitter to middle">
+            <action id="tabshifter.Actions.EqualSizeSplit" class="tabshifter.Actions$EqualSizeSplit" text="Equal Size Splitter">
                 <keyboard-shortcut keymap="$default" first-keystroke="alt shift EQUALS"/>
                 <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift EQUALS" replace-all="true"/>
                 <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt shift EQUALS" replace-all="true"/>
