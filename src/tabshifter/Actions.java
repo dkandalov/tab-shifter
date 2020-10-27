@@ -1,15 +1,9 @@
 package tabshifter;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.fileEditor.ex.*;
+import com.intellij.openapi.project.*;
 import org.jetbrains.annotations.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static tabshifter.Directions.*;
 
@@ -94,21 +88,9 @@ public class Actions {
 		Project project = event.getProject();
 		if (project == null) return TabShifter.none;
 
-		// re-use old tabShifter to preserve state
-		if (projectTabShifter.containsKey(project.getProjectFilePath())) {
-			return projectTabShifter.get(project.getProjectFilePath());
-		}
-
 		FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
 		if (editorManager == null || editorManager.getAllEditors().length == 0) return TabShifter.none;
 
-		TabShifter tabShifter = new TabShifter(new Ide(editorManager, project));
-		projectTabShifter.put(project.getProjectFilePath(), tabShifter);
-
-		Disposer.register(project, () -> projectTabShifter.remove(project.getProjectFilePath()));
-
-		return tabShifter;
+		return new TabShifter(new Ide(editorManager, project));
 	}
-
-	private static final Map<String, TabShifter> projectTabShifter = new HashMap<>();
 }

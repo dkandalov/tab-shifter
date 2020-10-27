@@ -5,6 +5,7 @@ import com.intellij.openapi.fileEditor.ex.*;
 import com.intellij.openapi.fileEditor.impl.*;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.ui.*;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.*;
 import com.intellij.openapi.util.text.*;
 import com.intellij.openapi.vfs.*;
@@ -24,18 +25,18 @@ import static tabshifter.EditorWindow_AccessToPanel_Hack.*;
 import static tabshifter.valueobjects.Split.Orientation.*;
 
 public class Ide {
+	private static final Key<MaximizeState> maximizeStateKey = Key.create("maximizeState");
+
 	private final FileEditorManagerEx editorManager;
 	private final Project project;
 	private final float widthStretch;
 	private final float heightStretch;
 	private final ToolWindowManagerEx toolWindowManager;
-	private MaximizeState maximizeState;
 
 	public Ide(FileEditorManagerEx editorManager, Project project) {
 		this.editorManager = editorManager;
 		this.toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
 		this.project = project;
-		this.maximizeState = null;
 
 		// Use these particular registry values to be consistent with in com.intellij.ide.actions.WindowAction.BaseSizeAction.
 		this.widthStretch = Registry.intValue("ide.windowSystem.hScrollChars", 5) / 100f;
@@ -122,16 +123,17 @@ public class Ide {
 		Splitter splitter = ((IdeSplitter) split).splitter;
 
 		// zoom out if the proportion equals the one during maximization
+		MaximizeState maximizeState = project.getUserData(maximizeStateKey);
 		if (maximizeState != null && maximizeState.maximisedProportion == splitter.getProportion()) {
 			splitter.setProportion(maximizeState.originalProportion);
-			maximizeState = null;
+			project.putUserData(maximizeStateKey, null);
 			return false;
 		}
 
 		float originalProportion = splitter.getProportion();
 		splitter.setProportion(inFirst ? 1.0F : 0.0F);
 		float maximisedProportion = splitter.getProportion();
-		maximizeState = new MaximizeState(originalProportion, maximisedProportion);
+		project.putUserData(maximizeStateKey, new MaximizeState(originalProportion, maximisedProportion));
 		return true;
 	}
 
