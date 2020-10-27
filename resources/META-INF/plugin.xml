@@ -7,7 +7,7 @@
     <description><![CDATA[
         This is a plugin with a bunch of actions to move tabs between editor splitters and resize splitters.
         Actions are added to "Main Menu -> Window -> Tab Shifter".
-        <br/>
+        <br/><br/>
         OSX shortcuts:
         <ul>
             <li>ctrl+alt+] - shift tab right</li>
@@ -19,6 +19,7 @@
             <li>alt+ctrl+= - equal size splitter</li>
             <li>alt+shift+M - maximize/restore splitter</li>
         </ul>
+        <br/>
         Other OS shortcuts:
         <ul>
             <li>alt+shift+] - shift tab right</li>
@@ -30,6 +31,7 @@
             <li>ctrl+alt+= - equal size splitter</li>
             <li>alt+shift+M - maximize/restore splitter</li>
         </ul>
+        <br/>
         To move focus between splitters:
         <ul>
             <li>ctrl+alt+shift+] - right</li>
@@ -38,6 +40,7 @@
             <li>ctrl+alt+shift+; - down</li>
             <li>ctrl+alt+. - recommended binding for built-in Goto Next Splitter action</li>
         </ul>
+        <br/>
         These actions are similar to built-in "Move Right/Down" tab actions and essentially fix usability issues.
         If you like the idea, please vote for <a href="https://youtrack.jetbrains.com/issue/IDEA-68692">this issue on youtrack</a>.
         For more details see <a href="https://github.com/dkandalov/tab-shift">GitHub page</a>.
