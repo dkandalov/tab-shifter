@@ -3,8 +3,7 @@
 Tab Shifter
 ====
 [**Tab Shifter**](http://plugins.jetbrains.com/plugin/7475) is a plugin for IntelliJ IDEA 
-with a bunch of actions to move tabs between editor splitters and resize splitters
-<br/>
+with a bunch of actions to move tabs between editor splitters and resize splitters.
 Actions are added to `Main Menu -> Window -> Tab Shifter`.
 
 OSX shortcuts:
@@ -34,30 +33,24 @@ To move focus between splitters:
  - `ctrl+alt+shift+;` - down
  - `ctrl + alt + .` - (built-in action) recommended binding for `Goto Next Splitter` action
 
-Obviously, the above shortcuts can be changed in `IDE Settings -> Keymap`.
+Of course, all the shortcuts can be changed in `IDE Settings -> Keymap`.
 
 
 Why?
 ====
-Basically, this plugin treats splitting as "take the current editor and *move* it to the next split window".
-If there is no split window, then create new one.
+The main motivation for this plugin is to have an action which *moves* the current tab to the next split window 
+(if there was no split window, create a new one). See [this issue on youtrack](https://youtrack.jetbrains.com/issue/IDEA-68692).
 
 <img src="https://raw.githubusercontent.com/dkandalov/tab-shift/master/tab-shifter.gif" alt="" title="" align="center"/>
 
-There are built-in actions to move tabs (see `Main Menu -> Window -> Editor Tabs -> Move Right/Down`).
-Unfortunately, they don't do the right thing. For example:
- - open several tabs in editor
- - use built-in action to move tab right (`Main Menu -> Window -> Editor Tabs -> Move Right`);
-   editor will be split into two and the tab will move to the right editor.
- - move back to leftmost editor and use built-in action to move tab right;
-   the leftmost editor will be split into two editors again (three editors in total) 
-   the tab will move into the middle editor. 
-   **Desired behavior** is to recognize that there is already editor on the right side and move tab into it. 
-
-If you like the idea, please vote for [this issue on youtrack](https://youtrack.jetbrains.com/issue/IDEA-68692).
+There are built-in actions to split and move tabs (see `Main Menu -> Window -> Editor Tabs) but, unfortunately, they don't do the right thing. 
+In particular:
+ - `Split Vertically/Horizontally` duplicates the current tab in the new split.
+ - `Split and Move Right/Down` always splits the current window (even if there is already split window in the specified direction)
+   and has no symmetric actions to move left/up (instead, you have to unsplit).
 
 
 Credits
 ====
 Plugin idea by [Sandro Mancuso](https://twitter.com/sandromancuso) at [SoCraTes UK 2013](http://socratesuk.org).
-Created using [LivePlugin](https://github.com/dkandalov/live-plugin).
+Initially created using [LivePlugin](https://github.com/dkandalov/live-plugin).
