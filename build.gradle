@@ -8,8 +8,10 @@ buildscript {
 
 plugins {
 	id "org.jetbrains.intellij" version "0.4.18"
+	id "org.jetbrains.kotlin.jvm" version "1.3.72"
 }
 apply plugin:"java"
+apply plugin:"kotlin"
 apply plugin:"idea"
 apply plugin:"org.jetbrains.intellij"
 
@@ -19,8 +21,9 @@ repositories {
 
 sourceSets {
 	main {
-		java { srcDir "src" }
-		resources { srcDir "resources" }
+		java.srcDir "src"
+		kotlin.srcDir "src"
+		resources.srcDir "resources"
 	}
 }
 
