@@ -55,15 +55,13 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         editorManager.currentWindow = (window as IdeWindow).editorWindow
     }
 
-    fun snapshotWindowLayout(): LayoutElement {
+    fun snapshotWindowLayout(): LayoutElement? {
         val rootPanel = editorManager.splitters.getComponent(0) as JPanel
+        if (editorManager.currentWindow == null || editorManager.currentWindow.files.isEmpty()) return null
         return snapshotWindowLayout(rootPanel)
     }
 
     private fun snapshotWindowLayout(panel: JPanel): LayoutElement {
-        if (editorManager.currentWindow == null || editorManager.currentWindow.files.isEmpty()) {
-            return LayoutElement.none
-        }
         val component = panel.getComponent(0)
         return if (component is Splitter) {
             IdeSplitter(
@@ -133,7 +131,11 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
     private class MaximizeState(val originalProportion: Float, val maximisedProportion: Float)
 
     private class IdeSplitter(first: LayoutElement, second: LayoutElement, val splitter: Splitter):
-        Split(first, second, if (splitter.isVertical) Orientation.horizontal else Orientation.vertical)
+        Split(
+            first = first,
+            second = second,
+            orientation = if (splitter.isVertical) Orientation.horizontal else Orientation.vertical
+        )
 
     private class IdeWindow(val editorWindow: EditorWindow?, hasOneTab: Boolean, isCurrent: Boolean): Window(hasOneTab, isCurrent) {
         override fun toString(): String {

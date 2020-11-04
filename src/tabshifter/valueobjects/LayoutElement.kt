@@ -3,13 +3,6 @@ package tabshifter.valueobjects
 abstract class LayoutElement {
     var position: Position = Position(0, 0, 0, 0)
     abstract fun size(): Size
-
-    companion object {
-        val none = object: LayoutElement() {
-            override fun size() = Size(0, 0)
-            override fun toString() = "LayoutElement{None}"
-        }
-    }
 }
 
 fun LayoutElement?.traverse(): Sequence<LayoutElement> = sequence {

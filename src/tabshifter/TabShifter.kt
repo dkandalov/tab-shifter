@@ -12,8 +12,7 @@ open class TabShifter(private val ide: Ide) {
      * could be used for switching focus, but it's currently doesn't work very well and is not enabled.
      */
     open fun moveFocus(direction: Directions.Direction) {
-        val layout = calculateAndSetPositions(ide.snapshotWindowLayout())
-        if (layout == LayoutElement.none) return
+        val layout = ide.snapshotWindowLayout()?.calculateAndSetPositions() ?: return
         val window = layout.currentWindow() ?: return
         val targetWindow = direction.findTargetWindow(window, layout) ?: return
         ide.setFocusOn(targetWindow)
@@ -29,8 +28,7 @@ open class TabShifter(private val ide: Ide) {
      * therefore, need to predict target window position and look up window by expected position
      */
     open fun moveTab(direction: Directions.Direction) {
-        val layout = calculateAndSetPositions(ide.snapshotWindowLayout())
-        if (layout == LayoutElement.none) return
+        val layout = ide.snapshotWindowLayout()?.calculateAndSetPositions() ?: return
         val window = layout.currentWindow() ?: return
         val targetWindow = direction.findTargetWindow(window, layout)
 
@@ -39,7 +37,7 @@ open class TabShifter(private val ide: Ide) {
         if (isAtEdge) {
             if (window.hasOneTab || !direction.canExpand()) return
             val newLayout = insertSplit(direction.splitOrientation(), window, layout)
-            calculateAndSetPositions(newLayout)
+            newLayout.calculateAndSetPositions()
             val sibling = findSiblingOf(window, newLayout) ?: return
             // should never happen
             newPosition = sibling.position
@@ -48,13 +46,13 @@ open class TabShifter(private val ide: Ide) {
             val willBeUnsplit = window.hasOneTab
             if (willBeUnsplit) {
                 val unsplitLayout = removeFrom(layout, window)
-                calculateAndSetPositions(unsplitLayout)
+                unsplitLayout?.calculateAndSetPositions()
             }
             newPosition = targetWindow!!.position
             ide.openCurrentFileIn(targetWindow)
         }
         ide.closeCurrentFileIn(window) {
-            val newWindowLayout = calculateAndSetPositions(ide.snapshotWindowLayout())
+            val newWindowLayout = ide.snapshotWindowLayout()?.calculateAndSetPositions()
             // Do this because identity of the window object can change after closing the current file.
             val targetWindowLookedUpAgain = newWindowLayout.traverse().filterIsInstance<Window>().find { it.position == newPosition }
             if (targetWindowLookedUpAgain == null) {
@@ -67,8 +65,7 @@ open class TabShifter(private val ide: Ide) {
     }
 
     open fun stretchSplitter(direction: Directions.Direction) {
-        val layout = calculateAndSetPositions(ide.snapshotWindowLayout())
-        if (layout == LayoutElement.none) return
+        val layout = ide.snapshotWindowLayout()?.calculateAndSetPositions() ?: return
         val window = layout.currentWindow() ?: return
         var split = findParentSplitOf(window, layout)
         val orientationToSkip = if (direction == left || direction == right) Split.Orientation.horizontal else Split.Orientation.vertical
@@ -84,8 +81,7 @@ open class TabShifter(private val ide: Ide) {
     }
 
     fun toggleMaximizeRestoreSplitter() {
-        val layout = calculateAndSetPositions(ide.snapshotWindowLayout())
-        if (layout == LayoutElement.none) return
+        val layout = ide.snapshotWindowLayout()?.calculateAndSetPositions() ?: return
         val window = layout.currentWindow()
         val split = findParentSplitOf(window, layout) ?: return
 
@@ -95,8 +91,7 @@ open class TabShifter(private val ide: Ide) {
     }
 
     fun equalSizeSplitter() {
-        val layout = calculateAndSetPositions(ide.snapshotWindowLayout())
-        if (layout == LayoutElement.none) return
+        val layout = ide.snapshotWindowLayout()?.calculateAndSetPositions() ?: return
         val split = findParentSplitOf(layout.currentWindow(), layout) ?: return
         ide.equalSizeSplitter(split)
     }
@@ -125,22 +120,22 @@ open class TabShifter(private val ide: Ide) {
             }
         }
 
-        private fun calculateAndSetPositions(element: LayoutElement?, position: Position = Position(0, 0, element!!.size().width, element.size().height)): LayoutElement {
-            if (element is Split) {
+        private fun LayoutElement.calculateAndSetPositions(position: Position = Position(0, 0, size().width, size().height)): LayoutElement {
+            if (this is Split) {
                 val firstPosition: Position
                 val secondPosition: Position
-                if (element.orientation == Split.Orientation.vertical) {
-                    firstPosition = position.withToX(position.toX - element.second.size().width)
-                    secondPosition = position.withFromX(position.fromX + element.first.size().width)
+                if (orientation == Split.Orientation.vertical) {
+                    firstPosition = position.withToX(position.toX - second.size().width)
+                    secondPosition = position.withFromX(position.fromX + first.size().width)
                 } else {
-                    firstPosition = position.withToY(position.toY - element.second.size().height)
-                    secondPosition = position.withFromY(position.fromY + element.first.size().height)
+                    firstPosition = position.withToY(position.toY - second.size().height)
+                    secondPosition = position.withFromY(position.fromY + first.size().height)
                 }
-                calculateAndSetPositions(element.first, firstPosition)
-                calculateAndSetPositions(element.second, secondPosition)
+                first.calculateAndSetPositions(firstPosition)
+                second.calculateAndSetPositions(secondPosition)
             }
-            element!!.position = position
-            return element
+            this.position = position
+            return this
         }
 
         private fun removeFrom(element: LayoutElement?, window: Window): LayoutElement? {

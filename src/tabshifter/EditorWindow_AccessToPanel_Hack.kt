@@ -2,7 +2,6 @@ package tabshifter
 
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.fileEditor.impl.EditorWindow
-import tabshifter.TabShifter
 import java.lang.reflect.Field
 import javax.swing.JPanel
 
