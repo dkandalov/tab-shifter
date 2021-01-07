@@ -35,12 +35,12 @@ open class TabShifter(private val ide: Ide) {
         val newPosition: Position
         val isAtEdge = targetWindow == null
         if (isAtEdge) {
-            if (window.hasOneTab || !direction.canExpand()) return
-            val newLayout = insertSplit(direction.splitOrientation(), window, layout)
+            if (window.hasOneTab || !direction.canExpand) return
+            val newLayout = insertSplit(direction.splitOrientation, window, layout)
             newLayout.calculateAndSetPositions()
             val sibling = findSiblingOf(window, newLayout) ?: return // should never happen
             newPosition = sibling.position
-            ide.createSplitter(direction.splitOrientation())
+            ide.createSplitter(direction.splitOrientation)
         } else {
             val willBeUnsplit = window.hasOneTab
             if (willBeUnsplit) {
