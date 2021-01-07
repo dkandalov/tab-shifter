@@ -38,8 +38,7 @@ open class TabShifter(private val ide: Ide) {
             if (window.hasOneTab || !direction.canExpand()) return
             val newLayout = insertSplit(direction.splitOrientation(), window, layout)
             newLayout.calculateAndSetPositions()
-            val sibling = findSiblingOf(window, newLayout) ?: return
-            // should never happen
+            val sibling = findSiblingOf(window, newLayout) ?: return // should never happen
             newPosition = sibling.position
             ide.createSplitter(direction.splitOrientation())
         } else {
@@ -56,7 +55,7 @@ open class TabShifter(private val ide: Ide) {
             // Do this because identity of the window object can change after closing the current file.
             val targetWindowLookedUpAgain = newWindowLayout.traverse().filterIsInstance<Window>().find { it.position == newPosition }
             if (targetWindowLookedUpAgain == null) {
-                // ideally this should never happen, logging in case something goes wrong
+                // Ideally, this should never happen, logging in case something goes wrong.
                 logger.warn("No window for: $newPosition; windowLayout: $newWindowLayout")
             } else {
                 ide.setFocusOn(targetWindowLookedUpAgain)
@@ -99,26 +98,23 @@ open class TabShifter(private val ide: Ide) {
     companion object {
         private val logger = Logger.getInstance(TabShifter::class.java.name)
 
-        private fun findParentSplitOf(layoutElement: LayoutElement?, layout: LayoutElement?): Split? {
-            return layout.traverse().filterIsInstance<Split>()
+        private fun findParentSplitOf(layoutElement: LayoutElement?, layout: LayoutElement?): Split? =
+            layout.traverse().filterIsInstance<Split>()
                 .find { it.first == layoutElement || it.second == layoutElement }
-        }
 
         private fun LayoutElement.currentWindow() =
             traverse().filterIsInstance<Window>().find { it.isCurrent }
 
-        private fun findSiblingOf(window: Window, element: LayoutElement): LayoutElement? {
-            return when (element) {
-                is Split      -> {
-                    if (element.first == window) return element.second
-                    if (element.second == window) return element.first
-                    val first = findSiblingOf(window, element.first)
-                    first ?: findSiblingOf(window, element.second)
+        private fun findSiblingOf(window: Window, element: LayoutElement): LayoutElement? =
+            when (element) {
+                is Split  -> when {
+                    element.first == window  -> element.second
+                    element.second == window -> element.first
+                    else                     -> findSiblingOf(window, element.first) ?: findSiblingOf(window, element.second)
                 }
                 is Window -> null
-                else  -> throw IllegalStateException()
+                else      -> throw IllegalStateException()
             }
-        }
 
         private fun LayoutElement.calculateAndSetPositions(position: Position = Position(0, 0, size().width, size().height)): LayoutElement {
             if (this is Split) {
@@ -139,14 +135,14 @@ open class TabShifter(private val ide: Ide) {
         }
 
         private fun removeFrom(element: LayoutElement?, window: Window): LayoutElement? {
-            return if (element is Split) {
-                val first = removeFrom(element.first, window)
-                val second = removeFrom(element.second, window)
-                if (first == null) second else if (second == null) first else Split(first, second, element.orientation)
-            } else if (element is Window) {
-                if (element == window) null else element
-            } else {
-                throw IllegalStateException()
+            return when (element) {
+                is Split  -> {
+                    val first = removeFrom(element.first, window)
+                    val second = removeFrom(element.second, window)
+                    if (first == null) second else if (second == null) first else Split(first, second, element.orientation)
+                }
+                is Window -> if (element == window) null else element
+                else      -> throw IllegalStateException()
             }
         }
 
