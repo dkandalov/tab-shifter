@@ -14,7 +14,6 @@ import com.intellij.ui.tabs.JBTabs
 import tabshifter.valueobjects.LayoutElement
 import tabshifter.valueobjects.Split
 import tabshifter.valueobjects.Window
-import java.awt.Component
 import javax.swing.JPanel
 import javax.swing.SwingConstants
 import javax.swing.SwingUtilities
@@ -44,11 +43,11 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
                 }
             }
         })
-        (window as IdeWindow).editorWindow!!.closeFile(fileToClose)
+        (window as IdeWindow).editorWindow.closeFile(fileToClose)
     }
 
     fun openCurrentFileIn(window: Window) {
-        editorManager.openFileWithProviders(project.currentFile()!!, true, (window as IdeWindow).editorWindow!!)
+        editorManager.openFileWithProviders(project.currentFile()!!, true, (window as IdeWindow).editorWindow)
     }
 
     fun setFocusOn(window: Window) {
@@ -68,21 +67,18 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
                 splitter = component
             )
         } else if (component is JPanel || component is JBTabs) {
-            val editorWindow = this.findWindowWith(component)
+            val editorWindow = windows.find { window ->
+                SwingUtilities.isDescendingFrom(component, EditorWindow_AccessToPanel_Hack.panelOf(window))
+            }!!
             IdeWindow(
                 editorWindow,
-                hasOneTab = editorWindow!!.tabCount == 1,
+                hasOneTab = editorWindow.tabCount == 1,
                 isCurrent = currentWindow == editorWindow
             )
         } else {
             throw IllegalStateException()
         }
     }
-
-    private fun FileEditorManagerEx.findWindowWith(component: Component) =
-        windows.find { window ->
-            SwingUtilities.isDescendingFrom(component, EditorWindow_AccessToPanel_Hack.panelOf(window))
-        }
 
     fun growSplitProportion(split: Split) {
         updateProportion(split, 1f)
@@ -133,9 +129,9 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         orientation = if (splitter.isVertical) Orientation.horizontal else Orientation.vertical
     )
 
-    private class IdeWindow(val editorWindow: EditorWindow?, hasOneTab: Boolean, isCurrent: Boolean): Window(hasOneTab, isCurrent) {
+    private class IdeWindow(val editorWindow: EditorWindow, hasOneTab: Boolean, isCurrent: Boolean): Window(hasOneTab, isCurrent) {
         override fun toString(): String {
-            val fileNames = editorWindow!!.files.map { it.name }
+            val fileNames = editorWindow.files.map { it.name }
             return "Window(" + fileNames.joinToString(",") + ")"
         }
     }
