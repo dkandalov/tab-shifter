@@ -29,7 +29,6 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
     fun createSplitter(orientation: Split.Orientation) {
         val swingOrientation = if (orientation == Split.Orientation.vertical) SwingConstants.VERTICAL else SwingConstants.HORIZONTAL
         editorManager.createSplitter(swingOrientation, editorManager.currentWindow)
-        editorManager.windows
     }
 
     fun closeCurrentFileIn(window: Window, onFileClosed: () -> Unit) {
@@ -73,7 +72,8 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
             IdeWindow(
                 editorWindow,
                 hasOneTab = editorWindow.tabCount == 1,
-                isCurrent = currentWindow == editorWindow
+                isCurrent = currentWindow == editorWindow,
+                pinnedFiles = editorWindow.files.filter { editorWindow.isFilePinned(it) }.map { it.name }
             )
         } else {
             throw IllegalStateException()
@@ -129,7 +129,12 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         orientation = if (splitter.isVertical) Orientation.horizontal else Orientation.vertical
     )
 
-    private class IdeWindow(val editorWindow: EditorWindow, hasOneTab: Boolean, isCurrent: Boolean): Window(hasOneTab, isCurrent) {
+    private class IdeWindow(
+        val editorWindow: EditorWindow,
+        hasOneTab: Boolean,
+        isCurrent: Boolean,
+        pinnedFiles: List<String>
+    ): Window(hasOneTab, isCurrent, pinnedFiles) {
         override fun toString(): String {
             val fileNames = editorWindow.files.map { it.name }
             return "Window(" + fileNames.joinToString(",") + ")"

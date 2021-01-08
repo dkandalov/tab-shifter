@@ -148,7 +148,7 @@ class TabShifter(private val ide: Ide) {
                     insertSplit(orientation, window, element.second),
                     element.orientation
                 )
-                is Window -> if (element == window) Split(window, Window(hasOneTab = true, isCurrent = false), orientation) else element
+                is Window -> if (element == window) Split(window, Window(hasOneTab = true, isCurrent = false, pinnedFiles = emptyList()), orientation) else element
                 else      -> throw IllegalStateException()
             }
     }
