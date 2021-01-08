@@ -39,10 +39,7 @@ class TabShifter(private val ide: Ide) {
             ide.createSplitter(direction.splitOrientation)
         } else {
             val willBeUnsplit = currentWindow.hasOneTab
-            if (willBeUnsplit) {
-                val unsplitLayout = removeFrom(layout, currentWindow)
-                unsplitLayout?.calculateAndSetPositions()
-            }
+            if (willBeUnsplit) layout.remove(currentWindow)?.calculateAndSetPositions()
             newPosition = targetWindow.position
             ide.openCurrentFileIn(targetWindow)
         }
@@ -130,14 +127,18 @@ class TabShifter(private val ide: Ide) {
             return this
         }
 
-        private fun removeFrom(element: LayoutElement, window: Window): LayoutElement? =
-            when (element) {
+        private fun LayoutElement.remove(window: Window): LayoutElement? =
+            when (this) {
                 is Split  -> {
-                    val first = removeFrom(element.first, window)
-                    val second = removeFrom(element.second, window)
-                    if (first == null) second else if (second == null) first else Split(first, second, element.orientation)
+                    val first = first.remove(window)
+                    val second = second.remove(window)
+                    when {
+                        first == null  -> second
+                        second == null -> first
+                        else           -> Split(first, second, this.orientation)
+                    }
                 }
-                is Window -> if (element == window) null else element
+                is Window -> if (this == window) null else this
                 else      -> throw IllegalStateException()
             }
 
@@ -148,7 +149,9 @@ class TabShifter(private val ide: Ide) {
                     insertSplit(orientation, window, element.second),
                     element.orientation
                 )
-                is Window -> if (element == window) Split(window, Window(hasOneTab = true, isCurrent = false, pinnedFiles = emptyList()), orientation) else element
+                is Window ->
+                    if (element == window) Split(window, Window(hasOneTab = true, isCurrent = false, pinnedFiles = emptyList()), orientation)
+                    else element
                 else      -> throw IllegalStateException()
             }
     }
