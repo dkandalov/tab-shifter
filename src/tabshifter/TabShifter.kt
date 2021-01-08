@@ -1,9 +1,6 @@
 package tabshifter
 
 import com.intellij.openapi.diagnostic.Logger
-import tabshifter.Directions.down
-import tabshifter.Directions.left
-import tabshifter.Directions.right
 import tabshifter.valueobjects.*
 
 class TabShifter(private val ide: Ide) {
@@ -11,7 +8,7 @@ class TabShifter(private val ide: Ide) {
      * Potentially this mysterious component com.intellij.ui.switcher.SwitchManagerAppComponent
      * could be used for switching focus, but it's currently doesn't work very well and is not enabled.
      */
-    fun moveFocus(direction: Directions.Direction) {
+    fun moveFocus(direction: Direction) {
         val layout = ide.snapshotWindowLayout()?.calculateAndSetPositions() ?: return
         val window = layout.currentWindow() ?: return
         val targetWindow = direction.findTargetWindow(window, layout) ?: return
@@ -27,7 +24,7 @@ class TabShifter(private val ide: Ide) {
      * - EditorWindow object changes its identity after split/unsplit (i.e. points to another visual window)
      * therefore, need to predict target window position and look up window by expected position
      */
-    fun moveTab(direction: Directions.Direction) {
+    fun moveTab(direction: Direction) {
         val layout = ide.snapshotWindowLayout()?.calculateAndSetPositions() ?: return
         val window = layout.currentWindow() ?: return
         val targetWindow = direction.findTargetWindow(window, layout)
@@ -63,7 +60,7 @@ class TabShifter(private val ide: Ide) {
         }
     }
 
-    fun stretchSplitter(direction: Directions.Direction) {
+    fun stretchSplitter(direction: Direction) {
         val layout = ide.snapshotWindowLayout()?.calculateAndSetPositions() ?: return
         val window = layout.currentWindow() ?: return
         var split = findParentSplitOf(window, layout)

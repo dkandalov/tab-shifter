@@ -15,73 +15,73 @@ object Actions {
 
     class ShiftLeft: AnAction(), DumbAware {
         override fun actionPerformed(event: AnActionEvent) {
-            tabShifter(event)?.moveTab(Directions.left)
+            tabShifter(event)?.moveTab(left)
         }
     }
 
     class ShiftUp: AnAction(), DumbAware {
         override fun actionPerformed(event: AnActionEvent) {
-            tabShifter(event)?.moveTab(Directions.up)
+            tabShifter(event)?.moveTab(up)
         }
     }
 
     class ShiftRight: AnAction(), DumbAware {
         override fun actionPerformed(event: AnActionEvent) {
-            tabShifter(event)?.moveTab(Directions.right)
+            tabShifter(event)?.moveTab(right)
         }
     }
 
     class ShiftDown: AnAction(), DumbAware {
         override fun actionPerformed(event: AnActionEvent) {
-            tabShifter(event)?.moveTab(Directions.down)
+            tabShifter(event)?.moveTab(down)
         }
     }
 
     class MoveFocusLeft: AnAction(), DumbAware {
         override fun actionPerformed(event: AnActionEvent) {
-            tabShifter(event)?.moveFocus(Directions.left)
+            tabShifter(event)?.moveFocus(left)
         }
     }
 
     class MoveFocusUp: AnAction(), DumbAware {
         override fun actionPerformed(event: AnActionEvent) {
-            tabShifter(event)?.moveFocus(Directions.up)
+            tabShifter(event)?.moveFocus(up)
         }
     }
 
     class MoveFocusRight: AnAction(), DumbAware {
         override fun actionPerformed(event: AnActionEvent) {
-            tabShifter(event)?.moveFocus(Directions.right)
+            tabShifter(event)?.moveFocus(right)
         }
     }
 
     class MoveFocusDown: AnAction(), DumbAware {
         override fun actionPerformed(event: AnActionEvent) {
-            tabShifter(event)?.moveFocus(Directions.down)
+            tabShifter(event)?.moveFocus(down)
         }
     }
 
     class StretchRight: AnAction(), DumbAware {
         override fun actionPerformed(event: AnActionEvent) {
-            tabShifter(event)?.stretchSplitter(Directions.right)
+            tabShifter(event)?.stretchSplitter(right)
         }
     }
 
     class StretchLeft: AnAction(), DumbAware {
         override fun actionPerformed(event: AnActionEvent) {
-            tabShifter(event)?.stretchSplitter(Directions.left)
+            tabShifter(event)?.stretchSplitter(left)
         }
     }
 
     class StretchUp: AnAction(), DumbAware {
         override fun actionPerformed(event: AnActionEvent) {
-            tabShifter(event)?.stretchSplitter(Directions.up)
+            tabShifter(event)?.stretchSplitter(up)
         }
     }
 
     class StretchDown: AnAction(), DumbAware {
         override fun actionPerformed(event: AnActionEvent) {
-            tabShifter(event)?.stretchSplitter(Directions.down)
+            tabShifter(event)?.stretchSplitter(down)
         }
     }
 
