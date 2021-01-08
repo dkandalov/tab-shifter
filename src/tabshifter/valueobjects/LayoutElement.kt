@@ -6,11 +6,12 @@ abstract class LayoutElement {
 }
 
 fun LayoutElement?.traverse(): Sequence<LayoutElement> = sequence {
-    if (this@traverse != null) {
-        yield(this@traverse!!)
-        if (this@traverse is Split) {
-            yieldAll(first.traverse())
-            yieldAll(second.traverse())
+    val element = this@traverse
+    if (element != null) {
+        yield(element!!)
+        if (element is Split) {
+            yieldAll(element.first.traverse())
+            yieldAll(element.second.traverse())
         }
     }
 }

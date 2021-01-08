@@ -52,6 +52,7 @@ class TabShifter(private val ide: Ide) {
                 logger.warn("No window for: $newPosition; windowLayout: $newWindowLayout")
             } else {
                 ide.setFocusOn(targetWindowLookedUpAgain)
+                ide.setPinnedFiles(targetWindowLookedUpAgain, currentWindow.pinnedFiles)
             }
         }
     }

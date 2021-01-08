@@ -53,6 +53,15 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         editorManager.currentWindow = (window as IdeWindow).editorWindow
     }
 
+    fun setPinnedFiles(window: Window, pinnedFiles: List<String>) {
+        val editorWindow = (window as IdeWindow).editorWindow
+        editorWindow.files.forEach { file ->
+            if (file.path in pinnedFiles) {
+                editorWindow.setFilePinned(file, true)
+            }
+        }
+    }
+
     fun snapshotWindowLayout(): LayoutElement? =
         if (editorManager.currentWindow == null || editorManager.currentWindow.files.isEmpty()) null
         else editorManager.snapshotWindowLayout(panel = editorManager.splitters.getComponent(0) as JPanel)
@@ -73,7 +82,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
                 editorWindow,
                 hasOneTab = editorWindow.tabCount == 1,
                 isCurrent = currentWindow == editorWindow,
-                pinnedFiles = editorWindow.files.filter { editorWindow.isFilePinned(it) }.map { it.name }
+                pinnedFiles = editorWindow.files.filter { editorWindow.isFilePinned(it) }.map { it.path }
             )
         } else {
             throw IllegalStateException()
