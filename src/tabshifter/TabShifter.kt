@@ -6,12 +6,12 @@ import tabshifter.Directions.left
 import tabshifter.Directions.right
 import tabshifter.valueobjects.*
 
-open class TabShifter(private val ide: Ide) {
+class TabShifter(private val ide: Ide) {
     /**
      * Potentially this mysterious component com.intellij.ui.switcher.SwitchManagerAppComponent
      * could be used for switching focus, but it's currently doesn't work very well and is not enabled.
      */
-    open fun moveFocus(direction: Directions.Direction) {
+    fun moveFocus(direction: Directions.Direction) {
         val layout = ide.snapshotWindowLayout()?.calculateAndSetPositions() ?: return
         val window = layout.currentWindow() ?: return
         val targetWindow = direction.findTargetWindow(window, layout) ?: return
@@ -27,7 +27,7 @@ open class TabShifter(private val ide: Ide) {
      * - EditorWindow object changes its identity after split/unsplit (i.e. points to another visual window)
      * therefore, need to predict target window position and look up window by expected position
      */
-    open fun moveTab(direction: Directions.Direction) {
+    fun moveTab(direction: Directions.Direction) {
         val layout = ide.snapshotWindowLayout()?.calculateAndSetPositions() ?: return
         val window = layout.currentWindow() ?: return
         val targetWindow = direction.findTargetWindow(window, layout)
@@ -63,7 +63,7 @@ open class TabShifter(private val ide: Ide) {
         }
     }
 
-    open fun stretchSplitter(direction: Directions.Direction) {
+    fun stretchSplitter(direction: Directions.Direction) {
         val layout = ide.snapshotWindowLayout()?.calculateAndSetPositions() ?: return
         val window = layout.currentWindow() ?: return
         var split = findParentSplitOf(window, layout)
@@ -134,8 +134,8 @@ open class TabShifter(private val ide: Ide) {
             return this
         }
 
-        private fun removeFrom(element: LayoutElement?, window: Window): LayoutElement? {
-            return when (element) {
+        private fun removeFrom(element: LayoutElement?, window: Window): LayoutElement? =
+            when (element) {
                 is Split  -> {
                     val first = removeFrom(element.first, window)
                     val second = removeFrom(element.second, window)
@@ -144,10 +144,9 @@ open class TabShifter(private val ide: Ide) {
                 is Window -> if (element == window) null else element
                 else      -> throw IllegalStateException()
             }
-        }
 
-        private fun insertSplit(orientation: Split.Orientation, window: Window, element: LayoutElement?): LayoutElement {
-            return if (element is Split) {
+        private fun insertSplit(orientation: Split.Orientation, window: Window, element: LayoutElement?): LayoutElement =
+            if (element is Split) {
                 Split(
                     insertSplit(orientation, window, element.first),
                     insertSplit(orientation, window, element.second),
@@ -158,6 +157,5 @@ open class TabShifter(private val ide: Ide) {
             } else {
                 throw IllegalStateException()
             }
-        }
     }
 }
