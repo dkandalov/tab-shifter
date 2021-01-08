@@ -58,34 +58,33 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
     fun snapshotWindowLayout(): LayoutElement? {
         val rootPanel = editorManager.splitters.getComponent(0) as JPanel
         if (editorManager.currentWindow == null || editorManager.currentWindow.files.isEmpty()) return null
-        return snapshotWindowLayout(rootPanel)
+        return editorManager.snapshotWindowLayout(rootPanel)
     }
 
-    private fun snapshotWindowLayout(panel: JPanel): LayoutElement {
+    private fun FileEditorManagerEx.snapshotWindowLayout(panel: JPanel): LayoutElement {
         val component = panel.getComponent(0)
         return if (component is Splitter) {
             IdeSplitter(
-                first = snapshotWindowLayout(component.firstComponent as JPanel),
-                second = snapshotWindowLayout(component.secondComponent as JPanel),
+                first = this.snapshotWindowLayout(component.firstComponent as JPanel),
+                second = this.snapshotWindowLayout(component.secondComponent as JPanel),
                 splitter = component
             )
         } else if (component is JPanel || component is JBTabs) {
-            val editorWindow = findWindowWith(component)
+            val editorWindow = this.findWindowWith(component)
             IdeWindow(
                 editorWindow,
                 hasOneTab = editorWindow!!.tabCount == 1,
-                isCurrent = editorManager.currentWindow == editorWindow
+                isCurrent = currentWindow == editorWindow
             )
         } else {
             throw IllegalStateException()
         }
     }
 
-    private fun findWindowWith(component: Component?): EditorWindow? {
-        if (component == null) return null
-        return editorManager.windows
-            .find { window -> SwingUtilities.isDescendingFrom(component, EditorWindow_AccessToPanel_Hack.panelOf(window)) }
-    }
+    private fun FileEditorManagerEx.findWindowWith(component: Component) =
+        windows.find { window ->
+            SwingUtilities.isDescendingFrom(component, EditorWindow_AccessToPanel_Hack.panelOf(window))
+        }
 
     fun growSplitProportion(split: Split) {
         updateProportion(split, 1f)
@@ -130,12 +129,11 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
 
     private class MaximizeState(val originalProportion: Float, val maximisedProportion: Float)
 
-    private class IdeSplitter(first: LayoutElement, second: LayoutElement, val splitter: Splitter):
-        Split(
-            first = first,
-            second = second,
-            orientation = if (splitter.isVertical) Orientation.horizontal else Orientation.vertical
-        )
+    private class IdeSplitter(first: LayoutElement, second: LayoutElement, val splitter: Splitter): Split(
+        first = first,
+        second = second,
+        orientation = if (splitter.isVertical) Orientation.horizontal else Orientation.vertical
+    )
 
     private class IdeWindow(val editorWindow: EditorWindow?, hasOneTab: Boolean, isCurrent: Boolean): Window(hasOneTab, isCurrent) {
         override fun toString(): String {
@@ -144,7 +142,6 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         }
     }
 
-    private fun Project.currentFile(): VirtualFile? {
-        return (FileEditorManagerEx.getInstance(this) as FileEditorManagerEx).currentFile
-    }
+    private fun Project.currentFile(): VirtualFile? =
+        (FileEditorManagerEx.getInstance(this) as FileEditorManagerEx).currentFile
 }
