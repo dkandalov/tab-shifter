@@ -29,15 +29,14 @@ open class Split(
         horizontal
     }
 
-    override fun size(): Size {
-        return if (orientation == Orientation.vertical) Size(
-            width = first.size().width + second.size().width,
-            height = max(first.size().height, second.size().height)
+    override val size =
+        if (orientation == Orientation.vertical) Size(
+            width = first.size.width + second.size.width,
+            height = max(first.size.height, second.size.height)
         ) else Size(
-            width = max(first.size().width, second.size().width),
-            height = first.size().height + second.size().height
+            width = max(first.size.width, second.size.width),
+            height = first.size.height + second.size.height
         )
-    }
 
     override fun toString() =
         "Split($orientation $first, $second)"

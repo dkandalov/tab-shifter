@@ -116,16 +116,16 @@ open class TabShifter(private val ide: Ide) {
                 else      -> throw IllegalStateException()
             }
 
-        private fun LayoutElement.calculateAndSetPositions(position: Position = Position(0, 0, size().width, size().height)): LayoutElement {
+        private fun LayoutElement.calculateAndSetPositions(position: Position = Position(0, 0, size.width, size.height)): LayoutElement {
             if (this is Split) {
                 val firstPosition: Position
                 val secondPosition: Position
                 if (orientation == Split.Orientation.vertical) {
-                    firstPosition = position.withToX(position.toX - second.size().width)
-                    secondPosition = position.withFromX(position.fromX + first.size().width)
+                    firstPosition = position.withToX(position.toX - second.size.width)
+                    secondPosition = position.withFromX(position.fromX + first.size.width)
                 } else {
-                    firstPosition = position.withToY(position.toY - second.size().height)
-                    secondPosition = position.withFromY(position.fromY + first.size().height)
+                    firstPosition = position.withToY(position.toY - second.size.height)
+                    secondPosition = position.withFromY(position.fromY + first.size.height)
                 }
                 first.calculateAndSetPositions(firstPosition)
                 second.calculateAndSetPositions(secondPosition)

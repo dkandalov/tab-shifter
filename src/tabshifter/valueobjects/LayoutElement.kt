@@ -2,7 +2,7 @@ package tabshifter.valueobjects
 
 abstract class LayoutElement {
     var position: Position = Position(0, 0, 0, 0)
-    abstract fun size(): Size
+    abstract val size: Size
 }
 
 fun LayoutElement?.traverse(): Sequence<LayoutElement> = sequence {
