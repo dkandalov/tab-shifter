@@ -10,8 +10,8 @@ class TabShifter(private val ide: Ide) {
      */
     fun moveFocus(direction: Direction) {
         val layout = ide.snapshotWindowLayout()?.calculateAndSetPositions() ?: return
-        val window = layout.currentWindow() ?: return
-        val targetWindow = direction.findTargetWindow(window, layout) ?: return
+        val currentWindow = layout.currentWindow() ?: return
+        val targetWindow = direction.findTargetWindow(currentWindow, layout) ?: return
         ide.setFocusOn(targetWindow)
     }
 
@@ -26,28 +26,27 @@ class TabShifter(private val ide: Ide) {
      */
     fun moveTab(direction: Direction) {
         val layout = ide.snapshotWindowLayout()?.calculateAndSetPositions() ?: return
-        val window = layout.currentWindow() ?: return
-        val targetWindow = direction.findTargetWindow(window, layout)
+        val currentWindow = layout.currentWindow() ?: return
+        val targetWindow = direction.findTargetWindow(currentWindow, layout)
 
         val newPosition: Position
-        val isAtEdge = targetWindow == null
-        if (isAtEdge) {
-            if (window.hasOneTab || !direction.canExpand) return
-            val newLayout = insertSplit(direction.splitOrientation, window, layout)
+        if (targetWindow == null) {
+            if (currentWindow.hasOneTab || !direction.canExpand) return
+            val newLayout = insertSplit(direction.splitOrientation, currentWindow, layout)
             newLayout.calculateAndSetPositions()
-            val sibling = findSiblingOf(window, newLayout) ?: return // should never happen
+            val sibling = findSiblingOf(currentWindow, newLayout) ?: return // should never happen
             newPosition = sibling.position
             ide.createSplitter(direction.splitOrientation)
         } else {
-            val willBeUnsplit = window.hasOneTab
+            val willBeUnsplit = currentWindow.hasOneTab
             if (willBeUnsplit) {
-                val unsplitLayout = removeFrom(layout, window)
+                val unsplitLayout = removeFrom(layout, currentWindow)
                 unsplitLayout?.calculateAndSetPositions()
             }
-            newPosition = targetWindow!!.position
+            newPosition = targetWindow.position
             ide.openCurrentFileIn(targetWindow)
         }
-        ide.closeCurrentFileIn(window) {
+        ide.closeCurrentFileIn(currentWindow) {
             val newWindowLayout = ide.snapshotWindowLayout()?.calculateAndSetPositions()
             // Do this because identity of the window object can change after closing the current file.
             val targetWindowLookedUpAgain = newWindowLayout.traverse().filterIsInstance<Window>().find { it.position == newPosition }
@@ -62,8 +61,8 @@ class TabShifter(private val ide: Ide) {
 
     fun stretchSplitter(direction: Direction) {
         val layout = ide.snapshotWindowLayout()?.calculateAndSetPositions() ?: return
-        val window = layout.currentWindow() ?: return
-        var split = findParentSplitOf(window, layout)
+        val currentWindow = layout.currentWindow() ?: return
+        var split = findParentSplitOf(currentWindow, layout)
         val orientationToSkip = if (direction == left || direction == right) Split.Orientation.horizontal else Split.Orientation.vertical
         while (split != null && split.orientation == orientationToSkip) {
             split = findParentSplitOf(split, layout)
@@ -78,17 +77,17 @@ class TabShifter(private val ide: Ide) {
 
     fun toggleMaximizeRestoreSplitter() {
         val layout = ide.snapshotWindowLayout()?.calculateAndSetPositions() ?: return
-        val window = layout.currentWindow()
-        val split = findParentSplitOf(window, layout) ?: return
+        val currentWindow = layout.currentWindow() ?: return
+        val split = findParentSplitOf(currentWindow, layout) ?: return
 
-        val inFirst = split.first == window
+        val inFirst = split.first == currentWindow
         val maximized = ide.toggleMaximizeRestoreSplitter(split, inFirst)
         if (maximized) ide.hideToolWindows()
     }
 
     fun equalSizeSplitter() {
         val layout = ide.snapshotWindowLayout()?.calculateAndSetPositions() ?: return
-        val split = findParentSplitOf(layout.currentWindow(), layout) ?: return
+        val split = findParentSplitOf(layout.currentWindow() ?: return , layout) ?: return
         ide.equalSizeSplitter(split)
     }
 

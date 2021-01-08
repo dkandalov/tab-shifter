@@ -55,11 +55,9 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         editorManager.currentWindow = (window as IdeWindow).editorWindow
     }
 
-    fun snapshotWindowLayout(): LayoutElement? {
-        val rootPanel = editorManager.splitters.getComponent(0) as JPanel
-        if (editorManager.currentWindow == null || editorManager.currentWindow.files.isEmpty()) return null
-        return editorManager.snapshotWindowLayout(rootPanel)
-    }
+    fun snapshotWindowLayout(): LayoutElement? =
+        if (editorManager.currentWindow == null || editorManager.currentWindow.files.isEmpty()) null
+        else editorManager.snapshotWindowLayout(panel = editorManager.splitters.getComponent(0) as JPanel)
 
     private fun FileEditorManagerEx.snapshotWindowLayout(panel: JPanel): LayoutElement {
         val component = panel.getComponent(0)
