@@ -32,7 +32,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
     }
 
     fun closeCurrentFileIn(window: Window, onFileClosed: () -> Unit) {
-        val fileToClose = project.currentFile()
+        val fileToClose = project.currentFile() ?: return
         val connection = project.messageBus.connect()
         connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, object: FileEditorManagerListener {
             override fun fileClosed(source: FileEditorManager, file: VirtualFile) {
