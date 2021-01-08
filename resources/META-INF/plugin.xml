@@ -55,7 +55,7 @@
     <idea-version since-build="201.6668.113"/>
 
     <!-- See http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
-    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.platform</depends>
 
     <actions>
         <!--
