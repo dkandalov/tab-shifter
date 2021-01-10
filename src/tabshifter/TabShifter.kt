@@ -58,10 +58,10 @@ class TabShifter(private val ide: Ide) {
     fun stretchSplitter(direction: Direction) {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
         val currentWindow = layout.currentWindow() ?: return
-        var split = findParentSplitOf(currentWindow, layout)
+        var split = layout.findParentSplitOf(currentWindow)
         val orientationToSkip = if (direction == left || direction == right) Split.Orientation.horizontal else Split.Orientation.vertical
         while (split != null && split.orientation == orientationToSkip) {
-            split = findParentSplitOf(split, layout)
+            split = layout.findParentSplitOf(split)
         }
         if (split == null) return
         if (direction == right || direction == down) {
@@ -74,7 +74,7 @@ class TabShifter(private val ide: Ide) {
     fun toggleMaximizeRestoreSplitter() {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
         val currentWindow = layout.currentWindow() ?: return
-        val split = findParentSplitOf(currentWindow, layout) ?: return
+        val split = layout.findParentSplitOf(currentWindow) ?: return
 
         val inFirst = split.first == currentWindow
         val maximized = ide.toggleMaximizeRestoreSplitter(split, inFirst)
@@ -83,7 +83,8 @@ class TabShifter(private val ide: Ide) {
 
     fun equalSizeSplitter() {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
-        val split = findParentSplitOf(layout.currentWindow() ?: return, layout) ?: return
+        val currentWindow = layout.currentWindow() ?: return
+        val split = layout.findParentSplitOf(currentWindow) ?: return
         ide.equalSizeSplitter(split)
     }
 
@@ -95,8 +96,8 @@ class TabShifter(private val ide: Ide) {
 private fun Ide.windowLayoutSnapshotWithPositions() =
     snapshotWindowLayout()?.updatePositions()
 
-private fun findParentSplitOf(layoutElement: LayoutElement, layout: LayoutElement): Split? =
-    layout.traverse().filterIsInstance<Split>()
+private fun LayoutElement.findParentSplitOf(layoutElement: LayoutElement): Split? =
+    traverse().filterIsInstance<Split>()
         .find { it.first == layoutElement || it.second == layoutElement }
 
 private fun LayoutElement.currentWindow() =

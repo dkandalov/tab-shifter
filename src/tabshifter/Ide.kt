@@ -1,14 +1,11 @@
 package tabshifter
 
-import com.intellij.openapi.fileEditor.FileEditorManager
-import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx
 import com.intellij.openapi.fileEditor.impl.EditorWindow
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Splitter
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.registry.Registry
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx
 import com.intellij.ui.tabs.JBTabs
@@ -20,7 +17,9 @@ import javax.swing.SwingConstants
 import javax.swing.SwingUtilities
 
 class Ide(private val editorManager: FileEditorManagerEx, private val project: Project) {
-    private val maximizeStateKey = Key.create<MaximizeState>("maximizeState")
+    companion object {
+        private val maximizeStateKey = Key.create<MaximizeState>("maximizeState")
+    }
 
     // Use these particular registry values to be consistent with in com.intellij.ide.actions.WindowAction.BaseSizeAction.
     private val widthStretch: Float = Registry.intValue("ide.windowSystem.hScrollChars", 5) / 100f
@@ -95,18 +94,19 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
     fun toggleMaximizeRestoreSplitter(split: Split, inFirst: Boolean): Boolean {
         val splitter = (split as IdeSplitter).splitter
 
-        // zoom out if the proportion equals the one during maximization
+        // Zoom out if the proportion equals the one during maximization.
         val maximizeState = project.getUserData(maximizeStateKey)
-        if (maximizeState != null && maximizeState.maximisedProportion == splitter.proportion) {
+        return if (maximizeState != null && maximizeState.maximisedProportion == splitter.proportion) {
             splitter.proportion = maximizeState.originalProportion
             project.putUserData(maximizeStateKey, null)
-            return false
+            false
+        } else {
+            val originalProportion = splitter.proportion
+            splitter.proportion = if (inFirst) 1.0f else 0.0f
+            val maximisedProportion = splitter.proportion
+            project.putUserData(maximizeStateKey, MaximizeState(originalProportion, maximisedProportion))
+            true
         }
-        val originalProportion = splitter.proportion
-        splitter.proportion = if (inFirst) 1.0f else 0.0f
-        val maximisedProportion = splitter.proportion
-        project.putUserData(maximizeStateKey, MaximizeState(originalProportion, maximisedProportion))
-        return true
     }
 
     fun equalSizeSplitter(split: Split) {
@@ -114,6 +114,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
     }
 
     fun hideToolWindows() {
+        // TODO use hide all toolwindows action
         toolWindowManager.toolWindowIds.forEach { windowId ->
             toolWindowManager.hideToolWindow(windowId, true)
         }
