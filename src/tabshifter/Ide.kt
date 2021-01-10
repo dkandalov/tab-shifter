@@ -32,22 +32,6 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         editorManager.createSplitter(swingOrientation, editorManager.currentWindow)
     }
 
-    fun closeFile(window: Window, filePath: String?, onFileClosed: () -> Unit) {
-        if (filePath == null) return
-        val virtualFile = VirtualFileManager.getInstance().findFileByUrl("file://$filePath") ?: return
-        val connection = project.messageBus.connect()
-        connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, object: FileEditorManagerListener {
-            override fun fileClosed(source: FileEditorManager, file: VirtualFile) {
-                if (file == virtualFile) {
-                    onFileClosed()
-                    connection.disconnect()
-                }
-            }
-        })
-        val transferFocus = false // This is important for the TabShifter.moveTab() logic.
-        (window as IdeWindow).editorWindow.closeFile(virtualFile, true, transferFocus)
-    }
-
     fun closeFile(window: Window, filePath: String?) {
         if (filePath == null) return
         val virtualFile = VirtualFileManager.getInstance().findFileByUrl("file://$filePath") ?: return

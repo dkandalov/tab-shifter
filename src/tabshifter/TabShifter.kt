@@ -33,10 +33,9 @@ class TabShifter(private val ide: Ide) {
             val currentWindow = layout.findSiblingOf(targetWindow) as Window
 
             layout.findWindowAt(currentWindow.position).let {
-                ide.closeFile(it, currentWindow.currentFile) {
-                    ide.windowLayoutSnapshotWithPositions().findWindowAt(targetWindow.position).let {
-                        ide.setPinnedFiles(it, currentWindow.pinnedFiles)
-                    }
+                ide.closeFile(it, currentWindow.currentFile)
+                ide.windowLayoutSnapshotWithPositions().findWindowAt(targetWindow.position).let {
+                    ide.setPinnedFiles(it, currentWindow.pinnedFiles)
                 }
             }
         } else {
