@@ -1,5 +1,6 @@
 package tabshifter
 
+import com.intellij.openapi.diagnostic.Logger
 import tabshifter.valueobjects.*
 
 class TabShifter(private val ide: Ide) {
@@ -32,9 +33,9 @@ class TabShifter(private val ide: Ide) {
             val targetWindow = layout.currentWindow() ?: return
             val currentWindow = layout.findSiblingOf(targetWindow) as Window
 
-            layout.findWindowAt(currentWindow.position).let {
+            layout.findWindowAt(currentWindow.position)?.let {
                 ide.closeFile(it, currentWindow.currentFile)
-                ide.windowLayoutSnapshotWithPositions().findWindowAt(targetWindow.position).let {
+                ide.windowLayoutSnapshotWithPositions().findWindowAt(targetWindow.position)?.let {
                     ide.setPinnedFiles(it, currentWindow.pinnedFiles)
                 }
             }
@@ -45,9 +46,14 @@ class TabShifter(private val ide: Ide) {
         }
     }
 
-    private fun LayoutElement?.findWindowAt(position: Position): Window =
-        traverse().filterIsInstance<Window>().find { it.position == position }
-            ?: error("No window at: $position; windowLayout: $this")
+    private fun LayoutElement?.findWindowAt(position: Position): Window? {
+        val window = traverse().filterIsInstance<Window>().find { it.position == position }
+        if (window == null) {
+            // Haven't seen this happening. Opting for silent error handling assuming that if this goes wrong, user can just retry the action.
+            logger.info("No window at: $position; windowLayout: $this")
+        }
+        return window
+    }
 
     fun stretchSplitter(direction: Direction) {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
@@ -79,6 +85,10 @@ class TabShifter(private val ide: Ide) {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
         val split = findParentSplitOf(layout.currentWindow() ?: return, layout) ?: return
         ide.equalSizeSplitter(split)
+    }
+
+    companion object {
+        private val logger = Logger.getInstance(TabShifter::class.java.name)
     }
 }
 
