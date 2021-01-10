@@ -1,6 +1,5 @@
 package tabshifter
 
-import com.intellij.openapi.application.invokeLater
 import tabshifter.valueobjects.*
 
 class TabShifter(private val ide: Ide) {
@@ -16,13 +15,9 @@ class TabShifter(private val ide: Ide) {
     }
 
     /**
-     * Moves tab in the specified direction.
-     *
-     * This is way more complicated than it should have been. The main reasons are:
-     * - closing-then-opening or opening-then-closing tab doesn't guarantee that focus will be in the moved tab,
-     *   therefore, need to track target window to move focus into it
-     * - EditorWindow object changes its identity after split/unsplit (i.e. points to another visual window)
-     *   therefore, need to predict target window position and look up window by expected position
+     * This is way more complicated than it should have been because
+     * EditorWindow object changes its identity after split/unsplit (i.e. points to another visual window)
+     * therefore, need to predict target window position and look up window by expected position
      */
     fun moveTab(direction: Direction) {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
@@ -40,24 +35,14 @@ class TabShifter(private val ide: Ide) {
             layout.findWindowAt(currentWindow.position).let {
                 ide.closeFile(it, currentWindow.currentFile) {
                     ide.windowLayoutSnapshotWithPositions().findWindowAt(targetWindow.position).let {
-                        invokeLater {
-                            ide.setPinnedFiles(it, currentWindow.pinnedFiles)
-//                            ide.setFocusOn(it) // TODO remove?
-                        }
+                        ide.setPinnedFiles(it, currentWindow.pinnedFiles)
                     }
                 }
             }
         } else {
-            ide.closeFile(currentWindow, currentWindow.currentFile) {
-                if (currentWindow.hasOneTab) {
-                    // Need this for the side-effect to update currentWindow position, so the lookup below does work
-                    layout.remove(currentWindow)
-                }
-                ide.windowLayoutSnapshotWithPositions().findWindowAt(targetWindow.position).let {
-                    ide.openFile(it, currentWindow.currentFile)
-                    ide.setPinnedFiles(it, currentWindow.pinnedFiles)
-                }
-            }
+            ide.openFile(targetWindow, currentWindow.currentFile)
+            ide.setPinnedFiles(targetWindow, currentWindow.pinnedFiles)
+            ide.closeFile(currentWindow, currentWindow.currentFile)
         }
     }
 
@@ -118,46 +103,6 @@ private fun LayoutElement.findSiblingOf(window: Window): LayoutElement? =
         is Window -> null
         else      -> throw IllegalStateException()
     }
-
-private fun LayoutElement.remove(window: Window): LayoutElement? {
-    fun LayoutElement.doRemove(window: Window): LayoutElement? =
-        when (this) {
-            is Split  -> {
-                val first = first.doRemove(window)
-                val second = second.doRemove(window)
-                when {
-                    first == null  -> second
-                    second == null -> first
-                    else           -> Split(first, second, this.orientation)
-                }
-            }
-            is Window -> if (this == window) null else this
-            else      -> throw IllegalStateException()
-        }
-
-    return doRemove(window)?.updatePositions()
-}
-
-private fun LayoutElement.insertSplit(orientation: Split.Orientation, window: Window): LayoutElement {
-    fun LayoutElement.doInsertSplit(orientation: Split.Orientation, window: Window): LayoutElement =
-        when (this) {
-            is Split  -> Split(
-                first.doInsertSplit(orientation, window),
-                second.doInsertSplit(orientation, window),
-                orientation
-            )
-            is Window ->
-                if (this != window) this
-                else Split(
-                    window,
-                    Window(hasOneTab = true, isCurrent = false, currentFile = currentFile, pinnedFiles = emptyList()),
-                    orientation
-                )
-            else      -> throw IllegalStateException()
-        }
-
-    return doInsertSplit(orientation, window).updatePositions()
-}
 
 private fun LayoutElement.updatePositions(position: Position = Position(0, 0, size.width, size.height)): LayoutElement {
     if (this is Split) {

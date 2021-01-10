@@ -32,20 +32,6 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         editorManager.createSplitter(swingOrientation, editorManager.currentWindow)
     }
 
-    fun closeCurrentFileIn(window: Window, onFileClosed: () -> Unit) {
-        val fileToClose = editorManager.currentFile ?: return
-        val connection = project.messageBus.connect()
-        connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, object: FileEditorManagerListener {
-            override fun fileClosed(source: FileEditorManager, file: VirtualFile) {
-                if (file == fileToClose) {
-                    onFileClosed()
-                    connection.disconnect()
-                }
-            }
-        })
-        (window as IdeWindow).editorWindow.closeFile(fileToClose)
-    }
-
     fun closeFile(window: Window, filePath: String?, onFileClosed: () -> Unit) {
         if (filePath == null) return
         val virtualFile = VirtualFileManager.getInstance().findFileByUrl("file://$filePath") ?: return
@@ -58,13 +44,15 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
                 }
             }
         })
-        (window as IdeWindow).editorWindow.closeFile(virtualFile, true, false)
+        val transferFocus = false // This is important for the TabShifter.moveTab() logic.
+        (window as IdeWindow).editorWindow.closeFile(virtualFile, true, transferFocus)
     }
 
     fun closeFile(window: Window, filePath: String?) {
         if (filePath == null) return
         val virtualFile = VirtualFileManager.getInstance().findFileByUrl("file://$filePath") ?: return
-        (window as IdeWindow).editorWindow.closeFile(virtualFile)
+        val transferFocus = false // This is important for the TabShifter.moveTab() logic.
+        (window as IdeWindow).editorWindow.closeFile(virtualFile, true, transferFocus)
     }
 
     fun openFile(window: Window, filePath: String?) {
