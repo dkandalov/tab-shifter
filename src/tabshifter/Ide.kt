@@ -50,10 +50,10 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         editorWindow.requestFocus(true)
     }
 
-    fun setPinnedFiles(window: Window, pinnedFiles: List<String>) {
+    fun setPinnedFiles(window: Window, pinnedFilesUrls: List<String>) {
         val editorWindow = (window as IdeWindow).editorWindow
         editorWindow.files.forEach { file ->
-            if (file.path in pinnedFiles) {
+            if (file.url in pinnedFilesUrls) {
                 editorWindow.setFilePinned(file, true)
             }
         }
