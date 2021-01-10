@@ -24,7 +24,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
     // Use these particular registry values to be consistent with in com.intellij.ide.actions.WindowAction.BaseSizeAction.
     private val widthStretch: Float = Registry.intValue("ide.windowSystem.hScrollChars", 5) / 100f
     private val heightStretch: Float = Registry.intValue("ide.windowSystem.vScrollChars", 5) / 100f
-    private val toolWindowManager: ToolWindowManagerEx = ToolWindowManagerEx.getInstanceEx(project)
+    private val toolWindowManager = ToolWindowManagerEx.getInstanceEx(project)
 
     fun createSplitter(orientation: Split.Orientation) {
         val swingOrientation = if (orientation == Split.Orientation.vertical) SwingConstants.VERTICAL else SwingConstants.HORIZONTAL
@@ -91,33 +91,43 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         updateProportion(split, 1f)
     }
 
-    fun toggleMaximizeRestoreSplitter(split: Split, inFirst: Boolean): Boolean {
+    fun toggleMaximizeRestoreSplitter(split: Split, toggleFirst: Boolean) {
         val splitter = (split as IdeSplitter).splitter
 
-        // Zoom out if the proportion equals the one during maximization.
         val maximizeState = project.getUserData(maximizeStateKey)
-        return if (maximizeState != null && maximizeState.maximisedProportion == splitter.proportion) {
+        if (maximizeState?.maximisedProportion == splitter.proportion) {
             splitter.proportion = maximizeState.originalProportion
             project.putUserData(maximizeStateKey, null)
-            false
+
+            toolWindowManager.restoreToolWindowLayout()
         } else {
             val originalProportion = splitter.proportion
-            splitter.proportion = if (inFirst) 1.0f else 0.0f
+            splitter.proportion = if (toggleFirst) 1.0f else 0.0f
             val maximisedProportion = splitter.proportion
             project.putUserData(maximizeStateKey, MaximizeState(originalProportion, maximisedProportion))
-            true
+
+            toolWindowManager.hideAllToolWindows()
+        }
+    }
+
+    private fun ToolWindowManagerEx.hideAllToolWindows() {
+        layoutToRestoreLater = layout.copy()
+        toolWindowIds.forEach { windowId ->
+            hideToolWindow(windowId, true)
+        }
+        activateEditorComponent()
+    }
+
+    private fun ToolWindowManagerEx.restoreToolWindowLayout() {
+        val restoredLayout = layoutToRestoreLater
+        if (restoredLayout != null) {
+            layoutToRestoreLater = null
+            layout = restoredLayout
         }
     }
 
     fun equalSizeSplitter(split: Split) {
         (split as IdeSplitter).splitter.proportion = 0.5f
-    }
-
-    fun hideToolWindows() {
-        // TODO use hide all toolwindows action
-        toolWindowManager.toolWindowIds.forEach { windowId ->
-            toolWindowManager.hideToolWindow(windowId, true)
-        }
     }
 
     fun shrinkSplitProportion(split: Split) {

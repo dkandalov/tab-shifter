@@ -76,9 +76,7 @@ class TabShifter(private val ide: Ide) {
         val currentWindow = layout.currentWindow() ?: return
         val split = layout.findParentSplitOf(currentWindow) ?: return
 
-        val inFirst = split.first == currentWindow
-        val maximized = ide.toggleMaximizeRestoreSplitter(split, inFirst)
-        if (maximized) ide.hideToolWindows()
+        ide.toggleMaximizeRestoreSplitter(split, toggleFirst = split.first == currentWindow)
     }
 
     fun equalSizeSplitter() {
