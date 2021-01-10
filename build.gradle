@@ -27,6 +27,10 @@ sourceSets {
 	}
 }
 
+compileKotlin.kotlinOptions {
+	jvmTarget = "1.8"
+}
+
 intellij {
 	def ideVersion = System.getenv().getOrDefault("IJ_VERSION",
 		"201.6668.113"
