@@ -31,16 +31,16 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         editorManager.createSplitter(swingOrientation, editorManager.currentWindow)
     }
 
-    fun closeFile(window: Window, filePath: String?) {
-        if (filePath == null) return
-        val virtualFile = VirtualFileManager.getInstance().findFileByUrl("file://$filePath") ?: return
+    fun closeFile(window: Window, fileUrl: String?) {
+        if (fileUrl == null) return
+        val virtualFile = VirtualFileManager.getInstance().findFileByUrl(fileUrl) ?: return
         val transferFocus = false // This is important for the TabShifter.moveTab() logic.
         (window as IdeWindow).editorWindow.closeFile(virtualFile, true, transferFocus)
     }
 
-    fun openFile(window: Window, filePath: String?) {
-        if (filePath == null) return
-        val virtualFile = VirtualFileManager.getInstance().findFileByUrl("file://$filePath") ?: return
+    fun openFile(window: Window, fileUrl: String?) {
+        if (fileUrl == null) return
+        val virtualFile = VirtualFileManager.getInstance().findFileByUrl(fileUrl) ?: return
         editorManager.openFileWithProviders(virtualFile, true, (window as IdeWindow).editorWindow)
     }
 
@@ -79,8 +79,8 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
                 editorWindow,
                 hasOneTab = editorWindow.tabCount == 1,
                 isCurrent = currentWindow == editorWindow,
-                currentFile = currentFile?.path,
-                pinnedFiles = editorWindow.files.filter { editorWindow.isFilePinned(it) }.map { it.path }
+                currentFileUrl = currentFile?.url,
+                pinnedFilesUrls = editorWindow.files.filter { editorWindow.isFilePinned(it) }.map { it.url }
             )
         } else {
             throw IllegalStateException()
@@ -142,9 +142,9 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         val editorWindow: EditorWindow,
         hasOneTab: Boolean,
         isCurrent: Boolean,
-        currentFile: String?,
-        pinnedFiles: List<String>
-    ): Window(hasOneTab, isCurrent, currentFile, pinnedFiles) {
+        currentFileUrl: String?,
+        pinnedFilesUrls: List<String>
+    ): Window(hasOneTab, isCurrent, currentFileUrl, pinnedFilesUrls) {
         override fun toString(): String {
             val fileNames = editorWindow.files.map { it.name }
             return "Window(" + fileNames.joinToString(",") + ")"
