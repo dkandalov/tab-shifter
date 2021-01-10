@@ -3,6 +3,7 @@ package tabshifter.valueobjects
 open class Window(
     val hasOneTab: Boolean,
     val isCurrent: Boolean,
+    val currentFile: String?,
     val pinnedFiles: List<String>
 ): LayoutElement() {
     override val size = Size(1, 1)

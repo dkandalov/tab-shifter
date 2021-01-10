@@ -9,6 +9,7 @@ import com.intellij.openapi.ui.Splitter
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx
 import com.intellij.ui.tabs.JBTabs
 import tabshifter.valueobjects.LayoutElement
@@ -32,7 +33,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
     }
 
     fun closeCurrentFileIn(window: Window, onFileClosed: () -> Unit) {
-        val fileToClose = project.currentFile() ?: return
+        val fileToClose = editorManager.currentFile ?: return
         val connection = project.messageBus.connect()
         connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, object: FileEditorManagerListener {
             override fun fileClosed(source: FileEditorManager, file: VirtualFile) {
@@ -45,12 +46,37 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         (window as IdeWindow).editorWindow.closeFile(fileToClose)
     }
 
-    fun openCurrentFileIn(window: Window) {
-        editorManager.openFileWithProviders(project.currentFile()!!, true, (window as IdeWindow).editorWindow)
+    fun closeFile(window: Window, filePath: String?, onFileClosed: () -> Unit) {
+        if (filePath == null) return
+        val virtualFile = VirtualFileManager.getInstance().findFileByUrl("file://$filePath") ?: return
+        val connection = project.messageBus.connect()
+        connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, object: FileEditorManagerListener {
+            override fun fileClosed(source: FileEditorManager, file: VirtualFile) {
+                if (file == virtualFile) {
+                    onFileClosed()
+                    connection.disconnect()
+                }
+            }
+        })
+        (window as IdeWindow).editorWindow.closeFile(virtualFile, true, false)
+    }
+
+    fun closeFile(window: Window, filePath: String?) {
+        if (filePath == null) return
+        val virtualFile = VirtualFileManager.getInstance().findFileByUrl("file://$filePath") ?: return
+        (window as IdeWindow).editorWindow.closeFile(virtualFile)
+    }
+
+    fun openFile(window: Window, filePath: String?) {
+        if (filePath == null) return
+        val virtualFile = VirtualFileManager.getInstance().findFileByUrl("file://$filePath") ?: return
+        editorManager.openFileWithProviders(virtualFile, true, (window as IdeWindow).editorWindow)
     }
 
     fun setFocusOn(window: Window) {
-        editorManager.currentWindow = (window as IdeWindow).editorWindow
+        val editorWindow = (window as IdeWindow).editorWindow
+        editorManager.currentWindow = editorWindow
+        editorWindow.requestFocus(true)
     }
 
     fun setPinnedFiles(window: Window, pinnedFiles: List<String>) {
@@ -82,6 +108,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
                 editorWindow,
                 hasOneTab = editorWindow.tabCount == 1,
                 isCurrent = currentWindow == editorWindow,
+                currentFile = currentFile?.path,
                 pinnedFiles = editorWindow.files.filter { editorWindow.isFilePinned(it) }.map { it.path }
             )
         } else {
@@ -142,14 +169,12 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         val editorWindow: EditorWindow,
         hasOneTab: Boolean,
         isCurrent: Boolean,
+        currentFile: String?,
         pinnedFiles: List<String>
-    ): Window(hasOneTab, isCurrent, pinnedFiles) {
+    ): Window(hasOneTab, isCurrent, currentFile, pinnedFiles) {
         override fun toString(): String {
             val fileNames = editorWindow.files.map { it.name }
             return "Window(" + fileNames.joinToString(",") + ")"
         }
     }
-
-    private fun Project.currentFile(): VirtualFile? =
-        (FileEditorManagerEx.getInstance(this) as FileEditorManagerEx).currentFile
 }
