@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx
 import com.intellij.openapi.project.DumbAware
+import tabshifter.Direction.*
 
 object Actions {
     private fun tabShifter(event: AnActionEvent): TabShifter? {
