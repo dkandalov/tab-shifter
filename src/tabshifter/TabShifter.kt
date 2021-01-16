@@ -88,8 +88,14 @@ class TabShifter(private val ide: Ide) {
     fun equalSizeSplitter() {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
         val currentWindow = layout.findWindow { it.isCurrent } ?: return
-        val split = layout.findParentSplitOf(currentWindow) ?: return
-        ide.equalSizeSplitter(split)
+
+        var layoutElement: LayoutElement = currentWindow
+        var parentSplit = layout.findParentSplitOf(layoutElement)
+        while (parentSplit != null) {
+            ide.equalSizeSplitter(parentSplit)
+            layoutElement = parentSplit
+            parentSplit = layout.findParentSplitOf(layoutElement)
+        }
     }
 }
 
