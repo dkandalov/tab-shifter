@@ -14,8 +14,8 @@ class TabShifter(private val ide: Ide) {
      */
     fun moveFocus(direction: Direction) {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
-        val currentWindow = layout.currentWindow() ?: return
-        val targetWindow = layout.findTargetWindow(currentWindow, direction) ?: return
+        val currentWindow = layout.findWindow { it.isCurrent } ?: return
+        val targetWindow = layout.findWindowNextTo(currentWindow, direction) ?: return
         ide.setFocusOn(targetWindow)
     }
 
@@ -26,8 +26,8 @@ class TabShifter(private val ide: Ide) {
      */
     fun moveTab(direction: Direction) {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
-        val currentWindow = layout.currentWindow() ?: return
-        val targetWindow = layout.findTargetWindow(currentWindow, direction)
+        val currentWindow = layout.findWindow { it.isCurrent } ?: return
+        val targetWindow = layout.findWindowNextTo(currentWindow, direction)
 
         if (targetWindow == null) {
             if (currentWindow.hasOneTab || direction == left || direction == up) return
@@ -38,7 +38,7 @@ class TabShifter(private val ide: Ide) {
             }
             ide.createSplitter(orientation)
             val layout = ide.windowLayoutSnapshotWithPositions() ?: return
-            val targetWindow = layout.currentWindow() ?: return
+            val targetWindow = layout.findWindow { it.isCurrent } ?: return
             val currentWindow = layout.findSiblingOf(targetWindow) as Window
 
             layout.findWindowAt(currentWindow.position)?.let {
@@ -56,7 +56,7 @@ class TabShifter(private val ide: Ide) {
 
     fun stretchSplitter(direction: Direction) {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
-        val currentWindow = layout.currentWindow() ?: return
+        val currentWindow = layout.findWindow { it.isCurrent } ?: return
         var split = layout.findParentSplitOf(currentWindow)
         val orientationToSkip = if (direction == left || direction == right) horizontal else vertical
         while (split != null && split.orientation == orientationToSkip) {
@@ -72,7 +72,7 @@ class TabShifter(private val ide: Ide) {
 
     fun toggleMaximizeRestoreSplitter() {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
-        val currentWindow = layout.currentWindow() ?: return
+        val currentWindow = layout.findWindow { it.isCurrent } ?: return
         val split = layout.findParentSplitOf(currentWindow) ?: return
 
         ide.toggleMaximizeRestoreSplitter(split, toggleFirst = split.first == currentWindow)
@@ -80,7 +80,7 @@ class TabShifter(private val ide: Ide) {
 
     fun equalSizeSplitter() {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
-        val currentWindow = layout.currentWindow() ?: return
+        val currentWindow = layout.findWindow { it.isCurrent } ?: return
         val split = layout.findParentSplitOf(currentWindow) ?: return
         ide.equalSizeSplitter(split)
     }
@@ -96,7 +96,7 @@ private fun Ide.windowLayoutSnapshotWithPositions() =
 private val logger = Logger.getInstance(TabShifter::class.java.name)
 
 private fun LayoutElement?.findWindowAt(position: Position): Window? {
-    val window = traverse().filterIsInstance<Window>().find { it.position == position }
+    val window = findWindow { it.position == position }
     if (window == null) {
         // Haven't seen this happening. Opting for silent error handling assuming that if this goes wrong, user can just retry the action.
         logger.info("No window at: $position; windowLayout: $this")
@@ -107,9 +107,6 @@ private fun LayoutElement?.findWindowAt(position: Position): Window? {
 private fun LayoutElement.findParentSplitOf(layoutElement: LayoutElement): Split? =
     traverse().filterIsInstance<Split>()
         .find { it.first == layoutElement || it.second == layoutElement }
-
-private fun LayoutElement.currentWindow() =
-    traverse().filterIsInstance<Window>().find { it.isCurrent }
 
 private fun LayoutElement.findSiblingOf(window: Window): LayoutElement? =
     when (this) {
@@ -140,23 +137,11 @@ private fun LayoutElement.updatePositions(position: Position = Position(0, 0, si
     return this
 }
 
-private fun LayoutElement.findTargetWindow(window: Window, direction: Direction) =
+private fun LayoutElement.findWindowNextTo(window: Window, direction: Direction) =
     when (direction) {
-        left  ->
-            traverse().filterIsInstance<Window>()
-                .filter { window.position.fromX == it.position.toX }
-                .minBy { abs(window.position.fromY - it.position.fromY) }
-        up    ->
-            traverse().filterIsInstance<Window>()
-                .filter { window.position.fromY == it.position.toY }
-                .minBy { abs(window.position.fromX - it.position.fromX) }
-        right ->
-            traverse().filterIsInstance<Window>()
-                .filter { window.position.toX == it.position.fromX }
-                .minBy { abs(window.position.fromY - it.position.fromY) }
-        down  ->
-            traverse().filterIsInstance<Window>()
-                .filter { window.position.toY == it.position.fromY }
-                .minBy { abs(window.position.fromX - it.position.fromX) }
+        left  -> filterAllWindows { window.position.fromX == it.position.toX }.minBy { abs(window.position.fromY - it.position.fromY) }
+        up    -> filterAllWindows { window.position.fromY == it.position.toY }.minBy { abs(window.position.fromX - it.position.fromX) }
+        right -> filterAllWindows { window.position.toX == it.position.fromX }.minBy { abs(window.position.fromY - it.position.fromY) }
+        down  -> filterAllWindows { window.position.toY == it.position.fromY }.minBy { abs(window.position.fromX - it.position.fromX) }
     }
 

@@ -16,6 +16,12 @@ fun LayoutElement?.traverse(): Sequence<LayoutElement> = sequence {
     }
 }
 
+fun LayoutElement?.filterAllWindows(predicate: (Window) -> Boolean): Sequence<Window> =
+    traverse().filterIsInstance<Window>().filter(predicate)
+
+fun LayoutElement?.findWindow(predicate: (Window) -> Boolean): Window? =
+    traverse().filterIsInstance<Window>().find(predicate)
+
 data class Position(val fromX: Int, val fromY: Int, val toX: Int, val toY: Int) {
     fun withFromX(value: Int) = Position(value, fromY, toX, toY)
     fun withFromY(value: Int) = Position(fromX, value, toX, toY)
