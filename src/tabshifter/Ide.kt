@@ -12,13 +12,14 @@ import com.intellij.ui.tabs.JBTabs
 import tabshifter.layout.LayoutElement
 import tabshifter.layout.Split
 import tabshifter.layout.Window
+import java.util.*
 import javax.swing.JPanel
 import javax.swing.SwingConstants
 import javax.swing.SwingUtilities
 
 class Ide(private val editorManager: FileEditorManagerEx, private val project: Project) {
     companion object {
-        private val maximizeStateKey = Key.create<MaximizeState>("maximizeState")
+        private val maximizeStateKey = Key.create<WeakHashMap<Splitter, MaximizeState>>("maximizeState")
     }
 
     // Use these particular registry values to be consistent with in com.intellij.ide.actions.WindowAction.BaseSizeAction.
@@ -91,38 +92,45 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         updateProportion(split, 1f)
     }
 
-    fun toggleMaximizeRestoreSplitter(split: Split, toggleFirst: Boolean) {
+    fun toggleMaximizeSplitter(split: Split, toggleFirst: Boolean): Boolean {
         val splitter = (split as IdeSplitter).splitter
+        val maximizedStateByElement = project.maximizedStateByElement()
 
-        val maximizeState = project.getUserData(maximizeStateKey)
-        if (maximizeState?.maximisedProportion == splitter.proportion) {
+        val maximizeState = maximizedStateByElement[splitter]
+        return if (maximizeState?.maximisedProportion == splitter.proportion) {
             splitter.proportion = maximizeState.originalProportion
-            project.putUserData(maximizeStateKey, null)
-
-            toolWindowManager.restoreToolWindowLayout()
+            maximizedStateByElement.remove(splitter)
+            false
         } else {
             val originalProportion = splitter.proportion
             splitter.proportion = if (toggleFirst) 1.0f else 0.0f
-            val maximisedProportion = splitter.proportion
-            project.putUserData(maximizeStateKey, MaximizeState(originalProportion, maximisedProportion))
-
-            toolWindowManager.hideAllToolWindows()
+            maximizedStateByElement[splitter] = MaximizeState(originalProportion, maximisedProportion = splitter.proportion)
+            true
         }
     }
 
-    private fun ToolWindowManagerEx.hideAllToolWindows() {
-        layoutToRestoreLater = layout.copy()
-        toolWindowIds.forEach { windowId ->
-            hideToolWindow(windowId, true)
+    private fun Project.maximizedStateByElement(): WeakHashMap<Splitter, MaximizeState> {
+        var result = getUserData(maximizeStateKey)
+        if (result == null) {
+            result = WeakHashMap()
+            putUserData(maximizeStateKey, result)
         }
-        activateEditorComponent()
+        return result
     }
 
-    private fun ToolWindowManagerEx.restoreToolWindowLayout() {
-        val restoredLayout = layoutToRestoreLater
+    fun hideAllToolWindows() = toolWindowManager.let {
+        it.layoutToRestoreLater = it.layout.copy()
+        it.toolWindowIds.forEach { windowId ->
+            it.hideToolWindow(windowId, true)
+        }
+        it.activateEditorComponent()
+    }
+
+    fun restoreToolWindowLayout() = toolWindowManager.let {
+        val restoredLayout = it.layoutToRestoreLater
         if (restoredLayout != null) {
-            layoutToRestoreLater = null
-            layout = restoredLayout
+            it.layoutToRestoreLater = null
+            it.layout = restoredLayout
         }
     }
 

@@ -70,12 +70,19 @@ class TabShifter(private val ide: Ide) {
         }
     }
 
-    fun toggleMaximizeRestoreSplitter() {
+    fun toggleMaximizeSplitter() {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
         val currentWindow = layout.findWindow { it.isCurrent } ?: return
-        val split = layout.findParentSplitOf(currentWindow) ?: return
 
-        ide.toggleMaximizeRestoreSplitter(split, toggleFirst = split.first == currentWindow)
+        var isMaximized = false
+        var layoutElement: LayoutElement = currentWindow
+        var parentSplit = layout.findParentSplitOf(layoutElement)
+        while (parentSplit != null) {
+            isMaximized = ide.toggleMaximizeSplitter(parentSplit, toggleFirst = parentSplit.first == layoutElement)
+            layoutElement = parentSplit
+            parentSplit = layout.findParentSplitOf(layoutElement)
+        }
+        if (isMaximized) ide.hideAllToolWindows() else ide.restoreToolWindowLayout()
     }
 
     fun equalSizeSplitter() {

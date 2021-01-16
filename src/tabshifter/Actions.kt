@@ -94,7 +94,7 @@ object Actions {
 
     class ToggleMaximizeRestore: AnAction(), DumbAware {
         override fun actionPerformed(event: AnActionEvent) {
-            tabShifter(event)?.toggleMaximizeRestoreSplitter()
+            tabShifter(event)?.toggleMaximizeSplitter()
         }
     }
 }
