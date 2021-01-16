@@ -5,6 +5,7 @@ import tabshifter.Direction.*
 import tabshifter.layout.*
 import tabshifter.layout.Split.Orientation.horizontal
 import tabshifter.layout.Split.Orientation.vertical
+import kotlin.math.abs
 
 class TabShifter(private val ide: Ide) {
     /**
@@ -14,7 +15,7 @@ class TabShifter(private val ide: Ide) {
     fun moveFocus(direction: Direction) {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
         val currentWindow = layout.currentWindow() ?: return
-        val targetWindow = direction.findTargetWindow(currentWindow, layout) ?: return
+        val targetWindow = layout.findTargetWindow(currentWindow, direction) ?: return
         ide.setFocusOn(targetWindow)
     }
 
@@ -26,7 +27,7 @@ class TabShifter(private val ide: Ide) {
     fun moveTab(direction: Direction) {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
         val currentWindow = layout.currentWindow() ?: return
-        val targetWindow = direction.findTargetWindow(currentWindow, layout)
+        val targetWindow = layout.findTargetWindow(currentWindow, direction)
 
         if (targetWindow == null) {
             if (currentWindow.hasOneTab || direction == left || direction == up) return
@@ -85,6 +86,10 @@ class TabShifter(private val ide: Ide) {
     }
 }
 
+enum class Direction {
+    left, up, right, down
+}
+
 private fun Ide.windowLayoutSnapshotWithPositions() =
     snapshotWindowLayout()?.updatePositions()
 
@@ -134,3 +139,24 @@ private fun LayoutElement.updatePositions(position: Position = Position(0, 0, si
     this.position = position
     return this
 }
+
+private fun LayoutElement.findTargetWindow(window: Window, direction: Direction) =
+    when (direction) {
+        left  ->
+            traverse().filterIsInstance<Window>()
+                .filter { window.position.fromX == it.position.toX }
+                .minBy { abs(window.position.fromY - it.position.fromY) }
+        up    ->
+            traverse().filterIsInstance<Window>()
+                .filter { window.position.fromY == it.position.toY }
+                .minBy { abs(window.position.fromX - it.position.fromX) }
+        right ->
+            traverse().filterIsInstance<Window>()
+                .filter { window.position.toX == it.position.fromX }
+                .minBy { abs(window.position.fromY - it.position.fromY) }
+        down  ->
+            traverse().filterIsInstance<Window>()
+                .filter { window.position.toY == it.position.fromY }
+                .minBy { abs(window.position.fromX - it.position.fromX) }
+    }
+
