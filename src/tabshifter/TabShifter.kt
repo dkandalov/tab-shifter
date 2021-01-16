@@ -3,6 +3,8 @@ package tabshifter
 import com.intellij.openapi.diagnostic.Logger
 import tabshifter.Direction.*
 import tabshifter.layout.*
+import tabshifter.layout.Split.Orientation.horizontal
+import tabshifter.layout.Split.Orientation.vertical
 
 class TabShifter(private val ide: Ide) {
     /**
@@ -27,7 +29,7 @@ class TabShifter(private val ide: Ide) {
         val targetWindow = direction.findTargetWindow(currentWindow, layout)
 
         if (targetWindow == null) {
-            if (currentWindow.hasOneTab || !direction.canExpand) return
+            if (currentWindow.hasOneTab || direction == left || direction == up) return
 
             ide.createSplitter(direction.splitOrientation)
             val layout = ide.windowLayoutSnapshotWithPositions() ?: return
@@ -47,20 +49,11 @@ class TabShifter(private val ide: Ide) {
         }
     }
 
-    private fun LayoutElement?.findWindowAt(position: Position): Window? {
-        val window = traverse().filterIsInstance<Window>().find { it.position == position }
-        if (window == null) {
-            // Haven't seen this happening. Opting for silent error handling assuming that if this goes wrong, user can just retry the action.
-            logger.info("No window at: $position; windowLayout: $this")
-        }
-        return window
-    }
-
     fun stretchSplitter(direction: Direction) {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
         val currentWindow = layout.currentWindow() ?: return
         var split = layout.findParentSplitOf(currentWindow)
-        val orientationToSkip = if (direction == left || direction == right) Split.Orientation.horizontal else Split.Orientation.vertical
+        val orientationToSkip = if (direction == left || direction == right) horizontal else vertical
         while (split != null && split.orientation == orientationToSkip) {
             split = layout.findParentSplitOf(split)
         }
@@ -86,14 +79,21 @@ class TabShifter(private val ide: Ide) {
         val split = layout.findParentSplitOf(currentWindow) ?: return
         ide.equalSizeSplitter(split)
     }
-
-    companion object {
-        private val logger = Logger.getInstance(TabShifter::class.java.name)
-    }
 }
 
 private fun Ide.windowLayoutSnapshotWithPositions() =
     snapshotWindowLayout()?.updatePositions()
+
+private val logger = Logger.getInstance(TabShifter::class.java.name)
+
+private fun LayoutElement?.findWindowAt(position: Position): Window? {
+    val window = traverse().filterIsInstance<Window>().find { it.position == position }
+    if (window == null) {
+        // Haven't seen this happening. Opting for silent error handling assuming that if this goes wrong, user can just retry the action.
+        logger.info("No window at: $position; windowLayout: $this")
+    }
+    return window
+}
 
 private fun LayoutElement.findParentSplitOf(layoutElement: LayoutElement): Split? =
     traverse().filterIsInstance<Split>()
@@ -117,7 +117,7 @@ private fun LayoutElement.updatePositions(position: Position = Position(0, 0, si
     if (this is Split) {
         val firstPosition: Position
         val secondPosition: Position
-        if (orientation == Split.Orientation.vertical) {
+        if (orientation == vertical) {
             firstPosition = position.withToX(position.toX - second.size.width)
             secondPosition = position.withFromX(position.fromX + first.size.width)
         } else {

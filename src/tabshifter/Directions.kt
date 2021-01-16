@@ -5,13 +5,12 @@ import kotlin.math.abs
 
 enum class Direction(
     val splitOrientation: Split.Orientation,
-    val findTargetWindow: (window: Window, layout: LayoutElement) -> Window?,
-    val canExpand: Boolean
+    val findTargetWindow: (window: Window, layout: LayoutElement) -> Window?
 ) {
-    left(Split.Orientation.vertical, ::findWindowLeftOf, canExpand = false),
-    up(Split.Orientation.horizontal, ::findWindowAbove, canExpand = false),
-    right(Split.Orientation.vertical, ::findWindowRightOf, canExpand = true),
-    down(Split.Orientation.horizontal, ::findWindowBelow, canExpand = true),
+    left(Split.Orientation.vertical, ::findWindowLeftOf),
+    up(Split.Orientation.horizontal, ::findWindowAbove),
+    right(Split.Orientation.vertical, ::findWindowRightOf),
+    down(Split.Orientation.horizontal, ::findWindowBelow),
 }
 
 private fun findWindowRightOf(window: Window, layout: LayoutElement): Window? =
