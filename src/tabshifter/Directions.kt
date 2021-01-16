@@ -4,13 +4,12 @@ import tabshifter.layout.*
 import kotlin.math.abs
 
 enum class Direction(
-    val splitOrientation: Split.Orientation,
     val findTargetWindow: (window: Window, layout: LayoutElement) -> Window?
 ) {
-    left(Split.Orientation.vertical, ::findWindowLeftOf),
-    up(Split.Orientation.horizontal, ::findWindowAbove),
-    right(Split.Orientation.vertical, ::findWindowRightOf),
-    down(Split.Orientation.horizontal, ::findWindowBelow),
+    left(::findWindowLeftOf),
+    up(::findWindowAbove),
+    right(::findWindowRightOf),
+    down(::findWindowBelow),
 }
 
 private fun findWindowRightOf(window: Window, layout: LayoutElement): Window? =

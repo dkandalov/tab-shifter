@@ -31,7 +31,11 @@ class TabShifter(private val ide: Ide) {
         if (targetWindow == null) {
             if (currentWindow.hasOneTab || direction == left || direction == up) return
 
-            ide.createSplitter(direction.splitOrientation)
+            val orientation = when (direction) {
+                left, right -> vertical
+                up, down    -> horizontal
+            }
+            ide.createSplitter(orientation)
             val layout = ide.windowLayoutSnapshotWithPositions() ?: return
             val targetWindow = layout.currentWindow() ?: return
             val currentWindow = layout.findSiblingOf(targetWindow) as Window
