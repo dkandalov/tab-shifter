@@ -1,4 +1,4 @@
-package tabshifter.valueobjects
+package tabshifter.layout
 
 abstract class LayoutElement {
     var position: Position = Position(0, 0, 0, 0)

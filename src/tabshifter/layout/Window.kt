@@ -1,4 +1,4 @@
-package tabshifter.valueobjects
+package tabshifter.layout
 
 open class Window(
     val hasOneTab: Boolean,

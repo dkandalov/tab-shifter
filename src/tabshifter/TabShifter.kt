@@ -2,7 +2,7 @@ package tabshifter
 
 import com.intellij.openapi.diagnostic.Logger
 import tabshifter.Direction.*
-import tabshifter.valueobjects.*
+import tabshifter.layout.*
 
 class TabShifter(private val ide: Ide) {
     /**

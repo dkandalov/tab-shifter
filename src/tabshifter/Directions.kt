@@ -1,6 +1,6 @@
 package tabshifter
 
-import tabshifter.valueobjects.*
+import tabshifter.layout.*
 import kotlin.math.abs
 
 enum class Direction(

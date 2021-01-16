@@ -9,9 +9,9 @@ import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx
 import com.intellij.ui.tabs.JBTabs
-import tabshifter.valueobjects.LayoutElement
-import tabshifter.valueobjects.Split
-import tabshifter.valueobjects.Window
+import tabshifter.layout.LayoutElement
+import tabshifter.layout.Split
+import tabshifter.layout.Window
 import javax.swing.JPanel
 import javax.swing.SwingConstants
 import javax.swing.SwingUtilities
