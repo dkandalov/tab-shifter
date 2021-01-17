@@ -6,7 +6,7 @@ Tab Shifter
 with a bunch of actions to move tabs between editor splitters and resize splitters.
 Actions are added to `Main Menu -> Window -> Tab Shifter`.
 
-OSX shortcuts:
+MacOS shortcuts:
  - `ctrl + alt + ]` - move tab to the right splitter (or create a new one if it's the rightmost splitter)
  - `ctrl + alt + [` - move tab to the left splitter
  - `ctrl + alt + P` - move tab to the splitter above
@@ -16,7 +16,7 @@ OSX shortcuts:
  - `alt + shift + =` - equal size splitter
  - `alt + shift + M` - maximize/restore splitter
 
-Other OS shortcuts:
+Linux/Windows shortcuts:
  - `alt + shift + ]` - move tab right
  - `alt + shift + [` - move tab left
  - `alt + shift + P` - move tab up
@@ -31,7 +31,7 @@ To move focus between splitters:
  - `ctrl + alt + shift + [` - left
  - `ctrl + alt + shift + P` - up
  - `ctrl + alt + shift + ;` - down
- - `ctrl + alt + .` - (built-in action) recommended binding for `Goto Next Splitter` action
+ - `ctrl + alt + .` - recommended binding for the built-in `Goto Next Splitter` action
 
 Of course, all the shortcuts can be changed in `IDE Settings -> Keymap`.
 
@@ -43,7 +43,7 @@ The main motivation for this plugin is to have an action which *moves* the curre
 
 <img src="https://raw.githubusercontent.com/dkandalov/tab-shift/master/tab-shifter.gif" alt="" title="" align="center"/>
 
-There are built-in actions to split and move tabs (see `Main Menu -> Window -> Editor Tabs) but, unfortunately, they don't do the right thing. 
+There are built-in actions to split and move tabs (see `Main Menu -> Window -> Editor Tabs`) but, unfortunately, they don't do the right thing. 
 In particular:
  - `Split Vertically/Horizontally` duplicates the current tab in the new split.
  - `Split and Move Right/Down` always splits the current window (even if there is already split window in the specified direction)
