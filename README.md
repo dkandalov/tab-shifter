@@ -27,10 +27,10 @@ Other OS shortcuts:
  - `alt + shift + M` - maximize/restore splitter
 
 To move focus between splitters:
- - `ctrl+alt+shift+]` - right
- - `ctrl+alt+shift+[` - left
- - `ctrl+alt+shift+P` - up
- - `ctrl+alt+shift+;` - down
+ - `ctrl + alt + shift + ]` - right
+ - `ctrl + alt + shift + [` - left
+ - `ctrl + alt + shift + P` - up
+ - `ctrl + alt + shift + ;` - down
  - `ctrl + alt + .` - (built-in action) recommended binding for `Goto Next Splitter` action
 
 Of course, all the shortcuts can be changed in `IDE Settings -> Keymap`.
