@@ -1,5 +1,6 @@
 package tabshifter.layout
 
+import tabshifter.layout.Split.Orientation.vertical
 import kotlin.math.max
 
 open class Split(
@@ -30,7 +31,7 @@ open class Split(
     }
 
     override val size =
-        if (orientation == Orientation.vertical) Size(
+        if (orientation == vertical) Size(
             width = first.size.width + second.size.width,
             height = max(first.size.height, second.size.height)
         ) else Size(
