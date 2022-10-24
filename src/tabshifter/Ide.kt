@@ -123,19 +123,21 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         return result
     }
 
+    @Suppress("UnstableApiUsage")
     fun hideAllToolWindows() = toolWindowManager.let {
-        it.layoutToRestoreLater = it.layout.copy()
+        it.layoutToRestoreLater = it.getLayout().copy()
         it.toolWindowIds.forEach { windowId ->
             it.hideToolWindow(windowId, true)
         }
         it.activateEditorComponent()
     }
 
+    @Suppress("UnstableApiUsage")
     fun restoreToolWindowLayout() = toolWindowManager.let {
         val restoredLayout = it.layoutToRestoreLater
         if (restoredLayout != null) {
             it.layoutToRestoreLater = null
-            it.layout = restoredLayout
+            it.setLayout(restoredLayout)
         }
     }
 

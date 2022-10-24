@@ -10,7 +10,7 @@ import kotlin.math.abs
 class TabShifter(private val ide: Ide) {
     /**
      * Potentially this mysterious component com.intellij.ui.switcher.SwitchManagerAppComponent
-     * could be used for switching focus, but it's currently doesn't work very well and is not enabled.
+     * could be used for switching focus, but it currently doesn't work very well and is not enabled.
      */
     fun moveFocus(direction: Direction) {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
@@ -152,9 +152,9 @@ private fun LayoutElement.updatePositions(position: Position = Position(0, 0, si
 
 private fun LayoutElement.findWindowNextTo(window: Window, direction: Direction) =
     when (direction) {
-        left  -> filterAllWindows { window.position.fromX == it.position.toX }.minBy { abs(window.position.fromY - it.position.fromY) }
-        up    -> filterAllWindows { window.position.fromY == it.position.toY }.minBy { abs(window.position.fromX - it.position.fromX) }
-        right -> filterAllWindows { window.position.toX == it.position.fromX }.minBy { abs(window.position.fromY - it.position.fromY) }
-        down  -> filterAllWindows { window.position.toY == it.position.fromY }.minBy { abs(window.position.fromX - it.position.fromX) }
+        left  -> filterAllWindows { window.position.fromX == it.position.toX }.minByOrNull { abs(window.position.fromY - it.position.fromY) }
+        up    -> filterAllWindows { window.position.fromY == it.position.toY }.minByOrNull { abs(window.position.fromX - it.position.fromX) }
+        right -> filterAllWindows { window.position.toX == it.position.fromX }.minByOrNull { abs(window.position.fromY - it.position.fromY) }
+        down  -> filterAllWindows { window.position.toY == it.position.fromY }.minByOrNull { abs(window.position.fromX - it.position.fromX) }
     }
 

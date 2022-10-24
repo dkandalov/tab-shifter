@@ -1,45 +1,43 @@
 buildscript {
-	repositories {
-		mavenCentral()
-		maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-	}
+    ext.kotlin_version = "1.6.21"
+    repositories {
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        gradlePluginPortal()
+    }
 }
-
 plugins {
-	id "org.jetbrains.intellij" version "0.6.5"
-	id "org.jetbrains.kotlin.jvm" version "1.3.72"
+    id "org.jetbrains.intellij" version "1.9.0"
+    id "org.jetbrains.kotlin.jvm" version "1.6.21"
 }
-apply plugin:"java"
-apply plugin:"kotlin"
-apply plugin:"idea"
-apply plugin:"org.jetbrains.intellij"
+apply plugin: "java"
+apply plugin: "kotlin"
+apply plugin: "idea"
+apply plugin: "org.jetbrains.intellij"
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 sourceSets {
-	main {
-		java.srcDir "src"
-		kotlin.srcDir "src"
-		resources.srcDir "resources"
-	}
+    main {
+        java.srcDir "src"
+        kotlin.srcDir "src"
+        resources.srcDir "resources"
+    }
 }
 
 compileKotlin.kotlinOptions {
-	jvmTarget = "1.8"
+    jvmTarget = "17"
 }
 
 intellij {
-	def ideVersion = System.getenv().getOrDefault("IJ_VERSION",
-		"201.6668.113"
-//		"LATEST-EAP-SNAPSHOT"
-	)
-	println("Using ide version: $ideVersion")
-	version ideVersion
-	type "UI"
-	pluginName "tab-shifter"
-	downloadSources true
-	sameSinceUntilBuild false
-	updateSinceUntilBuild false
+    // To find available IDE versions see https://www.jetbrains.com/intellij-repository/releases
+    // and https://www.jetbrains.com/intellij-repository/snapshots
+    version = System.getenv().getOrDefault("IJ_VERSION",
+        "222.3345.118"
+//        "LATEST-EAP-SNAPSHOT"
+    )
+    downloadSources = true
+    sameSinceUntilBuild = false
+    updateSinceUntilBuild = false
 }

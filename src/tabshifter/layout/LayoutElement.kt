@@ -8,7 +8,7 @@ abstract class LayoutElement {
 fun LayoutElement?.traverse(): Sequence<LayoutElement> = sequence {
     val element = this@traverse
     if (element != null) {
-        yield(element!!)
+        yield(element)
         if (element is Split) {
             yieldAll(element.first.traverse())
             yieldAll(element.second.traverse())
