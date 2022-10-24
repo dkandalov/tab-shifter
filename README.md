@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/dkandalov/tab-shifter.svg?branch=master)](https://travis-ci.org/dkandalov/tab-shifter)
+[![Build Status](https://github.com/dkandalov/tab-shifter/workflows/CI/badge.svg)](https://github.com/dkandalov/tab-shifter/actions)
 
 Tab Shifter
 ====
