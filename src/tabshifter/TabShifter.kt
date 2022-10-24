@@ -48,9 +48,9 @@ class TabShifter(private val ide: Ide) {
                 }
             }
         } else {
+            ide.closeFile(currentWindow, currentWindow.currentFileUrl)
             ide.openFile(targetWindow, currentWindow.currentFileUrl)
             ide.setPinnedFiles(targetWindow, currentWindow.pinnedFilesUrls)
-            ide.closeFile(currentWindow, currentWindow.currentFileUrl)
         }
     }
 
