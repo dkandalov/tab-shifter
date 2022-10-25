@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>socrates.tabshifter</id>
     <name>Tab Shifter</name>
-    <version>0.32</version>
+    <version>0.33</version>
     <vendor email="dmitry.kandalov@gmail.com" url="https://github.com/dkandalov/tab-shifter">Dmitry Kandalov</vendor>
 
     <description><![CDATA[
@@ -46,7 +46,7 @@
         For more details see <a href="https://github.com/dkandalov/tab-shift">GitHub page</a>.
         <br/><br/>
         Plugin idea by <a href="https://twitter.com/sandromancuso">Sandro Mancuso</a> at
-        <a href="http://socratesuk.org/">SoCraTes UK 2013</a>.
+        <a href="https://socratesuk.org/">SoCraTes UK 2013</a>.
         Created using <a href="https://github.com/dkandalov/live-plugin">LivePlugin</a>.
     ]]></description>
 

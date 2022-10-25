@@ -46,6 +46,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         if (fileUrl == null) return
         val virtualFile = VirtualFileManager.getInstance().findFileByUrl(fileUrl) ?: return
         editorManager.openFileWithProviders(virtualFile, true, (window as IdeWindow).editorWindow)
+        setFocusOn(window)
     }
 
     fun setFocusOn(window: Window) {
