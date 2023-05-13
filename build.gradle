@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = "1.6.21"
+    ext.kotlin_version = "1.7.22"
     repositories {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         gradlePluginPortal()
@@ -7,7 +7,7 @@ buildscript {
 }
 plugins {
     id "org.jetbrains.intellij" version "1.13.3"
-    id "org.jetbrains.kotlin.jvm" version "1.6.21"
+    id "org.jetbrains.kotlin.jvm" version "1.7.22"
 }
 apply plugin: "java"
 apply plugin: "kotlin"
@@ -34,7 +34,7 @@ intellij {
     // To find available IDE versions see https://www.jetbrains.com/intellij-repository/releases
     // and https://www.jetbrains.com/intellij-repository/snapshots
     version = System.getenv().getOrDefault("IJ_VERSION",
-        "222.3345.118"
+        "231.8770.65"
 //        "LATEST-EAP-SNAPSHOT"
     )
     downloadSources = true

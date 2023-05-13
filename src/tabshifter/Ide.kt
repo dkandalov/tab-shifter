@@ -2,6 +2,7 @@ package tabshifter
 
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx
 import com.intellij.openapi.fileEditor.impl.EditorWindow
+import com.intellij.openapi.fileEditor.impl.FileEditorOpenOptions
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Splitter
 import com.intellij.openapi.util.Key
@@ -45,7 +46,8 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
     fun openFile(window: Window, fileUrl: String?) {
         if (fileUrl == null) return
         val virtualFile = VirtualFileManager.getInstance().findFileByUrl(fileUrl) ?: return
-        editorManager.openFileWithProviders(virtualFile, true, (window as IdeWindow).editorWindow)
+        @Suppress("UnstableApiUsage")
+        editorManager.openFile(virtualFile, (window as IdeWindow).editorWindow, FileEditorOpenOptions())
         setFocusOn(window)
     }
 
@@ -65,7 +67,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
     }
 
     fun snapshotWindowLayout(): LayoutElement? =
-        if (editorManager.currentWindow == null || editorManager.currentWindow.files.isEmpty()) null
+        if (editorManager.currentWindow == null || editorManager.currentWindow!!.files.isEmpty()) null
         else editorManager.snapshotWindowLayout(panel = editorManager.splitters.getComponent(0) as JPanel)
 
     private fun FileEditorManagerEx.snapshotWindowLayout(panel: JPanel): LayoutElement =

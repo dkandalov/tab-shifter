@@ -9,7 +9,7 @@ import tabshifter.Direction.*
 object Actions {
     private fun tabShifter(event: AnActionEvent): TabShifter? {
         val project = event.project ?: return null
-        val editorManager = FileEditorManagerEx.getInstanceEx(project) ?: return null
+        val editorManager = FileEditorManagerEx.getInstanceEx(project)
         if (editorManager.allEditors.isEmpty()) return null
         return TabShifter(Ide(editorManager, project))
     }
