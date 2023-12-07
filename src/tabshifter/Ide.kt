@@ -16,6 +16,7 @@ import tabshifter.layout.Split.Orientation
 import tabshifter.layout.Split.Orientation.horizontal
 import tabshifter.layout.Split.Orientation.vertical
 import tabshifter.layout.Window
+import java.awt.Container
 import java.util.*
 import javax.swing.JPanel
 import javax.swing.SwingConstants
@@ -68,20 +69,20 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
 
     fun snapshotWindowLayout(): LayoutElement? =
         if (editorManager.currentWindow == null || editorManager.currentWindow!!.files.isEmpty()) null
-        else editorManager.snapshotWindowLayout(panel = editorManager.splitters.getComponent(0) as JPanel)
+        else editorManager.snapshotWindowLayout(container = editorManager.splitters.getComponent(0) as Container)
 
-    private fun FileEditorManagerEx.snapshotWindowLayout(panel: JPanel): LayoutElement =
-        when (val component = panel.getComponent(0)) {
+    private fun FileEditorManagerEx.snapshotWindowLayout(container: Container): LayoutElement =
+        when (container) {
             is Splitter -> {
                 IdeSplitter(
-                    first = snapshotWindowLayout(component.firstComponent as JPanel),
-                    second = snapshotWindowLayout(component.secondComponent as JPanel),
-                    splitter = component
+                    first = snapshotWindowLayout(container.firstComponent),
+                    second = snapshotWindowLayout(container.secondComponent),
+                    splitter = container
                 )
             }
             is JPanel, is JBTabs -> {
                 val editorWindow = windows.find { window ->
-                    SwingUtilities.isDescendingFrom(component, EditorWindow_AccessToPanel_Hack.panelOf(window))
+                    SwingUtilities.isDescendingFrom(container, EditorWindow_AccessToPanel_Hack.panelOf(window))
                 }!!
                 IdeWindow(
                     editorWindow,
@@ -155,7 +156,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
     private fun updateProportion(split: Split, direction: Float) {
         val stretch = direction * if (split.orientation == vertical) widthStretch else heightStretch
         val splitter = (split as IdeSplitter).splitter
-        splitter.proportion = splitter.proportion + stretch
+        splitter.proportion += stretch
     }
 
     private class MaximizeState(val originalProportion: Float, val maximisedProportion: Float)

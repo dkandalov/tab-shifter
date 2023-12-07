@@ -1,26 +1,10 @@
 package tabshifter
 
-import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.fileEditor.impl.EditorWindow
-import javax.swing.JPanel
+import javax.swing.JComponent
+import kotlin.reflect.full.declaredMemberProperties
 
 object EditorWindow_AccessToPanel_Hack {
-    private val logger = Logger.getInstance(TabShifter::class.java.name)
-
-    fun panelOf(editorWindow: EditorWindow): JPanel? =
-        try {
-            val panelField = try {
-                EditorWindow::class.java.getDeclaredField("panel")
-            } catch (e: NoSuchFieldException) {
-                EditorWindow::class.java.getDeclaredField("myPanel")
-            }
-            panelField.isAccessible = true
-            panelField[editorWindow] as JPanel
-        } catch (e: NoSuchFieldException) {
-            logger.warn("Couldn't find panel field")
-            null
-        } catch (e: IllegalAccessException) {
-            logger.warn("Couldn't access panel field", e)
-            null
-        }
+    fun panelOf(editorWindow: EditorWindow): JComponent =
+        EditorWindow::class.declaredMemberProperties.find { it.name == "component" }?.get(editorWindow) as JComponent
 }
