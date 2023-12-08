@@ -48,7 +48,11 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         if (fileUrl == null) return
         val virtualFile = VirtualFileManager.getInstance().findFileByUrl(fileUrl) ?: return
         @Suppress("UnstableApiUsage")
-        editorManager.openFile(virtualFile, (window as IdeWindow).editorWindow, FileEditorOpenOptions())
+        editorManager.openFile(
+            virtualFile,
+            (window as IdeWindow).editorWindow,
+            FileEditorOpenOptions().withSelectAsCurrent(true).withRequestFocus(true).withReuseOpen(true)
+        )
         setFocusOn(window)
     }
 
