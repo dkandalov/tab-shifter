@@ -30,11 +30,12 @@ class TabShifter(private val ide: Ide) {
         val targetWindow = layout.findWindowNextTo(currentWindow, direction)
 
         if (targetWindow == null) {
-            if (currentWindow.hasOneTab || direction == left || direction == up) return
+            if (currentWindow.hasOneTab) return
 
             val orientation = when (direction) {
-                left, right -> vertical
-                up, down    -> horizontal
+                left, up -> return
+                right    -> vertical
+                down     -> horizontal
             }
             ide.createSplitter(orientation)
             val layout = ide.windowLayoutSnapshotWithPositions() ?: return
@@ -43,8 +44,8 @@ class TabShifter(private val ide: Ide) {
 
             layout.findWindowAt(currentWindow.position)?.let {
                 ide.closeFile(it, currentWindow.currentFileUrl)
-                ide.windowLayoutSnapshotWithPositions().findWindowAt(targetWindow.position)?.let {
-                    ide.setPinnedFiles(it, currentWindow.pinnedFilesUrls)
+                ide.windowLayoutSnapshotWithPositions().findWindowAt(targetWindow.position)?.let { window ->
+                    ide.setPinnedFiles(window, currentWindow.pinnedFilesUrls)
                 }
             }
         } else {
