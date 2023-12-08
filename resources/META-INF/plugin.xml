@@ -50,9 +50,8 @@
         Created using <a href="https://github.com/dkandalov/live-plugin">LivePlugin</a>.
     ]]></description>
 
-
     <!-- See http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html -->
-    <idea-version since-build="231.8770.65"/>
+    <idea-version since-build="233.11799"/>
 
     <!-- See http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
