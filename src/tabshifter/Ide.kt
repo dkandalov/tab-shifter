@@ -34,7 +34,12 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
 
     fun createSplitter(orientation: Orientation) {
         val swingOrientation = if (orientation == vertical) SwingConstants.VERTICAL else SwingConstants.HORIZONTAL
-        editorManager.createSplitter(swingOrientation, editorManager.currentWindow)
+        editorManager.currentWindow?.split(
+            orientation = swingOrientation,
+            forceSplit = true,
+            virtualFile = null,
+            focusNew = true
+        )
     }
 
     fun closeFile(window: Window, fileUrl: String?) {
