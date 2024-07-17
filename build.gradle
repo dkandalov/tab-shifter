@@ -23,8 +23,8 @@ intellij {
     // To find available IDE versions see https://www.jetbrains.com/intellij-repository/releases
     // and https://www.jetbrains.com/intellij-repository/snapshots
     version = System.getenv().getOrDefault("IJ_VERSION",
-        "233.11799.241", // version in which required change in FileEditorManagerEx.snapshotWindowLayout()
-//        "LATEST-EAP-SNAPSHOT"
+//        "233.11799.241", // version in which required change in FileEditorManagerEx.snapshotWindowLayout()
+        "LATEST-EAP-SNAPSHOT"
     )
     downloadSources = true
     sameSinceUntilBuild = false

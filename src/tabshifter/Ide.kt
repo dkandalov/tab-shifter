@@ -64,7 +64,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
 
     fun setPinnedFiles(window: Window, pinnedFilesUrls: List<String>) {
         val editorWindow = (window as IdeWindow).editorWindow
-        editorWindow.files.forEach { file ->
+        editorWindow.fileList.forEach { file ->
             if (file.url in pinnedFilesUrls) {
                 editorWindow.setFilePinned(file, true)
             }
@@ -72,7 +72,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
     }
 
     fun snapshotWindowLayout(): LayoutElement? =
-        if (editorManager.currentWindow == null || editorManager.currentWindow!!.files.isEmpty()) null
+        if (editorManager.currentWindow == null || editorManager.currentWindow!!.fileList.isEmpty()) null
         else editorManager.snapshotWindowLayout(container = editorManager.splitters.getComponent(0) as Container)
 
     private fun FileEditorManagerEx.snapshotWindowLayout(container: Container): LayoutElement =
@@ -93,7 +93,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
                     hasOneTab = editorWindow.tabCount == 1,
                     isCurrent = currentWindow == editorWindow,
                     currentFileUrl = currentFile?.url,
-                    pinnedFilesUrls = editorWindow.files.filter { editorWindow.isFilePinned(it) }.map { it.url }
+                    pinnedFilesUrls = editorWindow.fileList.filter { editorWindow.isFilePinned(it) }.map { it.url }
                 )
             }
             else -> {
@@ -179,7 +179,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         pinnedFilesUrls: List<String>
     ) : Window(hasOneTab, isCurrent, currentFileUrl, pinnedFilesUrls) {
         override fun toString(): String {
-            val fileNames = editorWindow.files.map { it.name }
+            val fileNames = editorWindow.fileList.map { it.name }
             return "Window(" + fileNames.joinToString(",") + ")"
         }
     }
