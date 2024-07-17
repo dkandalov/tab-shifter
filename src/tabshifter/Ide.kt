@@ -97,7 +97,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
                 )
             }
             else -> {
-                throw IllegalStateException()
+                error("Unexpected container ${container.javaClass.name}")
             }
         }
 
@@ -165,11 +165,12 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
 
     private class MaximizeState(val originalProportion: Float, val maximisedProportion: Float)
 
-    private class IdeSplitter(first: LayoutElement, second: LayoutElement, val splitter: Splitter) : Split(
-        first = first,
-        second = second,
-        orientation = if (splitter.isVertical) horizontal else vertical
-    )
+    private class IdeSplitter(first: LayoutElement, second: LayoutElement, val splitter: Splitter) :
+        Split(
+            first = first,
+            second = second,
+            orientation = if (splitter.isVertical) horizontal else vertical
+        )
 
     private class IdeWindow(
         val editorWindow: EditorWindow,
@@ -178,9 +179,8 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         currentFileUrl: String?,
         pinnedFilesUrls: List<String>
     ) : Window(hasOneTab, isCurrent, currentFileUrl, pinnedFilesUrls) {
-        override fun toString(): String {
-            val fileNames = editorWindow.fileList.map { it.name }
-            return "Window(" + fileNames.joinToString(",") + ")"
-        }
+        override fun toString() =
+            "Window(" + editorWindow.fileList.joinToString(",") { it.name } + ")" +
+                if (isCurrent) "*" else ""
     }
 }
