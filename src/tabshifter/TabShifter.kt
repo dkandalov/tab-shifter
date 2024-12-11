@@ -42,7 +42,7 @@ class TabShifter(private val ide: Ide) {
                 ide.setFocusOn(targetWindow)
             }
             else {
-                // Toolbox to editor attempt first. If not, Toolbox to Toolbox  
+                  
                     
                 hideToolbox(direction)
             }
@@ -50,17 +50,29 @@ class TabShifter(private val ide: Ide) {
     }
 
     private fun hideToolbox(direction: Direction) {
-        val autoCloseOnExitEnabled = false
+        val enableAutoCloseOnToolboxLeave = false // Experimental
         
-        if (autoCloseOnExitEnabled) {
+        val enableToolboxToToolboxMove = true 
+        
+        if (enableAutoCloseOnToolboxLeave) {
             val currentToolboxId = ToolWindowManager.getInstance(ide.project).lastActiveToolWindowId
             
             IdeJava.hideToolWindow(ide, direction, currentToolboxId);
         }
 
-        if (IdeJava.activateRecentEditorConditioned(ide, direction)) {
-            // 
-        } else {
+        if ( !IdeJava.activateRecentEditorConditioned(ide, direction) ) {
+            // Toolbox to editor attempt first. If not, Toolbox to Toolbox
+            
+            if ( !enableAutoCloseOnToolboxLeave ) {
+                // Toolbox to toolbox move 
+                
+                if ( enableToolboxToToolboxMove ) {
+                    IdeJava.activateRecentToolWindow(ide, direction)
+                }
+            }
+        }
+
+        if ( enableAutoCloseOnToolboxLeave ) {
             IdeJava.activateRecentToolWindow(ide, direction)
         }
     }

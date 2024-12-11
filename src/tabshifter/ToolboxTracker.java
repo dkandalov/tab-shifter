@@ -8,11 +8,11 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
 
-public class ToolwindowTracker {
-        private static Map<Project, ToolwindowTracker> PROJECTS = new ConcurrentHashMap<>();
+public class ToolboxTracker {
+        private static Map<Project, ToolboxTracker> PROJECTS = new ConcurrentHashMap<>();
         
-        public static ToolwindowTracker getInstance(Project project) {
-                return PROJECTS.computeIfAbsent(project, k -> new ToolwindowTracker(project));
+        public static ToolboxTracker getInstance(Project project) {
+                return PROJECTS.computeIfAbsent(project, k -> new ToolboxTracker(project));
         }
         
         /////////////////////////////////////////////////////////////////////
@@ -21,7 +21,7 @@ public class ToolwindowTracker {
         private final Map<String, String> byAnchors = new ConcurrentHashMap<>();
         private final Map<String, Info>   byId      = new ConcurrentHashMap<>();
         
-        private ToolwindowTracker(Project project) {
+        private ToolboxTracker(Project project) {
                 this.project = project;
                 
                 init();
@@ -32,7 +32,7 @@ public class ToolwindowTracker {
          */
         private void init() {
                 for (String id : getManager().getToolWindowIds()) {
-                        track(id);
+                        trackToolbox(id);
                 }
         }
         
@@ -40,7 +40,7 @@ public class ToolwindowTracker {
                 return ToolWindowManager.getInstance(this.project);
         }
         
-        public void track(String id) {
+        public void trackToolbox(String id) {
                 if ( id != null ) {
                         ToolWindow window = getManager().getToolWindow(id);
                         
@@ -75,27 +75,6 @@ public class ToolwindowTracker {
                                 
                                 return true;
                         }
-                }
-                else {
-                        init();
-                        
-                        String lastIdaa = getLastActiveToolwindowForAnchor(anchor);
-                        
-                        if (lastIdaa != null) {
-                                
-                                ToolWindow window = getManager().getToolWindow(lastIdaa);
-                                
-                                if ( window != null ) {
-                                        
-                                        var wasUs = wasUs(window);
-                                        
-                                        window.activate(() -> {
-                                                getInfo(lastIdaa).wasUs = wasUs;
-                                        });
-                                        
-                                        return true;
-                                }
-                        } 
                 }
                 
                 return false;

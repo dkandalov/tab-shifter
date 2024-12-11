@@ -62,6 +62,7 @@ public class IdeJava {
                 var window = getActiveToolWindow(ide);
                 
                 if ( window != null ) {
+                        
                         if ( window.getAnchor() == anchor ) {
                                 activateRecentActiveEditor(ide); return true;
                         }
