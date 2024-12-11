@@ -1,6 +1,7 @@
 package tabshifter
 
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.wm.ToolWindowManager
 import tabshifter.Direction.*
 import tabshifter.layout.*
 import tabshifter.layout.Split.Orientation.horizontal
@@ -15,8 +16,53 @@ class TabShifter(private val ide: Ide) {
     fun moveFocus(direction: Direction) {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
         val currentWindow = layout.findWindow { it.isCurrent } ?: return
-        val targetWindow = layout.findWindowNextTo(currentWindow, direction) ?: return
-        ide.setFocusOn(targetWindow)
+
+        val isFocusOnEditor = IdeJava.isFocusOnEditor(ide)
+
+        val targetWindow = layout.findWindowNextTo(currentWindow, direction);
+        if (targetWindow == null) {
+            
+            if (isFocusOnEditor) {
+                // We are on an editor but hitting an edge / wall
+                
+                IdeJava.activateRecentToolWindow(ide, direction)
+            }
+
+            else {
+                // Toolbox to editor attempt first. If not, Toolbox to Toolbox
+
+                hideToolbox(direction)
+            }
+        }
+        else {
+            
+            if ( isFocusOnEditor ) {
+                // Editor to editor
+                
+                ide.setFocusOn(targetWindow)
+            }
+            else {
+                // Toolbox to editor attempt first. If not, Toolbox to Toolbox  
+                    
+                hideToolbox(direction)
+            }
+        }
+    }
+
+    private fun hideToolbox(direction: Direction) {
+        val autoCloseOnExitEnabled = false
+        
+        if (autoCloseOnExitEnabled) {
+            val currentToolboxId = ToolWindowManager.getInstance(ide.project).lastActiveToolWindowId
+            
+            IdeJava.hideToolWindow(ide, direction, currentToolboxId);
+        }
+
+        if (IdeJava.activateRecentEditorConditioned(ide, direction)) {
+            // 
+        } else {
+            IdeJava.activateRecentToolWindow(ide, direction)
+        }
     }
 
     /**
