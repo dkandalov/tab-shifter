@@ -1,5 +1,7 @@
 package tabshifter
 
+import com.intellij.ide.projectView.ProjectView
+import com.intellij.ide.projectView.impl.ProjectViewImpl
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx
 import com.intellij.openapi.fileEditor.impl.EditorWindow
 import com.intellij.openapi.fileEditor.impl.FileEditorOpenOptions
@@ -8,6 +10,8 @@ import com.intellij.openapi.ui.Splitter
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.vfs.VirtualFileManager
+import com.intellij.openapi.wm.IdeFocusManager
+import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx
 import com.intellij.ui.tabs.JBTabs
 import tabshifter.layout.LayoutElement
@@ -22,7 +26,8 @@ import javax.swing.JPanel
 import javax.swing.SwingConstants
 import javax.swing.SwingUtilities
 
-class Ide(private val editorManager: FileEditorManagerEx, private val project: Project) {
+
+class Ide(val manager: FileEditorManagerEx, val project: Project) {
     companion object {
         private val maximizeStateKey = Key.create<WeakHashMap<Splitter, MaximizeState>>("maximizeState")
     }
@@ -34,7 +39,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
 
     fun createSplitter(orientation: Orientation) {
         val swingOrientation = if (orientation == vertical) SwingConstants.VERTICAL else SwingConstants.HORIZONTAL
-        editorManager.currentWindow?.split(
+        manager.currentWindow?.split(
             orientation = swingOrientation,
             forceSplit = true,
             virtualFile = null,
@@ -53,7 +58,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         if (fileUrl == null) return
         val virtualFile = VirtualFileManager.getInstance().findFileByUrl(fileUrl) ?: return
         @Suppress("UnstableApiUsage")
-        editorManager.openFile(
+        manager.openFile(
             virtualFile,
             (window as IdeWindow).editorWindow,
             FileEditorOpenOptions().withSelectAsCurrent(true).withRequestFocus(true).withReuseOpen(true)
@@ -63,7 +68,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
 
     fun setFocusOn(window: Window) {
         val editorWindow = (window as IdeWindow).editorWindow
-        editorManager.currentWindow = editorWindow
+        manager.currentWindow = editorWindow
         editorWindow.requestFocus(true)
     }
 
@@ -77,8 +82,8 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
     }
 
     fun snapshotWindowLayout(): LayoutElement? =
-        if (editorManager.currentWindow == null || editorManager.currentWindow!!.fileList.isEmpty()) null
-        else editorManager.snapshotWindowLayout(container = editorManager.splitters.getComponent(0) as Container)
+        if (manager.currentWindow == null || manager.currentWindow!!.fileList.isEmpty()) null
+        else manager.snapshotWindowLayout(container = manager.splitters.getComponent(0) as Container)
 
     private fun FileEditorManagerEx.snapshotWindowLayout(container: Container): LayoutElement =
         when (container) {
@@ -134,6 +139,25 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
             putUserData(maximizeStateKey, result)
         }
         return result
+    }
+
+    fun activateMostRecentlyActiveEditor() {
+        // Get the most recently active file across all splitters
+        val file = (manager as? FileEditorManagerEx)?.currentFile ?: return
+
+        // Open the file in the editor and bring it to focus
+        manager.openFile(file, true)
+    }
+
+
+    fun isFocusOnProjectViewToolWindow(): Boolean {
+        val view = ProjectView.getInstance(project) as ProjectViewImpl
+
+        val manager: ToolWindowManager = ToolWindowManager.getInstance(project)
+
+        val window = manager.getToolWindow(view.getName())
+        
+        return window?.isActive ?: false
     }
 
     @Suppress("UnstableApiUsage")
