@@ -51,7 +51,7 @@
     ]]></description>
 
     <!-- See http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html -->
-    <idea-version since-build="2024.2"/>
+    <idea-version since-build="242.2"/>
 
     <!-- See http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
