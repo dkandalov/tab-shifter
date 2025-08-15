@@ -1,14 +1,15 @@
 plugins {
-    id "org.jetbrains.intellij" version "1.17.4"
+    id "org.jetbrains.intellij.platform" version "2.7.2"
     id "org.jetbrains.kotlin.jvm" version "2.2.0"
+    id "java"
+    id "groovy"
 }
-apply plugin: "java"
-apply plugin: "kotlin"
-apply plugin: "idea"
-apply plugin: "org.jetbrains.intellij"
 
 repositories {
     mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 sourceSets {
@@ -19,19 +20,23 @@ sourceSets {
     }
 }
 
-// Disabled to avoid "java.lang.IndexOutOfBoundsException: Index: 1, Size: 1" during build
-tasks.named("buildSearchableOptions").configure {
-    enabled = false
+// To find available IDE versions see https://www.jetbrains.com/intellij-repository/releases
+// and https://www.jetbrains.com/intellij-repository/snapshots
+ext.ideVersion = "2025.2"
+//ext.ideVersion = "LATEST-EAP-SNAPSHOT"
+
+dependencies {
+    intellijPlatform {
+        intellijIdeaCommunity(ideVersion, false)
+    }
 }
 
-intellij {
-    // To find available IDE versions see https://www.jetbrains.com/intellij-repository/releases
-    // and https://www.jetbrains.com/intellij-repository/snapshots
-    version = System.getenv().getOrDefault("IJ_VERSION",
-        "2025.2"
-//        "LATEST-EAP-SNAPSHOT"
-    )
-    downloadSources = true
-    sameSinceUntilBuild = false
-    updateSinceUntilBuild = false
+intellijPlatform {
+    projectName = "tab-shifter"
+    buildSearchableOptions = false // Disable because it takes a long time and the plugin doesn't need it
+    pluginConfiguration {
+        ideaVersion {
+            untilBuild = provider { null } // Disable patching plugin.xml because "until" version is too restrictive (it's better to keep it open-ended)
+        }
+    }
 }
