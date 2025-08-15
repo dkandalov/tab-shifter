@@ -1,6 +1,6 @@
 plugins {
-    id "org.jetbrains.intellij" version "1.16.1"
-    id "org.jetbrains.kotlin.jvm" version "1.8.22"
+    id "org.jetbrains.intellij" version "1.17.4"
+    id "org.jetbrains.kotlin.jvm" version "2.2.0"
 }
 apply plugin: "java"
 apply plugin: "kotlin"
@@ -19,11 +19,16 @@ sourceSets {
     }
 }
 
+// Disabled to avoid "java.lang.IndexOutOfBoundsException: Index: 1, Size: 1" during build
+tasks.named("buildSearchableOptions").configure {
+    enabled = false
+}
+
 intellij {
     // To find available IDE versions see https://www.jetbrains.com/intellij-repository/releases
     // and https://www.jetbrains.com/intellij-repository/snapshots
     version = System.getenv().getOrDefault("IJ_VERSION",
-        "2024.2" // Version with FileEditorOpenOptions signature change binary incompatibility
+        "2025.2"
 //        "LATEST-EAP-SNAPSHOT"
     )
     downloadSources = true
