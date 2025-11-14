@@ -1,5 +1,5 @@
 plugins {
-    id "org.jetbrains.intellij.platform" version "2.7.2"
+    id "org.jetbrains.intellij.platform" version "2.10.4"
     id "org.jetbrains.kotlin.jvm" version "2.2.0"
     id "java"
     id "groovy"
@@ -22,8 +22,8 @@ sourceSets {
 
 // To find available IDE versions see https://www.jetbrains.com/intellij-repository/releases
 // and https://www.jetbrains.com/intellij-repository/snapshots
-ext.ideVersion = "2025.2"
-//ext.ideVersion = "LATEST-EAP-SNAPSHOT"
+//ext.ideVersion = "2025.2"
+ext.ideVersion = "LATEST-EAP-SNAPSHOT"
 
 dependencies {
     intellijPlatform {
@@ -36,7 +36,11 @@ intellijPlatform {
     buildSearchableOptions = false // Disable because it takes a long time and the plugin doesn't need it
     pluginConfiguration {
         ideaVersion {
-            untilBuild = provider { null } // Disable patching plugin.xml because "until" version is too restrictive (it's better to keep it open-ended)
+            // Disable patching plugin.xml because:
+            // - "since" version can be earlier than current SDK (e.g. to specify major release 252 instead of specific EAP versoin)
+            // - "until" version is better open-ended
+            sinceBuild = provider { null }
+            untilBuild = provider { null }
         }
     }
 }
