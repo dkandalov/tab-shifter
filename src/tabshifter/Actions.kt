@@ -92,6 +92,12 @@ object Actions {
         }
     }
 
+    class DistributeSplitSize: AnAction(), DumbAware {
+        override fun actionPerformed(event: AnActionEvent) {
+            tabShifter(event)?.distributeSplitSize()
+        }
+    }
+
     class ToggleMaximizeRestore: AnAction(), DumbAware {
         override fun actionPerformed(event: AnActionEvent) {
             tabShifter(event)?.toggleMaximizeSplitter()

@@ -1,5 +1,6 @@
 package tabshifter
 
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx
 import com.intellij.openapi.fileEditor.impl.EditorWindow
 import com.intellij.openapi.fileEditor.impl.FileEditorOpenOptions
@@ -157,6 +158,68 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
     fun equalSizeSplitter(split: Split) {
         (split as IdeSplitter).splitter.proportion = 0.5f
     }
+
+    fun distributeSplitSize(split: Split) {
+        // To evenly distribute the width/height of all the editors you need to
+        // calculate the total number of leaf nodes that are reachable from the splitter
+        // and how many are reachable from the first branch. A node is "reachable"
+        // if it is also a splitter and has the same orientation as its parent. A
+        // leaf node is either a 'Window' or a Split element with a different
+        // orientation from its parent.
+        val counts = split.countFirstAndSecondLeaves()
+        counts.forEach {(split, count) ->
+            val (firstCount, secondCount) = count
+            split.splitter.proportion = firstCount.toFloat() / (firstCount + secondCount)
+        }
+    }
+
+    private fun Split.countFirstAndSecondLeaves(): Map<IdeSplitter, Pair<Int, Int>> {
+        val counts: MutableMap<IdeSplitter, Pair<Int, Int>> = mutableMapOf()
+
+        fun doCount(parent: LayoutElement): Int {
+            when (parent) {
+                is Window -> return 1
+                is Split -> {
+                    // Make sure we recurse through every node in the layout tree.
+                    val firstCount = doCount(parent.first)
+                    val secondCount = doCount(parent.second)
+
+                    // Process the first branch.
+                    val firstLeaves = when (parent.first) {
+                        // The first child is a leaf
+                        is Window -> firstCount
+
+                        // If the first child has the same orientation include its
+                        // children in the count for our node. Otherwise, it's a split
+                        // of a different orientation and should be considered a
+                        // leaf node.
+                        is Split -> if (parent.first.orientation == parent.orientation) firstCount else 1
+
+                        // This shouldn't be possible
+                        else -> 0
+                    }
+
+                    // Process the second branch.
+                    val secondLeaves = when (parent.second) {
+                        // Same reasoning as the first branch
+                        is Window -> secondCount
+                        is Split -> if (parent.second.orientation == parent.orientation) secondCount else 1
+                        else -> 0
+                    }
+
+                    counts[parent as IdeSplitter] = firstLeaves to secondLeaves
+                    return firstLeaves + secondLeaves
+                }
+                else -> throw IllegalStateException("Unexpected LayoutElement: $parent")
+            }
+        }
+
+        // Start the recursion
+        doCount(this)
+
+        return counts
+    }
+
 
     fun shrinkSplitProportion(split: Split) {
         updateProportion(split, -1f)
