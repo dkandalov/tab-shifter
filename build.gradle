@@ -1,6 +1,6 @@
 plugins {
     id "org.jetbrains.intellij.platform" version "2.10.4"
-    id "org.jetbrains.kotlin.jvm" version "2.2.0"
+    id "org.jetbrains.kotlin.jvm" version "2.3.20"
     id "java"
     id "groovy"
 }
@@ -22,8 +22,8 @@ sourceSets {
 
 // To find available IDE versions see https://www.jetbrains.com/intellij-repository/releases
 // and https://www.jetbrains.com/intellij-repository/snapshots
-//ext.ideVersion = "2025.2"
-ext.ideVersion = "LATEST-EAP-SNAPSHOT"
+ext.ideVersion = "2026.1"
+//ext.ideVersion = "LATEST-EAP-SNAPSHOT"
 
 dependencies {
     intellijPlatform {
