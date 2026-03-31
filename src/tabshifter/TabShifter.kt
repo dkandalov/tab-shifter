@@ -98,6 +98,13 @@ class TabShifter(private val ide: Ide) {
             parentSplit = layout.findParentSplitOf(layoutElement)
         }
     }
+
+    fun distributeSplitSize() {
+        val layout = ide.snapshotWindowLayout()
+        if (layout !is Split) return
+
+        ide.distributeSplitSize(layout)
+    }
 }
 
 enum class Direction {
@@ -158,4 +165,3 @@ private fun LayoutElement.findWindowNextTo(window: Window, direction: Direction)
         right -> filterAllWindows { window.position.toX == it.position.fromX }.minByOrNull { abs(window.position.fromY - it.position.fromY) }
         down  -> filterAllWindows { window.position.toY == it.position.fromY }.minByOrNull { abs(window.position.fromX - it.position.fromX) }
     }
-
