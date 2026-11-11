@@ -18,9 +18,9 @@ There is no Gradle test source set: `check` only compiles. The only tests are `p
 
 ## Versioning and compatibility
 
-- The target IDE SDK is `ext.ideVersion` in `build.gradle` (IntelliJ IDEA Community).
-- Plugin version and `since-build` are maintained by hand in `resources/META-INF/plugin.xml`. Patching of since/until is deliberately disabled in `build.gradle` so `since-build` can name a major release and `until-build` stays open-ended. A release typically bumps `<version>`, `since-build`, and `ideVersion` together.
-- Sources live directly in `src/` (not `src/main/kotlin`) and resources in `resources/`, configured via `sourceSets` in `build.gradle`.
+- The target IDE SDK is `ideVersion` in `build.gradle.kts` (IntelliJ IDEA).
+- Plugin version and `since-build` are maintained by hand in `resources/META-INF/plugin.xml`. Patching of since/until is deliberately disabled in `build.gradle.kts` so `since-build` can name a major release and `until-build` stays open-ended. A release typically bumps `<version>`, `since-build`, and `ideVersion` together.
+- Sources live directly in `src/` (not `src/main/kotlin`) and resources in `resources/`, configured via `sourceSets` in `build.gradle.kts`.
 
 ## Architecture
 
