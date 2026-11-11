@@ -22,12 +22,12 @@ sourceSets {
 
 // To find available IDE versions see https://www.jetbrains.com/intellij-repository/releases
 // and https://www.jetbrains.com/intellij-repository/snapshots
-ext.ideVersion = "2026.1"
+ext.ideVersion = "2026.3"
 //ext.ideVersion = "LATEST-EAP-SNAPSHOT"
 
 dependencies {
     intellijPlatform {
-        intellijIdeaCommunity(ideVersion, false)
+        intellijIdea(ideVersion)
     }
 }
 
