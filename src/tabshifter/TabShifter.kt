@@ -1,6 +1,5 @@
 package tabshifter
 
-import com.intellij.openapi.diagnostic.Logger
 import tabshifter.Direction.*
 import tabshifter.layout.*
 import tabshifter.layout.Split.Orientation.horizontal
@@ -19,11 +18,6 @@ class TabShifter(private val ide: Ide) {
         ide.setFocusOn(targetWindow)
     }
 
-    /**
-     * This is way more complicated than it should have been because
-     * EditorWindow object changes its identity after split/unsplit (i.e. points to another visual window)
-     * therefore, need to predict target window position and look up window by expected position
-     */
     fun moveTab(direction: Direction) {
         val layout = ide.windowLayoutSnapshotWithPositions() ?: return
         val currentWindow = layout.findWindow { it.isCurrent } ?: return
@@ -37,21 +31,9 @@ class TabShifter(private val ide: Ide) {
                 right    -> vertical
                 down     -> horizontal
             }
-            ide.createSplitter(orientation)
-            val layout = ide.windowLayoutSnapshotWithPositions() ?: return
-            val targetWindow = layout.findWindow { it.isCurrent } ?: return
-            val currentWindow = layout.findSiblingOf(targetWindow) as Window
-
-            layout.findWindowAt(currentWindow.position)?.let {
-                ide.closeFile(it, currentWindow.currentFileUrl)
-                ide.windowLayoutSnapshotWithPositions().findWindowAt(targetWindow.position)?.let { window ->
-                    ide.setPinnedFiles(window, currentWindow.pinnedFilesUrls)
-                }
-            }
+            ide.moveFileToNewSplitter(currentWindow, currentWindow.currentFileUrl, orientation)
         } else {
-            ide.closeFile(currentWindow, currentWindow.currentFileUrl)
-            ide.openFile(targetWindow, currentWindow.currentFileUrl)
-            ide.setPinnedFiles(targetWindow, currentWindow.pinnedFilesUrls)
+            ide.moveFile(currentWindow, targetWindow, currentWindow.currentFileUrl)
         }
     }
 
@@ -107,31 +89,9 @@ enum class Direction {
 private fun Ide.windowLayoutSnapshotWithPositions() =
     snapshotWindowLayout()?.updatePositions()
 
-private val logger = Logger.getInstance(TabShifter::class.java.name)
-
-private fun LayoutElement?.findWindowAt(position: Position): Window? {
-    val window = findWindow { it.position == position }
-    if (window == null) {
-        // Haven't seen this happening. Opting for silent error handling assuming that if this goes wrong, user can just retry the action.
-        logger.info("No window at: $position; windowLayout: $this")
-    }
-    return window
-}
-
 private fun LayoutElement.findParentSplitOf(layoutElement: LayoutElement): Split? =
     traverse().filterIsInstance<Split>()
         .find { it.first == layoutElement || it.second == layoutElement }
-
-private fun LayoutElement.findSiblingOf(window: Window): LayoutElement? =
-    when (this) {
-        is Split  -> when {
-            first == window  -> second
-            second == window -> first
-            else             -> first.findSiblingOf(window) ?: second.findSiblingOf(window)
-        }
-        is Window -> null
-        else      -> throw IllegalStateException()
-    }
 
 private fun LayoutElement.updatePositions(position: Position = Position(0, 0, size.width, size.height)): LayoutElement {
     if (this is Split) {

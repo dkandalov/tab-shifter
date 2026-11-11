@@ -1,5 +1,6 @@
 package tabshifter
 
+import com.intellij.openapi.fileEditor.FileEditorManagerKeys
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx
 import com.intellij.openapi.fileEditor.impl.EditorWindow
 import com.intellij.openapi.fileEditor.impl.FileEditorOpenOptions
@@ -7,7 +8,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Splitter
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.registry.Registry
-import com.intellij.openapi.vfs.VirtualFileManager
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx
 import com.intellij.ui.tabs.JBTabs
 import tabshifter.layout.LayoutElement
@@ -32,48 +33,71 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
     private val heightStretch: Float = Registry.intValue("ide.windowSystem.vScrollChars", 5) / 100f
     private val toolWindowManager = ToolWindowManagerEx.getInstanceEx(project)
 
-    fun createSplitter(orientation: Orientation) {
+    fun moveFile(from: Window, to: Window, fileUrl: String?) {
+        val sourceWindow = (from as IdeWindow).editorWindow
+        val targetWindow = (to as IdeWindow).editorWindow
+        val file = sourceWindow.findFile(fileUrl) ?: return
+        closingToReopen(file) {
+            val isPinned = sourceWindow.isFilePinned(file)
+            sourceWindow.closeFile(file, true, false)
+            @Suppress("UnstableApiUsage")
+            editorManager.openFile(
+                file,
+                targetWindow,
+                FileEditorOpenOptions().withSelectAsCurrent(true).withRequestFocus(true).withReuseOpen(true)
+            )
+            if (isPinned) targetWindow.setFilePinned(file, true)
+        }
+        setFocusOn(to)
+    }
+
+    /**
+     * The file is closed before splitting (rather than letting split() copy it and closing the original afterwards)
+     * because editors of files marked with FileEditorManagerKeys.FORBID_TAB_SPLIT (e.g. agent sessions)
+     * must never be open in two windows at once.
+     */
+    fun moveFileToNewSplitter(from: Window, fileUrl: String?, orientation: Orientation) {
+        val sourceWindow = (from as IdeWindow).editorWindow
+        val file = sourceWindow.findFile(fileUrl) ?: return
         val swingOrientation = if (orientation == vertical) SwingConstants.VERTICAL else SwingConstants.HORIZONTAL
-        editorManager.currentWindow?.split(
-            orientation = swingOrientation,
-            forceSplit = true,
-            virtualFile = null,
-            focusNew = true
-        )
+        closingToReopen(file) {
+            val isPinned = sourceWindow.isFilePinned(file)
+            sourceWindow.closeFile(file, true, false)
+            val newWindow = sourceWindow.split(
+                orientation = swingOrientation,
+                forceSplit = true,
+                virtualFile = file,
+                focusNew = true
+            ) ?: return
+            if (isPinned) newWindow.setFilePinned(file, true)
+        }
     }
 
-    fun closeFile(window: Window, fileUrl: String?) {
-        if (fileUrl == null) return
-        val virtualFile = VirtualFileManager.getInstance().findFileByUrl(fileUrl) ?: return
-        val transferFocus = false // This is important for the TabShifter.moveTab() logic.
-        (window as IdeWindow).editorWindow.closeFile(virtualFile, true, transferFocus)
-    }
+    /**
+     * Uses the exact VirtualFile instance open in the window instead of resolving the url through VirtualFileManager,
+     * because non-standard editors (e.g. agent sessions) are backed by custom file systems
+     * which may not resolve the url or may resolve it to a different instance.
+     */
+    private fun EditorWindow.findFile(fileUrl: String?): VirtualFile? =
+        if (fileUrl == null) null else fileList.find { it.url == fileUrl }
 
-    fun openFile(window: Window, fileUrl: String?) {
-        if (fileUrl == null) return
-        val virtualFile = VirtualFileManager.getInstance().findFileByUrl(fileUrl) ?: return
-        @Suppress("UnstableApiUsage")
-        editorManager.openFile(
-            virtualFile,
-            (window as IdeWindow).editorWindow,
-            FileEditorOpenOptions().withSelectAsCurrent(true).withRequestFocus(true).withReuseOpen(true)
-        )
-        setFocusOn(window)
+    /**
+     * Marks the file as being reopened so that editors which release their state on close (e.g. agent sessions)
+     * keep it while the file is moved. See com.intellij.openapi.fileEditor.impl.MoveEditorToOppositeTabGroupAction.
+     */
+    private inline fun closingToReopen(file: VirtualFile, f: () -> Unit) {
+        file.putUserData(FileEditorManagerKeys.CLOSING_TO_REOPEN, true)
+        try {
+            f()
+        } finally {
+            file.putUserData(FileEditorManagerKeys.CLOSING_TO_REOPEN, null)
+        }
     }
 
     fun setFocusOn(window: Window) {
         val editorWindow = (window as IdeWindow).editorWindow
         editorManager.currentWindow = editorWindow
         editorWindow.requestFocus(true)
-    }
-
-    fun setPinnedFiles(window: Window, pinnedFilesUrls: List<String>) {
-        val editorWindow = (window as IdeWindow).editorWindow
-        editorWindow.fileList.forEach { file ->
-            if (file.url in pinnedFilesUrls) {
-                editorWindow.setFilePinned(file, true)
-            }
-        }
     }
 
     fun snapshotWindowLayout(): LayoutElement? =
@@ -97,8 +121,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
                     editorWindow,
                     hasOneTab = editorWindow.tabCount == 1,
                     isCurrent = currentWindow == editorWindow,
-                    currentFileUrl = currentFile?.url,
-                    pinnedFilesUrls = editorWindow.fileList.filter { editorWindow.isFilePinned(it) }.map { it.url }
+                    currentFileUrl = currentFile?.url
                 )
             }
             else -> {
@@ -181,9 +204,8 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         val editorWindow: EditorWindow,
         hasOneTab: Boolean,
         isCurrent: Boolean,
-        currentFileUrl: String?,
-        pinnedFilesUrls: List<String>
-    ) : Window(hasOneTab, isCurrent, currentFileUrl, pinnedFilesUrls) {
+        currentFileUrl: String?
+    ) : Window(hasOneTab, isCurrent, currentFileUrl) {
         override fun toString() =
             "Window(" + editorWindow.fileList.joinToString(",") { it.name } + ")" +
                 if (isCurrent) "*" else ""
