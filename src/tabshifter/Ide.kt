@@ -2,7 +2,6 @@ package tabshifter
 
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx
 import com.intellij.openapi.fileEditor.impl.EditorWindow
-import com.intellij.openapi.fileEditor.impl.FileEditorOpenOptions
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Splitter
 import com.intellij.openapi.util.Key
@@ -56,7 +55,7 @@ class Ide(private val editorManager: FileEditorManagerEx, private val project: P
         editorManager.openFile(
             virtualFile,
             (window as IdeWindow).editorWindow,
-            FileEditorOpenOptions().withSelectAsCurrent(true).withRequestFocus(true).withReuseOpen(true)
+            FileEditorOpenOptionsFactory.create().withSelectAsCurrent(true).withRequestFocus(true).withReuseOpen(true)
         )
         setFocusOn(window)
     }
